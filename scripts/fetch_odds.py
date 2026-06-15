@@ -16,9 +16,15 @@ from wc2026.odds_api import get_odds
 from wc2026.poisson import DC_RHO, most_likely_score, outcome_probabilities
 from wc2026.team_mapping import normalize_team_name
 
-# Throttle: skip if we updated within the last 6 hours, to stay under
-# The Odds API free quota of 500/month.
-MIN_REFRESH_INTERVAL = timedelta(hours=6)
+# Tiered refresh intervals based on time-to-kickoff of the next match.
+# The Odds API free quota is 500/month; the tiered design keeps us well under
+# that while reacting fast when bookmakers are actively moving lines.
+HOT_INTERVAL = timedelta(minutes=20)   # match within HOT_HORIZON → lines moving fast
+WARM_INTERVAL = timedelta(hours=2)     # match within WARM_HORIZON
+COLD_INTERVAL = timedelta(hours=6)     # nothing imminent
+
+HOT_HORIZON = timedelta(hours=3)
+WARM_HORIZON = timedelta(hours=24)
 
 # The Odds API uses slightly different team names; map them to martj42 style
 # (same canonical form our fixtures table uses).
@@ -69,6 +75,35 @@ def _aggregate_market(event: dict) -> dict | None:
     }
 
 
+def _next_kickoff(db_path: Path) -> "datetime | None":
+    """Earliest kickoff among matches not yet finished."""
+    now = datetime.now(timezone.utc)
+    with get_connection(db_path) as conn:
+        rows = conn.execute(
+            "SELECT utc_kickoff FROM fixtures "
+            "WHERE status != 'FINISHED' "
+            "ORDER BY utc_kickoff"
+        ).fetchall()
+    for r in rows:
+        kickoff = datetime.fromisoformat(r["utc_kickoff"].replace("Z", "+00:00"))
+        if kickoff >= now:
+            return kickoff
+    return None
+
+
+def required_interval(db_path: Path) -> tuple[timedelta, str]:
+    """Return (interval, tier name) based on time-to-next-kickoff."""
+    kickoff = _next_kickoff(db_path)
+    if kickoff is None:
+        return COLD_INTERVAL, "cold"
+    time_to_match = kickoff - datetime.now(timezone.utc)
+    if time_to_match <= HOT_HORIZON:
+        return HOT_INTERVAL, "hot"
+    if time_to_match <= WARM_HORIZON:
+        return WARM_INTERVAL, "warm"
+    return COLD_INTERVAL, "cold"
+
+
 def _should_refresh(db_path: Path) -> bool:
     if "--force" in sys.argv:
         return True
@@ -77,13 +112,19 @@ def _should_refresh(db_path: Path) -> bool:
             "SELECT MAX(updated_at) AS last FROM market_predictions"
         ).fetchone()
     last = row["last"] if row else None
+    interval, tier = required_interval(db_path)
     if not last:
+        print(f"[odds] no prior fetch; refreshing (tier={tier})")
         return True
     last_dt = datetime.fromisoformat(last)
     if last_dt.tzinfo is None:
         last_dt = last_dt.replace(tzinfo=timezone.utc)
     age = datetime.now(timezone.utc) - last_dt
-    return age >= MIN_REFRESH_INTERVAL
+    if age >= interval:
+        print(f"[odds] tier={tier} interval={interval} age={age}; refreshing")
+        return True
+    print(f"[odds] tier={tier} interval={interval} age={age}; skipping")
+    return False
 
 
 def main() -> int:

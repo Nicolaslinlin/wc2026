@@ -4,7 +4,7 @@
 搭建一个 GitHub Pages 静态站，展示 2026 世界杯全部比赛的赛程、实际比分和 Elo+泊松模型预测，每 30 分钟由 GitHub Actions 自动更新；URL: https://nicolaslinlin.github.io/wc2026/
 
 ## Current Phase
-Phase 1
+✅ 全部完成（2026-06-15 上线）— https://nicolaslinlin.github.io/wc2026/
 
 ## Phases
 

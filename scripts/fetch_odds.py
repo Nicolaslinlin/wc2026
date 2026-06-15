@@ -20,8 +20,8 @@ from wc2026.team_mapping import normalize_team_name
 # The Odds API free quota is 500/month; the tiered design keeps us well under
 # that while reacting fast when bookmakers are actively moving lines.
 HOT_INTERVAL = timedelta(minutes=20)   # match within HOT_HORIZON → lines moving fast
-WARM_INTERVAL = timedelta(hours=2)     # match within WARM_HORIZON
-COLD_INTERVAL = timedelta(hours=6)     # nothing imminent
+WARM_INTERVAL = timedelta(hours=3)     # match within WARM_HORIZON
+COLD_INTERVAL = timedelta(hours=8)     # nothing imminent
 
 HOT_HORIZON = timedelta(hours=3)
 WARM_HORIZON = timedelta(hours=24)

@@ -151,6 +151,11 @@
     background: rgba(99, 102, 241, 0.1); padding: 2px 8px; border-radius: 6px;
     margin: 0 6px;
   }
+  .market-row { margin-top: 6px; }
+  .market-row .pred-label::before { content: '💰 '; }
+  .pred-score.market-score {
+    color: #fbbf24; background: rgba(251, 191, 36, 0.12);
+  }
   .probs {
     display: flex; gap: 12px;
     font-size: 0.78rem; color: var(--muted);
@@ -159,9 +164,15 @@
   .probs strong { color: var(--text); font-weight: 600; }
 
   .status-row {
-    display: flex; gap: 10px; margin-top: 10px;
+    display: flex; flex-wrap: wrap; align-items: center; gap: 6px;
+    margin-top: 10px;
     font-size: 0.78rem; font-weight: 600;
   }
+  .hit-label {
+    color: var(--muted); font-size: 0.72rem; text-transform: uppercase;
+    letter-spacing: 0.06em; margin-right: 2px;
+  }
+  .hit-label.market-label { margin-left: 8px; color: #fbbf24; }
   .tag {
     padding: 3px 10px; border-radius: 6px;
     display: inline-flex; align-items: center; gap: 4px;
@@ -245,17 +256,45 @@
       </div>
     </div>
 
+    {% if match.has_market %}
+    <div class="pred-row market-row">
+      <div>
+        <span class="pred-label">市场预测</span>
+        <span class="pred-score market-score">{{ match.mkt_home }} - {{ match.mkt_away }}</span>
+      </div>
+      <div class="probs">
+        <span>主胜 <strong>{{ match.mkt_prob_home_pct }}%</strong></span>
+        <span>平 <strong>{{ match.mkt_prob_draw_pct }}%</strong></span>
+        <span>客胜 <strong>{{ match.mkt_prob_away_pct }}%</strong></span>
+      </div>
+    </div>
+    {% endif %}
+
     {% if match.status == 'FINISHED' %}
     <div class="status-row">
+      <span class="hit-label">模型</span>
       {% if match.outcome_hit %}
-        <span class="tag hit">✓ 胜负命中</span>
+        <span class="tag hit">✓ 胜负</span>
       {% else %}
-        <span class="tag miss">✗ 胜负未中</span>
+        <span class="tag miss">✗ 胜负</span>
       {% endif %}
       {% if match.score_hit %}
-        <span class="tag hit">✓ 比分命中</span>
+        <span class="tag hit">✓ 比分</span>
       {% else %}
-        <span class="tag miss">✗ 比分未中</span>
+        <span class="tag miss">✗ 比分</span>
+      {% endif %}
+      {% if match.has_market %}
+        <span class="hit-label market-label">市场</span>
+        {% if match.market_outcome_hit %}
+          <span class="tag hit">✓ 胜负</span>
+        {% else %}
+          <span class="tag miss">✗ 胜负</span>
+        {% endif %}
+        {% if match.market_score_hit %}
+          <span class="tag hit">✓ 比分</span>
+        {% else %}
+          <span class="tag miss">✗ 比分</span>
+        {% endif %}
       {% endif %}
     </div>
     {% else %}

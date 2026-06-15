@@ -38,6 +38,22 @@ CREATE TABLE IF NOT EXISTS predictions (
     updated_at TEXT NOT NULL,
     FOREIGN KEY (match_id) REFERENCES fixtures(match_id)
 );
+
+CREATE TABLE IF NOT EXISTS market_predictions (
+    match_id INTEGER PRIMARY KEY,
+    mkt_home_score INTEGER NOT NULL,
+    mkt_away_score INTEGER NOT NULL,
+    mkt_prob_home_win REAL NOT NULL,
+    mkt_prob_draw REAL NOT NULL,
+    mkt_prob_away_win REAL NOT NULL,
+    mkt_home_xg REAL NOT NULL,
+    mkt_away_xg REAL NOT NULL,
+    spread_home REAL,
+    total_goals REAL,
+    bookmaker TEXT,
+    updated_at TEXT NOT NULL,
+    FOREIGN KEY (match_id) REFERENCES fixtures(match_id)
+);
 """
 
 

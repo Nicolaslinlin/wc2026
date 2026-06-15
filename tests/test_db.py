@@ -10,7 +10,7 @@ def test_init_db_creates_tables(tmp_path):
     tables = {row[0] for row in conn.execute(
         "SELECT name FROM sqlite_master WHERE type='table'"
     )}
-    assert tables == {"matches_history", "fixtures", "predictions"}
+    assert tables == {"matches_history", "fixtures", "predictions", "market_predictions"}
 
 
 def test_get_connection_returns_sqlite_conn(tmp_path):

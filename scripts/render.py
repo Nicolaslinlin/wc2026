@@ -69,6 +69,16 @@ def build_match_view(row: dict[str, Any]) -> dict[str, Any]:
     weekday_zh = "日一二三四五六"[kickoff_local.weekday()]  # mon=0
     # weekday() returns 0=mon..6=sun; rearrange so 日 is sun
     weekday_zh = ["一", "二", "三", "四", "五", "六", "日"][kickoff_local.weekday()]
+    has_market = row.get("mkt_home_score") is not None
+    market_outcome_hit = market_score_hit = False
+    if is_finished and has_market:
+        actual = _outcome(row["home_score"], row["away_score"])
+        mkt = _outcome(row["mkt_home_score"], row["mkt_away_score"])
+        market_outcome_hit = actual == mkt
+        market_score_hit = (
+            row["home_score"] == row["mkt_home_score"]
+            and row["away_score"] == row["mkt_away_score"]
+        )
     return {
         "match_id": row["match_id"],
         "kickoff_local": kickoff_local.strftime(f"%m/%d ({weekday_zh}) %H:%M JST"),
@@ -90,6 +100,14 @@ def build_match_view(row: dict[str, Any]) -> dict[str, Any]:
         "prob_away_pct": round(row["prob_away_win"] * 100),
         "outcome_hit": outcome_hit,
         "score_hit": score_hit,
+        "has_market": has_market,
+        "mkt_home": row.get("mkt_home_score"),
+        "mkt_away": row.get("mkt_away_score"),
+        "mkt_prob_home_pct": round(row["mkt_prob_home_win"] * 100) if has_market else None,
+        "mkt_prob_draw_pct": round(row["mkt_prob_draw"] * 100) if has_market else None,
+        "mkt_prob_away_pct": round(row["mkt_prob_away_win"] * 100) if has_market else None,
+        "market_outcome_hit": market_outcome_hit,
+        "market_score_hit": market_score_hit,
     }
 
 
@@ -118,9 +136,12 @@ def main() -> int:
                    f.home_team, f.away_team, f.status, f.home_score, f.away_score,
                    p.pred_home_score, p.pred_away_score,
                    p.prob_home_win, p.prob_draw, p.prob_away_win,
-                   p.home_xg, p.away_xg
+                   p.home_xg, p.away_xg,
+                   m.mkt_home_score, m.mkt_away_score,
+                   m.mkt_prob_home_win, m.mkt_prob_draw, m.mkt_prob_away_win
             FROM fixtures f
             LEFT JOIN predictions p USING (match_id)
+            LEFT JOIN market_predictions m USING (match_id)
             ORDER BY f.utc_kickoff
             """
         ).fetchall()

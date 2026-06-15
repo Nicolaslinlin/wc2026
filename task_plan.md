@@ -4,7 +4,9 @@
 搭建一个 GitHub Pages 静态站，展示 2026 世界杯全部比赛的赛程、实际比分和 Elo+泊松模型预测，每 30 分钟由 GitHub Actions 自动更新；URL: https://nicolaslinlin.github.io/wc2026/
 
 ## Current Phase
-✅ 全部完成（2026-06-15 上线）— https://nicolaslinlin.github.io/wc2026/
+Phase 7（模型 vs 市场对比）
+
+✅ Phase 1-6 已完成（2026-06-15 上线）— https://nicolaslinlin.github.io/wc2026/
 
 ## Phases
 
@@ -49,6 +51,20 @@
 - [ ] 验证线上 URL 可访问
 - **Status:** pending
 - **参考：** 计划 Task 13-15
+
+### Phase 7: 模型 vs 市场盘口对比
+- [ ] 注册 The Odds API 拿 key（用户）
+- [ ] DB 加 `market_predictions` 表
+- [ ] `wc2026/market.py`：从让球(spread) + 大小球(total) 反推 home_xg / away_xg + TDD
+- [ ] `wc2026/odds_api.py`：The Odds API 封装
+- [ ] `scripts/fetch_odds.py`：拉盘口 → 反推 xG → 跑泊松 → 写表
+- [ ] `render.py` 增加"市场预测"一行
+- [ ] 模板 UI 更新
+- [ ] 用户在 GitHub Secret 加 `ODDS_API_TOKEN`
+- [ ] `update.yml` workflow 加 fetch_odds 步骤
+- [ ] 部署 + 验证
+- **Status:** in_progress
+- **设计要点：** spread = home_xg - away_xg；total/2 = (home_xg+away_xg)/2；二元一次方程求解；再丢入现成的 poisson 函数
 
 ### Phase 6: 端到端验证
 - [ ] 全测试套件通过（uv run pytest）

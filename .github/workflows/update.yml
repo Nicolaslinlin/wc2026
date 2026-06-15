@@ -37,6 +37,12 @@ jobs:
       - name: Predict
         run: uv run python -m scripts.predict
 
+      - name: Fetch bookmaker odds (best-effort)
+        env:
+          ODDS_API_TOKEN: ${{ secrets.ODDS_API_TOKEN }}
+        continue-on-error: true
+        run: uv run python -m scripts.fetch_odds
+
       - name: Render
         run: uv run python -m scripts.render
 

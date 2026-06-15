@@ -4,6 +4,7 @@ from wc2026.team_mapping import normalize_team_name
 def test_normalize_known_alias():
     assert normalize_team_name("Korea Republic") == "South Korea"
     assert normalize_team_name("USA") == "United States"
+    assert normalize_team_name("Cape Verde Islands") == "Cape Verde"
 
 
 def test_normalize_unknown_returns_input():

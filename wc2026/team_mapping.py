@@ -7,6 +7,7 @@ ALIAS = {
     "Czechia": "Czech Republic",
     "Ivory Coast": "Côte d'Ivoire",
     "Cabo Verde": "Cape Verde",
+    "Cape Verde Islands": "Cape Verde",
     "Türkiye": "Turkey",
 }
 

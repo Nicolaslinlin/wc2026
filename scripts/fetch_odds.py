@@ -11,9 +11,9 @@ from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 from wc2026.db import get_connection
-from wc2026.market import implied_probability, xg_from_spread_total
+from wc2026.market import xg_from_spread_total
 from wc2026.odds_api import get_odds
-from wc2026.poisson import most_likely_score
+from wc2026.poisson import most_likely_score, outcome_probabilities
 from wc2026.team_mapping import normalize_team_name
 
 # Throttle: skip if we updated within the last 6 hours, to stay under
@@ -36,14 +36,12 @@ def _canon(name: str) -> str:
 
 
 def _aggregate_market(event: dict) -> dict | None:
-    """Aggregate odds across bookmakers; return summary dict or None if insufficient."""
+    """Aggregate spread + total across bookmakers; xG and probs come from Poisson."""
     spreads = []
     totals = []
-    h_odds, d_odds, a_odds = [], [], []
     book_names = []
 
     home_name = _canon(event["home_team"])
-    away_name = _canon(event["away_team"])
 
     for book in event.get("bookmakers", []):
         book_names.append(book["title"])
@@ -56,27 +54,17 @@ def _aggregate_market(event: dict) -> dict | None:
                         spreads.append(o["point"])
                         break
             elif key == "totals":
-                # take the "Over" line; "Under" has the same point
                 for o in outcomes:
                     if o["name"] == "Over" and "point" in o:
                         totals.append(o["point"])
                         break
-            elif key == "h2h_3_way":
-                d = {_canon(o["name"]): o["price"] for o in outcomes if "name" in o}
-                if home_name in d and away_name in d and "Draw" in d:
-                    h_odds.append(d[home_name])
-                    d_odds.append(d["Draw"])
-                    a_odds.append(d[away_name])
 
-    if not spreads or not totals or not h_odds:
+    if not spreads or not totals:
         return None
 
     return {
         "spread_home": statistics.median(spreads),
         "total_goals": statistics.median(totals),
-        "h2h_home": statistics.median(h_odds),
-        "h2h_draw": statistics.median(d_odds),
-        "h2h_away": statistics.median(a_odds),
         "bookmaker": f"median of {len(book_names)} books",
     }
 
@@ -135,10 +123,9 @@ def main() -> int:
             continue
 
         xh, xa = xg_from_spread_total(agg["spread_home"], agg["total_goals"])
-        ph, pd, pa = implied_probability(
-            agg["h2h_home"], agg["h2h_draw"], agg["h2h_away"]
-        )
-        # market most-likely score from market-derived xG via our existing Poisson
+        # outcome probabilities + most-likely score from market-derived xG
+        # via our existing Poisson model — same framework as our model predictions
+        ph, pd, pa = outcome_probabilities(xh, xa)
         sh, sa = most_likely_score(xh, xa)
 
         rows.append((

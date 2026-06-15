@@ -11,7 +11,7 @@ import requests
 
 BASE = "https://api.the-odds-api.com/v4"
 SPORT = "soccer_fifa_world_cup"
-MARKETS = "h2h_3_way,spreads,totals"
+MARKETS = "spreads,totals"
 REGIONS = "uk,eu"
 
 

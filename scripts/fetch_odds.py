@@ -13,7 +13,7 @@ from pathlib import Path
 from wc2026.db import get_connection
 from wc2026.market import xg_from_spread_total
 from wc2026.odds_api import get_odds
-from wc2026.poisson import most_likely_score, outcome_probabilities
+from wc2026.poisson import DC_RHO, most_likely_score, outcome_probabilities
 from wc2026.team_mapping import normalize_team_name
 
 # Throttle: skip if we updated within the last 6 hours, to stay under
@@ -124,9 +124,9 @@ def main() -> int:
 
         xh, xa = xg_from_spread_total(agg["spread_home"], agg["total_goals"])
         # outcome probabilities + most-likely score from market-derived xG
-        # via our existing Poisson model — same framework as our model predictions
-        ph, pd, pa = outcome_probabilities(xh, xa)
-        sh, sa = most_likely_score(xh, xa)
+        # via our existing Poisson + Dixon-Coles correction
+        ph, pd, pa = outcome_probabilities(xh, xa, rho=DC_RHO)
+        sh, sa = most_likely_score(xh, xa, rho=DC_RHO)
 
         rows.append((
             match_id, sh, sa, ph, pd, pa, xh, xa,

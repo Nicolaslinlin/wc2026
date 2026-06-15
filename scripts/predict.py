@@ -9,6 +9,7 @@ from pathlib import Path
 from wc2026.db import get_connection
 from wc2026.elo import INITIAL_RATING, update_ratings
 from wc2026.poisson import (
+    DC_RHO,
     lambda_from_elo,
     most_likely_score,
     outcome_probabilities,
@@ -56,8 +57,8 @@ def predict_all(db_path: Path, ratings: dict[str, float]) -> int:
             # World Cup: no real home advantage (except for host nations,
             # which we ignore for simplicity)
             lam_h, lam_a = lambda_from_elo(home_elo, away_elo, home_advantage=0.0)
-            ph, pd, pa = outcome_probabilities(lam_h, lam_a)
-            sh, sa = most_likely_score(lam_h, lam_a)
+            ph, pd, pa = outcome_probabilities(lam_h, lam_a, rho=DC_RHO)
+            sh, sa = most_likely_score(lam_h, lam_a, rho=DC_RHO)
             rows.append((
                 f["match_id"], sh, sa, ph, pd, pa, lam_h, lam_a, now,
             ))

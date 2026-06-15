@@ -9,6 +9,11 @@ ALIAS = {
     "Cabo Verde": "Cape Verde",
     "Cape Verde Islands": "Cape Verde",
     "Türkiye": "Turkey",
+    "Congo DR": "DR Congo",
+    "DR Congo": "DR Congo",
+    "Congo": "Republic of the Congo",
+    "Bosnia-Herzegovina": "Bosnia and Herzegovina",
+    "Bosnia and Herzegovina": "Bosnia and Herzegovina",
 }
 
 

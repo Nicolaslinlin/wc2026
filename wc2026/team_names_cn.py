@@ -20,6 +20,11 @@ CHINESE_NAMES = {
     "South Africa": "南非", "Mali": "马里", "Burkina Faso": "布基纳法索",
     "DR Congo": "刚果（金）", "Zambia": "赞比亚", "Uzbekistan": "乌兹别克斯坦",
     "Jordan": "约旦", "Iraq": "伊拉克",
+    "Bosnia and Herzegovina": "波黑",
+    "Republic of the Congo": "刚果（布）",
+    "Haiti": "海地",
+    "Slovakia": "斯洛伐克",
+    "New Caledonia": "新喀里多尼亚",
 }
 
 

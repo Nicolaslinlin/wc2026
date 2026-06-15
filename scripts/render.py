@@ -32,6 +32,11 @@ FLAGS = {
     "South Africa": "🇿🇦", "Mali": "🇲🇱", "Burkina Faso": "🇧🇫",
     "DR Congo": "🇨🇩", "Zambia": "🇿🇲", "Uzbekistan": "🇺🇿",
     "Jordan": "🇯🇴", "Iraq": "🇮🇶",
+    "Bosnia and Herzegovina": "🇧🇦",
+    "Republic of the Congo": "🇨🇬",
+    "Haiti": "🇭🇹",
+    "Slovakia": "🇸🇰",
+    "New Caledonia": "🇳🇨",
 }
 
 STAGE_LABELS = {

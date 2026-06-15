@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>2026 世界杯预测</title>
+<style>
+  * { box-sizing: border-box; }
+  body { font-family: -apple-system, "Segoe UI", "Microsoft YaHei", sans-serif;
+         max-width: 800px; margin: 0 auto; padding: 16px; background: #fafafa; color: #222; }
+  h1 { font-size: 1.5rem; margin: 0 0 4px; }
+  .updated { color: #888; font-size: 0.85rem; margin-bottom: 16px; }
+  .filters { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
+  .filter-btn { padding: 6px 12px; border: 1px solid #ccc; background: white;
+                border-radius: 16px; cursor: pointer; font-size: 0.9rem; }
+  .filter-btn.active { background: #1a73e8; color: white; border-color: #1a73e8; }
+  .match { background: white; border-radius: 8px; padding: 12px; margin-bottom: 10px;
+           box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
+  .meta { color: #666; font-size: 0.85rem; margin-bottom: 6px; }
+  .teams { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center;
+           gap: 8px; margin: 6px 0; }
+  .home { text-align: right; font-weight: 600; }
+  .away { text-align: left; font-weight: 600; }
+  .score { font-size: 1.2rem; font-weight: 700; text-align: center; min-width: 60px; }
+  .score.pending { color: #aaa; font-weight: 400; }
+  .pred { font-size: 0.85rem; color: #444; margin-top: 4px; }
+  .prob { font-size: 0.8rem; color: #666; }
+  .status { font-size: 0.8rem; margin-top: 4px; }
+  .hit { color: #2e7d32; margin-right: 8px; }
+  .miss { color: #c62828; margin-right: 8px; }
+  footer { color: #999; font-size: 0.75rem; text-align: center; margin-top: 24px; }
+</style>
+</head>
+<body>
+<h1>🏆 2026 世界杯预测</h1>
+<div class="updated">最后更新：{{ updated_at }}</div>
+
+<div class="filters">
+  <button class="filter-btn active" data-filter="all">全部</button>
+  <button class="filter-btn" data-filter="group">小组赛</button>
+  <button class="filter-btn" data-filter="knockout">淘汰赛</button>
+  <button class="filter-btn" data-filter="finished">已结束</button>
+  <button class="filter-btn" data-filter="upcoming">未开始</button>
+</div>
+
+{% for match in matches %}
+<div class="match"
+     data-stage="{{ 'group' if match.stage == 'GROUP_STAGE' else 'knockout' }}"
+     data-status="{{ 'finished' if match.status == 'FINISHED' else 'upcoming' }}">
+  <div class="meta">
+    {{ match.kickoff_local }}
+    {% if match.venue %}· {{ match.venue }}{% endif %}
+    · {{ match.stage_label }}{% if match.group_code %} {{ match.group_code }}{% endif %}
+  </div>
+  <div class="teams">
+    <div class="home">{{ match.home_flag }} {{ match.home_team }}</div>
+    {% if match.status == 'FINISHED' %}
+      <div class="score">{{ match.home_score }} - {{ match.away_score }}</div>
+    {% else %}
+      <div class="score pending">vs</div>
+    {% endif %}
+    <div class="away">{{ match.away_team }} {{ match.away_flag }}</div>
+  </div>
+  <div class="pred">
+    预测：<strong>{{ match.pred_home }} - {{ match.pred_away }}</strong>
+    <span class="prob"> | 主胜 {{ match.prob_home_pct }}% · 平 {{ match.prob_draw_pct }}% · 客胜 {{ match.prob_away_pct }}%</span>
+  </div>
+  {% if match.status == 'FINISHED' %}
+    <div class="status">
+      {% if match.outcome_hit %}<span class="hit">✅ 胜负命中</span>{% else %}<span class="miss">❌ 胜负未中</span>{% endif %}
+      {% if match.score_hit %}<span class="hit">✅ 比分命中</span>{% else %}<span class="miss">❌ 比分未中</span>{% endif %}
+    </div>
+  {% else %}
+    <div class="status">⏳ 未开始</div>
+  {% endif %}
+</div>
+{% endfor %}
+
+<footer>
+  数据：football-data.org · 历史：martj42/international_results · 模型：Elo + Poisson<br>
+  这是一个学习项目，预测仅供娱乐。
+</footer>
+
+<script>
+  const buttons = document.querySelectorAll('.filter-btn');
+  const matches = document.querySelectorAll('.match');
+  buttons.forEach(btn => btn.addEventListener('click', () => {
+    buttons.forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    const f = btn.dataset.filter;
+    matches.forEach(m => {
+      let show = true;
+      if (f === 'group') show = m.dataset.stage === 'group';
+      else if (f === 'knockout') show = m.dataset.stage === 'knockout';
+      else if (f === 'finished') show = m.dataset.status === 'finished';
+      else if (f === 'upcoming') show = m.dataset.status === 'upcoming';
+      m.style.display = show ? '' : 'none';
+    });
+  }));
+</script>
+</body>
+</html>

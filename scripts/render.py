@@ -10,6 +10,7 @@ from zoneinfo import ZoneInfo
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 
 from wc2026.db import get_connection
+from wc2026.team_names_cn import to_chinese
 
 FLAGS = {
     "Germany": "🇩🇪", "Curaçao": "🇨🇼", "Brazil": "🇧🇷", "Argentina": "🇦🇷",
@@ -75,8 +76,8 @@ def build_match_view(row: dict[str, Any]) -> dict[str, Any]:
         "stage_label": STAGE_LABELS.get(row["stage"], row["stage"]),
         "group_code": row["group_code"],
         "venue": row["venue"],
-        "home_team": row["home_team"],
-        "away_team": row["away_team"],
+        "home_team": to_chinese(row["home_team"]),
+        "away_team": to_chinese(row["away_team"]),
         "home_flag": FLAGS.get(row["home_team"], "🏳"),
         "away_flag": FLAGS.get(row["away_team"], "🏳"),
         "status": row["status"] if is_finished else "UPCOMING",

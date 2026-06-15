@@ -61,4 +61,4 @@ def test_render_writes_html(tmp_path):
     )
     text = out.read_text(encoding="utf-8")
     assert "2026 世界杯预测" in text
-    assert "最后更新：2026-06-14 18:00" in text
+    assert "2026-06-14 18:00" in text

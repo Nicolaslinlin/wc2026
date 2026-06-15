@@ -50,7 +50,20 @@
     -webkit-text-fill-color: transparent;
     margin-bottom: 6px;
   }
-  header .subtitle { color: var(--muted); font-size: 0.9rem; font-weight: 500; }
+  header .subtitle { color: var(--muted); font-size: 0.85rem; font-weight: 500; line-height: 1.8; }
+  header .subtitle strong { color: var(--text); font-weight: 600; }
+  header .sub-tag {
+    display: inline-block;
+    background: rgba(99, 102, 241, 0.18);
+    color: var(--accent-light);
+    padding: 1px 8px;
+    border-radius: 5px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    margin-right: 6px;
+    vertical-align: middle;
+  }
   header .updated {
     display: inline-block; margin-top: 12px;
     color: var(--muted); font-size: 0.8rem;
@@ -203,7 +216,10 @@
   <header>
     <span class="trophy">🏆</span>
     <h1>2026 世界杯预测</h1>
-    <div class="subtitle">Elo + 泊松 + Dixon-Coles · 每 20 分钟刷新</div>
+    <div class="subtitle">
+      <div><span class="sub-tag">模型</span> Elo + 泊松 + Dixon-Coles</div>
+      <div><span class="sub-tag">刷新</span> 比分 <strong>20 分钟</strong> · 盘口 <strong>20 分 / 3 小时 / 8 小时</strong>（按距开赛分级）</div>
+    </div>
     <div class="updated">最后更新 · {{ updated_at }}</div>
   </header>
 

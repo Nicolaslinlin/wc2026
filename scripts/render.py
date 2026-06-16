@@ -116,14 +116,114 @@ def build_match_view(row: dict[str, Any]) -> dict[str, Any]:
     }
 
 
+def compute_stats(rows: list[dict]) -> dict:
+    """Aggregate model + market outcome/score hit rates across finished matches."""
+    finished_total = 0
+    model_outcome_hits = 0
+    model_score_hits = 0
+    market_total = 0
+    market_outcome_hits = 0
+    market_score_hits = 0
+
+    for r in rows:
+        if r.get("status") != "FINISHED" or r.get("home_score") is None:
+            continue
+        finished_total += 1
+        actual = _outcome(r["home_score"], r["away_score"])
+        m = _outcome(r["pred_home_score"], r["pred_away_score"])
+        if actual == m:
+            model_outcome_hits += 1
+        if r["home_score"] == r["pred_home_score"] and r["away_score"] == r["pred_away_score"]:
+            model_score_hits += 1
+        if r.get("mkt_home_score") is not None:
+            market_total += 1
+            mkt = _outcome(r["mkt_home_score"], r["mkt_away_score"])
+            if actual == mkt:
+                market_outcome_hits += 1
+            if r["home_score"] == r["mkt_home_score"] and r["away_score"] == r["mkt_away_score"]:
+                market_score_hits += 1
+
+    def pct(num, denom):
+        return round(num * 100 / denom) if denom else 0
+
+    return {
+        "finished_total": finished_total,
+        "model_outcome_hit_pct": pct(model_outcome_hits, finished_total),
+        "model_score_hit_pct": pct(model_score_hits, finished_total),
+        "market_total": market_total,
+        "market_outcome_hit_pct": pct(market_outcome_hits, market_total),
+        "market_score_hit_pct": pct(market_score_hits, market_total),
+    }
+
+
+def build_timeline(rows: list[dict]) -> list[dict]:
+    """Cumulative model/market outcome hit rate per finished match (chronological)."""
+    finished = [
+        r for r in rows
+        if r.get("status") == "FINISHED" and r.get("home_score") is not None
+    ]
+    finished.sort(key=lambda r: r["utc_kickoff"])
+
+    model_hits = 0
+    market_hits = 0
+    market_count = 0
+    timeline = []
+    for i, r in enumerate(finished, start=1):
+        actual = _outcome(r["home_score"], r["away_score"])
+        m = _outcome(r["pred_home_score"], r["pred_away_score"])
+        if actual == m:
+            model_hits += 1
+        if r.get("mkt_home_score") is not None:
+            market_count += 1
+            mkt = _outcome(r["mkt_home_score"], r["mkt_away_score"])
+            if actual == mkt:
+                market_hits += 1
+        timeline.append({
+            "model_rate": model_hits / i,
+            "market_rate": (market_hits / market_count) if market_count else None,
+        })
+    return timeline
+
+
+def timeline_to_svg_paths(timeline: list[dict], width: int = 320, height: int = 80) -> dict:
+    """Build SVG polyline `points` strings for model + market sparklines."""
+    if len(timeline) < 1:
+        return {"model": "", "market": "", "n": 0}
+    n = len(timeline)
+    step = width / max(n - 1, 1) if n > 1 else 0
+
+    def y(rate):
+        return round(height - rate * height, 2)
+
+    model_pts = " ".join(
+        f"{round(i * step, 2)},{y(t['model_rate'])}" for i, t in enumerate(timeline)
+    )
+    market_pts = " ".join(
+        f"{round(i * step, 2)},{y(t['market_rate'])}"
+        for i, t in enumerate(timeline) if t["market_rate"] is not None
+    )
+    return {"model": model_pts, "market": market_pts, "n": n}
+
+
 def render(matches: list[dict], updated_at: str, out_path: Path,
-           template_dir: Path) -> None:
+           template_dir: Path,
+           stats: dict | None = None,
+           sparkline: dict | None = None) -> None:
     env = Environment(
         loader=FileSystemLoader(template_dir),
         autoescape=select_autoescape(["html"]),
     )
+    empty_stats = {
+        "finished_total": 0, "model_outcome_hit_pct": 0, "model_score_hit_pct": 0,
+        "market_total": 0, "market_outcome_hit_pct": 0, "market_score_hit_pct": 0,
+    }
     template = env.get_template("index.html.j2")
-    html = template.render(matches=matches, updated_at=updated_at)
+    html = template.render(
+        matches=matches,
+        updated_at=updated_at,
+        stats=stats or empty_stats,
+        sparkline=sparkline or {"model": "", "market": "", "n": 0},
+    )
     out_path.parent.mkdir(parents=True, exist_ok=True)
     out_path.write_text(html, encoding="utf-8")
 
@@ -151,10 +251,13 @@ def main() -> int:
             """
         ).fetchall()
 
-    matches = [build_match_view(dict(r)) for r in rows
-               if r["pred_home_score"] is not None]
+    dict_rows = [dict(r) for r in rows if r["pred_home_score"] is not None]
+    stats = compute_stats(dict_rows)
+    timeline = build_timeline(dict_rows)
+    sparkline = timeline_to_svg_paths(timeline)
+    matches = [build_match_view(r) for r in dict_rows]
     updated = datetime.now(ZoneInfo("Asia/Tokyo")).strftime("%Y-%m-%d %H:%M JST")
-    render(matches, updated, out_path, template_dir)
+    render(matches, updated, out_path, template_dir, stats=stats, sparkline=sparkline)
     print(f"Rendered {len(matches)} matches to {out_path}")
     return 0
 

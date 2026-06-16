@@ -50,12 +50,105 @@
     -webkit-text-fill-color: transparent;
     margin-bottom: 6px;
   }
-  header .subtitle { color: var(--muted); font-size: 0.9rem; font-weight: 500; }
+  header .subtitle { color: var(--muted); font-size: 0.85rem; font-weight: 500; line-height: 1.8; }
+  header .subtitle strong { color: var(--text); font-weight: 600; }
+  header .sub-tag {
+    display: inline-block;
+    background: rgba(99, 102, 241, 0.18);
+    color: var(--accent-light);
+    padding: 1px 8px;
+    border-radius: 5px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    margin-right: 6px;
+    vertical-align: middle;
+  }
   header .updated {
     display: inline-block; margin-top: 12px;
     color: var(--muted); font-size: 0.8rem;
     padding: 4px 12px; background: rgba(99, 102, 241, 0.1);
     border-radius: 12px; border: 1px solid rgba(99, 102, 241, 0.2);
+  }
+
+  /* Stats dashboard */
+  .dashboard {
+    background: rgba(30, 41, 59, 0.6);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 16px;
+    margin-bottom: 20px;
+    backdrop-filter: blur(8px);
+  }
+  .dashboard-title {
+    font-size: 0.75rem; font-weight: 700; letter-spacing: 0.08em;
+    text-transform: uppercase; color: var(--muted); margin-bottom: 12px;
+  }
+  .stat-grid {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px;
+  }
+  .stat {
+    background: rgba(15, 23, 42, 0.5);
+    border-radius: 10px; padding: 10px 12px;
+  }
+  .stat .stat-label {
+    font-size: 0.7rem; color: var(--muted); margin-bottom: 4px;
+    font-weight: 500;
+  }
+  .stat .stat-value {
+    font-size: 1.6rem; font-weight: 800; line-height: 1;
+    font-variant-numeric: tabular-nums;
+  }
+  .stat.model .stat-value { color: var(--accent-light); }
+  .stat.market .stat-value { color: #fbbf24; }
+  .stat .stat-sample {
+    font-size: 0.7rem; color: var(--muted); margin-top: 4px;
+  }
+  .sparkline-wrap {
+    margin-top: 14px; padding-top: 12px;
+    border-top: 1px solid var(--border);
+  }
+  .sparkline-legend {
+    display: flex; gap: 14px; font-size: 0.72rem;
+    color: var(--muted); margin-bottom: 8px;
+  }
+  .legend-dot {
+    display: inline-block; width: 10px; height: 3px;
+    border-radius: 2px; vertical-align: middle; margin-right: 4px;
+  }
+  .legend-dot.model { background: var(--accent-light); }
+  .legend-dot.market { background: #fbbf24; }
+  .sparkline {
+    width: 100%; height: 80px; display: block;
+    overflow: visible;
+  }
+  .sparkline .grid { stroke: rgba(148, 163, 184, 0.12); stroke-width: 1; }
+  .sparkline .axis-label {
+    fill: var(--muted); font-size: 9px; font-family: inherit;
+  }
+  .sparkline .line-model {
+    fill: none; stroke: var(--accent-light); stroke-width: 2;
+    stroke-linecap: round; stroke-linejoin: round;
+  }
+  .sparkline .line-market {
+    fill: none; stroke: #fbbf24; stroke-width: 2;
+    stroke-linecap: round; stroke-linejoin: round;
+    stroke-dasharray: 4 3;
+  }
+  .dashboard-empty {
+    color: var(--muted); font-size: 0.85rem; text-align: center;
+    padding: 8px 0;
+  }
+  @media (max-width: 600px) {
+    .stat-grid { grid-template-columns: repeat(2, 1fr); }
+    .stat .stat-value { font-size: 1.3rem; }
+  }
+
+  /* Market unavailable placeholder */
+  .pred-row.market-empty .pred-score {
+    background: rgba(148, 163, 184, 0.08);
+    color: var(--muted); font-weight: 500;
+    font-size: 0.78rem;
   }
 
   .filters {
@@ -151,6 +244,11 @@
     background: rgba(99, 102, 241, 0.1); padding: 2px 8px; border-radius: 6px;
     margin: 0 6px;
   }
+  .market-row { margin-top: 6px; }
+  .market-row .pred-label::before { content: '💰 '; }
+  .pred-score.market-score {
+    color: #fbbf24; background: rgba(251, 191, 36, 0.12);
+  }
   .probs {
     display: flex; gap: 12px;
     font-size: 0.78rem; color: var(--muted);
@@ -159,9 +257,15 @@
   .probs strong { color: var(--text); font-weight: 600; }
 
   .status-row {
-    display: flex; gap: 10px; margin-top: 10px;
+    display: flex; flex-wrap: wrap; align-items: center; gap: 6px;
+    margin-top: 10px;
     font-size: 0.78rem; font-weight: 600;
   }
+  .hit-label {
+    color: var(--muted); font-size: 0.72rem; text-transform: uppercase;
+    letter-spacing: 0.06em; margin-right: 2px;
+  }
+  .hit-label.market-label { margin-left: 8px; color: #fbbf24; }
   .tag {
     padding: 3px 10px; border-radius: 6px;
     display: inline-flex; align-items: center; gap: 4px;
@@ -192,9 +296,64 @@
   <header>
     <span class="trophy">🏆</span>
     <h1>2026 世界杯预测</h1>
-    <div class="subtitle">Elo 评分 + 泊松模型 · 数据每 30 分钟更新</div>
-    <div class="updated">最后更新 · 2026-06-15 13:38 JST</div>
+    <div class="subtitle">
+      <div><span class="sub-tag">模型</span> Elo + 泊松 + Dixon-Coles</div>
+      <div><span class="sub-tag">比分</span> 每 <strong>20 分钟</strong> 刷新一次</div>
+      <div>
+        <span class="sub-tag">盘口</span>
+        临赛 3h 内 <strong>20 分钟</strong>
+        · 24h 内 <strong>3 小时</strong>
+        · 其他 <strong>8 小时</strong>
+      </div>
+    </div>
+    <div class="updated">最后更新 · 2026-06-16 09:47 JST</div>
   </header>
+
+  <div class="dashboard">
+    <div class="dashboard-title">📊 累计命中率（已结束 10 场）</div>
+    
+    <div class="stat-grid">
+      <div class="stat model">
+        <div class="stat-label">模型 · 胜负</div>
+        <div class="stat-value">50%</div>
+        <div class="stat-sample">/ 10 场</div>
+      </div>
+      <div class="stat model">
+        <div class="stat-label">模型 · 比分</div>
+        <div class="stat-value">10%</div>
+        <div class="stat-sample">/ 10 场</div>
+      </div>
+      <div class="stat market">
+        <div class="stat-label">市场 · 胜负</div>
+        <div class="stat-value">0%</div>
+        <div class="stat-sample">/ 0 场</div>
+      </div>
+      <div class="stat market">
+        <div class="stat-label">市场 · 比分</div>
+        <div class="stat-value">0%</div>
+        <div class="stat-sample">/ 0 场</div>
+      </div>
+    </div>
+    
+    <div class="sparkline-wrap">
+      <div class="sparkline-legend">
+        <span><span class="legend-dot model"></span>模型胜负命中率</span>
+        <span><span class="legend-dot market"></span>市场胜负命中率</span>
+      </div>
+      <svg class="sparkline" viewBox="0 0 320 80" preserveAspectRatio="none">
+        <line class="grid" x1="0" y1="0" x2="320" y2="0"/>
+        <line class="grid" x1="0" y1="40" x2="320" y2="40"/>
+        <line class="grid" x1="0" y1="80" x2="320" y2="80"/>
+        <text class="axis-label" x="2" y="9">100%</text>
+        <text class="axis-label" x="2" y="44">50%</text>
+        <text class="axis-label" x="2" y="78">0%</text>
+        <polyline class="line-model" points="0.0,0.0 35.56,0.0 71.11,0.0 106.67,20.0 142.22,32.0 177.78,40.0 213.33,45.71 248.89,40.0 284.44,35.56 320.0,40.0"/>
+        
+      </svg>
+    </div>
+    
+    
+  </div>
 
   <div class="filters">
     <button class="filter-btn active" data-filter="all">全部</button>
@@ -244,12 +403,26 @@
     </div>
 
     
+    <div class="pred-row market-row market-empty">
+      <div>
+        <span class="pred-label">市场预测</span>
+        <span class="pred-score">盘口未挂出</span>
+      </div>
+    </div>
+    
+
+    
     <div class="status-row">
+      <span class="hit-label">模型</span>
       
-        <span class="tag hit">✓ 胜负命中</span>
+        <span class="tag hit">✓ 胜负</span>
       
       
-        <span class="tag hit">✓ 比分命中</span>
+        <span class="tag hit">✓ 比分</span>
+      
+      
+        <span class="hit-label market-label">市场</span>
+        <span style="color: var(--muted); font-size: 0.72rem;">无盘口</span>
       
     </div>
     
@@ -294,12 +467,26 @@
     </div>
 
     
+    <div class="pred-row market-row market-empty">
+      <div>
+        <span class="pred-label">市场预测</span>
+        <span class="pred-score">盘口未挂出</span>
+      </div>
+    </div>
+    
+
+    
     <div class="status-row">
+      <span class="hit-label">模型</span>
       
-        <span class="tag hit">✓ 胜负命中</span>
+        <span class="tag hit">✓ 胜负</span>
       
       
-        <span class="tag miss">✗ 比分未中</span>
+        <span class="tag miss">✗ 比分</span>
+      
+      
+        <span class="hit-label market-label">市场</span>
+        <span style="color: var(--muted); font-size: 0.72rem;">无盘口</span>
       
     </div>
     
@@ -342,6 +529,15 @@
         <span>客胜 <strong>9%</strong></span>
       </div>
     </div>
+
+    
+    <div class="pred-row market-row market-empty">
+      <div>
+        <span class="pred-label">市场预测</span>
+        <span class="pred-score">盘口未挂出</span>
+      </div>
+    </div>
+    
 
     
     <div class="status-row">
@@ -389,12 +585,26 @@
     </div>
 
     
+    <div class="pred-row market-row market-empty">
+      <div>
+        <span class="pred-label">市场预测</span>
+        <span class="pred-score">盘口未挂出</span>
+      </div>
+    </div>
+    
+
+    
     <div class="status-row">
+      <span class="hit-label">模型</span>
       
-        <span class="tag hit">✓ 胜负命中</span>
+        <span class="tag hit">✓ 胜负</span>
       
       
-        <span class="tag miss">✗ 比分未中</span>
+        <span class="tag miss">✗ 比分</span>
+      
+      
+        <span class="hit-label market-label">市场</span>
+        <span style="color: var(--muted); font-size: 0.72rem;">无盘口</span>
       
     </div>
     
@@ -439,12 +649,26 @@
     </div>
 
     
+    <div class="pred-row market-row market-empty">
+      <div>
+        <span class="pred-label">市场预测</span>
+        <span class="pred-score">盘口未挂出</span>
+      </div>
+    </div>
+    
+
+    
     <div class="status-row">
+      <span class="hit-label">模型</span>
       
-        <span class="tag miss">✗ 胜负未中</span>
+        <span class="tag miss">✗ 胜负</span>
       
       
-        <span class="tag miss">✗ 比分未中</span>
+        <span class="tag miss">✗ 比分</span>
+      
+      
+        <span class="hit-label market-label">市场</span>
+        <span style="color: var(--muted); font-size: 0.72rem;">无盘口</span>
       
     </div>
     
@@ -489,12 +713,26 @@
     </div>
 
     
+    <div class="pred-row market-row market-empty">
+      <div>
+        <span class="pred-label">市场预测</span>
+        <span class="pred-score">盘口未挂出</span>
+      </div>
+    </div>
+    
+
+    
     <div class="status-row">
+      <span class="hit-label">模型</span>
       
-        <span class="tag miss">✗ 胜负未中</span>
+        <span class="tag miss">✗ 胜负</span>
       
       
-        <span class="tag miss">✗ 比分未中</span>
+        <span class="tag miss">✗ 比分</span>
+      
+      
+        <span class="hit-label market-label">市场</span>
+        <span style="color: var(--muted); font-size: 0.72rem;">无盘口</span>
       
     </div>
     
@@ -512,8 +750,8 @@
 
     <div class="teams">
       <div class="team home">
-        <span class="name">Haiti</span>
-        <span class="flag">🏳</span>
+        <span class="name">海地</span>
+        <span class="flag">🇭🇹</span>
       </div>
       <div class="score-box actual-box">
         
@@ -539,12 +777,26 @@
     </div>
 
     
+    <div class="pred-row market-row market-empty">
+      <div>
+        <span class="pred-label">市场预测</span>
+        <span class="pred-score">盘口未挂出</span>
+      </div>
+    </div>
+    
+
+    
     <div class="status-row">
+      <span class="hit-label">模型</span>
       
-        <span class="tag miss">✗ 胜负未中</span>
+        <span class="tag miss">✗ 胜负</span>
       
       
-        <span class="tag miss">✗ 比分未中</span>
+        <span class="tag miss">✗ 比分</span>
+      
+      
+        <span class="hit-label market-label">市场</span>
+        <span style="color: var(--muted); font-size: 0.72rem;">无盘口</span>
       
     </div>
     
@@ -589,12 +841,26 @@
     </div>
 
     
+    <div class="pred-row market-row market-empty">
+      <div>
+        <span class="pred-label">市场预测</span>
+        <span class="pred-score">盘口未挂出</span>
+      </div>
+    </div>
+    
+
+    
     <div class="status-row">
+      <span class="hit-label">模型</span>
       
-        <span class="tag miss">✗ 胜负未中</span>
+        <span class="tag miss">✗ 胜负</span>
       
       
-        <span class="tag miss">✗ 比分未中</span>
+        <span class="tag miss">✗ 比分</span>
+      
+      
+        <span class="hit-label market-label">市场</span>
+        <span style="color: var(--muted); font-size: 0.72rem;">无盘口</span>
       
     </div>
     
@@ -639,12 +905,26 @@
     </div>
 
     
+    <div class="pred-row market-row market-empty">
+      <div>
+        <span class="pred-label">市场预测</span>
+        <span class="pred-score">盘口未挂出</span>
+      </div>
+    </div>
+    
+
+    
     <div class="status-row">
+      <span class="hit-label">模型</span>
       
-        <span class="tag hit">✓ 胜负命中</span>
+        <span class="tag hit">✓ 胜负</span>
       
       
-        <span class="tag miss">✗ 比分未中</span>
+        <span class="tag miss">✗ 比分</span>
+      
+      
+        <span class="hit-label market-label">市场</span>
+        <span style="color: var(--muted); font-size: 0.72rem;">无盘口</span>
       
     </div>
     
@@ -689,12 +969,26 @@
     </div>
 
     
+    <div class="pred-row market-row market-empty">
+      <div>
+        <span class="pred-label">市场预测</span>
+        <span class="pred-score">盘口未挂出</span>
+      </div>
+    </div>
+    
+
+    
     <div class="status-row">
+      <span class="hit-label">模型</span>
       
-        <span class="tag hit">✓ 胜负命中</span>
+        <span class="tag hit">✓ 胜负</span>
       
       
-        <span class="tag miss">✗ 比分未中</span>
+        <span class="tag miss">✗ 比分</span>
+      
+      
+        <span class="hit-label market-label">市场</span>
+        <span style="color: var(--muted); font-size: 0.72rem;">无盘口</span>
       
     </div>
     
@@ -739,12 +1033,26 @@
     </div>
 
     
+    <div class="pred-row market-row market-empty">
+      <div>
+        <span class="pred-label">市场预测</span>
+        <span class="pred-score">盘口未挂出</span>
+      </div>
+    </div>
+    
+
+    
     <div class="status-row">
+      <span class="hit-label">模型</span>
       
-        <span class="tag miss">✗ 胜负未中</span>
+        <span class="tag miss">✗ 胜负</span>
       
       
-        <span class="tag miss">✗ 比分未中</span>
+        <span class="tag miss">✗ 比分</span>
+      
+      
+        <span class="hit-label market-label">市场</span>
+        <span style="color: var(--muted); font-size: 0.72rem;">无盘口</span>
       
     </div>
     
@@ -787,6 +1095,15 @@
         <span>客胜 <strong>47%</strong></span>
       </div>
     </div>
+
+    
+    <div class="pred-row market-row market-empty">
+      <div>
+        <span class="pred-label">市场预测</span>
+        <span class="pred-score">盘口未挂出</span>
+      </div>
+    </div>
+    
 
     
     <div class="status-row">
@@ -834,6 +1151,15 @@
     </div>
 
     
+    <div class="pred-row market-row market-empty">
+      <div>
+        <span class="pred-label">市场预测</span>
+        <span class="pred-score">盘口未挂出</span>
+      </div>
+    </div>
+    
+
+    
     <div class="status-row">
       <span class="tag upcoming">⏳ 未开始</span>
     </div>
@@ -877,6 +1203,15 @@
         <span>客胜 <strong>33%</strong></span>
       </div>
     </div>
+
+    
+    <div class="pred-row market-row market-empty">
+      <div>
+        <span class="pred-label">市场预测</span>
+        <span class="pred-score">盘口未挂出</span>
+      </div>
+    </div>
+    
 
     
     <div class="status-row">
@@ -924,6 +1259,15 @@
     </div>
 
     
+    <div class="pred-row market-row market-empty">
+      <div>
+        <span class="pred-label">市场预测</span>
+        <span class="pred-score">盘口未挂出</span>
+      </div>
+    </div>
+    
+
+    
     <div class="status-row">
       <span class="tag upcoming">⏳ 未开始</span>
     </div>
@@ -967,6 +1311,15 @@
         <span>客胜 <strong>7%</strong></span>
       </div>
     </div>
+
+    
+    <div class="pred-row market-row market-empty">
+      <div>
+        <span class="pred-label">市场预测</span>
+        <span class="pred-score">盘口未挂出</span>
+      </div>
+    </div>
+    
 
     
     <div class="status-row">
@@ -1014,6 +1367,15 @@
     </div>
 
     
+    <div class="pred-row market-row market-empty">
+      <div>
+        <span class="pred-label">市场预测</span>
+        <span class="pred-score">盘口未挂出</span>
+      </div>
+    </div>
+    
+
+    
     <div class="status-row">
       <span class="tag upcoming">⏳ 未开始</span>
     </div>
@@ -1057,6 +1419,15 @@
         <span>客胜 <strong>66%</strong></span>
       </div>
     </div>
+
+    
+    <div class="pred-row market-row market-empty">
+      <div>
+        <span class="pred-label">市场预测</span>
+        <span class="pred-score">盘口未挂出</span>
+      </div>
+    </div>
+    
 
     
     <div class="status-row">
@@ -1104,6 +1475,15 @@
     </div>
 
     
+    <div class="pred-row market-row market-empty">
+      <div>
+        <span class="pred-label">市场预测</span>
+        <span class="pred-score">盘口未挂出</span>
+      </div>
+    </div>
+    
+
+    
     <div class="status-row">
       <span class="tag upcoming">⏳ 未开始</span>
     </div>
@@ -1147,6 +1527,15 @@
         <span>客胜 <strong>21%</strong></span>
       </div>
     </div>
+
+    
+    <div class="pred-row market-row market-empty">
+      <div>
+        <span class="pred-label">市场预测</span>
+        <span class="pred-score">盘口未挂出</span>
+      </div>
+    </div>
+    
 
     
     <div class="status-row">
@@ -1194,6 +1583,15 @@
     </div>
 
     
+    <div class="pred-row market-row market-empty">
+      <div>
+        <span class="pred-label">市场预测</span>
+        <span class="pred-score">盘口未挂出</span>
+      </div>
+    </div>
+    
+
+    
     <div class="status-row">
       <span class="tag upcoming">⏳ 未开始</span>
     </div>
@@ -1237,6 +1635,15 @@
         <span>客胜 <strong>17%</strong></span>
       </div>
     </div>
+
+    
+    <div class="pred-row market-row market-empty">
+      <div>
+        <span class="pred-label">市场预测</span>
+        <span class="pred-score">盘口未挂出</span>
+      </div>
+    </div>
+    
 
     
     <div class="status-row">
@@ -1284,6 +1691,15 @@
     </div>
 
     
+    <div class="pred-row market-row market-empty">
+      <div>
+        <span class="pred-label">市场预测</span>
+        <span class="pred-score">盘口未挂出</span>
+      </div>
+    </div>
+    
+
+    
     <div class="status-row">
       <span class="tag upcoming">⏳ 未开始</span>
     </div>
@@ -1327,6 +1743,15 @@
         <span>客胜 <strong>51%</strong></span>
       </div>
     </div>
+
+    
+    <div class="pred-row market-row market-empty">
+      <div>
+        <span class="pred-label">市场预测</span>
+        <span class="pred-score">盘口未挂出</span>
+      </div>
+    </div>
+    
 
     
     <div class="status-row">
@@ -1374,6 +1799,15 @@
     </div>
 
     
+    <div class="pred-row market-row market-empty">
+      <div>
+        <span class="pred-label">市场预测</span>
+        <span class="pred-score">盘口未挂出</span>
+      </div>
+    </div>
+    
+
+    
     <div class="status-row">
       <span class="tag upcoming">⏳ 未开始</span>
     </div>
@@ -1417,6 +1851,15 @@
         <span>客胜 <strong>9%</strong></span>
       </div>
     </div>
+
+    
+    <div class="pred-row market-row market-empty">
+      <div>
+        <span class="pred-label">市场预测</span>
+        <span class="pred-score">盘口未挂出</span>
+      </div>
+    </div>
+    
 
     
     <div class="status-row">
@@ -1464,6 +1907,15 @@
     </div>
 
     
+    <div class="pred-row market-row market-empty">
+      <div>
+        <span class="pred-label">市场预测</span>
+        <span class="pred-score">盘口未挂出</span>
+      </div>
+    </div>
+    
+
+    
     <div class="status-row">
       <span class="tag upcoming">⏳ 未开始</span>
     </div>
@@ -1507,6 +1959,15 @@
         <span>客胜 <strong>29%</strong></span>
       </div>
     </div>
+
+    
+    <div class="pred-row market-row market-empty">
+      <div>
+        <span class="pred-label">市场预测</span>
+        <span class="pred-score">盘口未挂出</span>
+      </div>
+    </div>
+    
 
     
     <div class="status-row">
@@ -1554,6 +2015,15 @@
     </div>
 
     
+    <div class="pred-row market-row market-empty">
+      <div>
+        <span class="pred-label">市场预测</span>
+        <span class="pred-score">盘口未挂出</span>
+      </div>
+    </div>
+    
+
+    
     <div class="status-row">
       <span class="tag upcoming">⏳ 未开始</span>
     </div>
@@ -1599,6 +2069,15 @@
     </div>
 
     
+    <div class="pred-row market-row market-empty">
+      <div>
+        <span class="pred-label">市场预测</span>
+        <span class="pred-score">盘口未挂出</span>
+      </div>
+    </div>
+    
+
+    
     <div class="status-row">
       <span class="tag upcoming">⏳ 未开始</span>
     </div>
@@ -1626,8 +2105,8 @@
         
       </div>
       <div class="team away">
-        <span class="flag">🏳</span>
-        <span class="name">Haiti</span>
+        <span class="flag">🇭🇹</span>
+        <span class="name">海地</span>
       </div>
     </div>
 
@@ -1642,6 +2121,15 @@
         <span>客胜 <strong>11%</strong></span>
       </div>
     </div>
+
+    
+    <div class="pred-row market-row market-empty">
+      <div>
+        <span class="pred-label">市场预测</span>
+        <span class="pred-score">盘口未挂出</span>
+      </div>
+    </div>
+    
 
     
     <div class="status-row">
@@ -1689,6 +2177,15 @@
     </div>
 
     
+    <div class="pred-row market-row market-empty">
+      <div>
+        <span class="pred-label">市场预测</span>
+        <span class="pred-score">盘口未挂出</span>
+      </div>
+    </div>
+    
+
+    
     <div class="status-row">
       <span class="tag upcoming">⏳ 未开始</span>
     </div>
@@ -1732,6 +2229,15 @@
         <span>客胜 <strong>13%</strong></span>
       </div>
     </div>
+
+    
+    <div class="pred-row market-row market-empty">
+      <div>
+        <span class="pred-label">市场预测</span>
+        <span class="pred-score">盘口未挂出</span>
+      </div>
+    </div>
+    
 
     
     <div class="status-row">
@@ -1779,6 +2285,15 @@
     </div>
 
     
+    <div class="pred-row market-row market-empty">
+      <div>
+        <span class="pred-label">市场预测</span>
+        <span class="pred-score">盘口未挂出</span>
+      </div>
+    </div>
+    
+
+    
     <div class="status-row">
       <span class="tag upcoming">⏳ 未开始</span>
     </div>
@@ -1822,6 +2337,15 @@
         <span>客胜 <strong>17%</strong></span>
       </div>
     </div>
+
+    
+    <div class="pred-row market-row market-empty">
+      <div>
+        <span class="pred-label">市场预测</span>
+        <span class="pred-score">盘口未挂出</span>
+      </div>
+    </div>
+    
 
     
     <div class="status-row">
@@ -1869,6 +2393,15 @@
     </div>
 
     
+    <div class="pred-row market-row market-empty">
+      <div>
+        <span class="pred-label">市场预测</span>
+        <span class="pred-score">盘口未挂出</span>
+      </div>
+    </div>
+    
+
+    
     <div class="status-row">
       <span class="tag upcoming">⏳ 未开始</span>
     </div>
@@ -1912,6 +2445,15 @@
         <span>客胜 <strong>6%</strong></span>
       </div>
     </div>
+
+    
+    <div class="pred-row market-row market-empty">
+      <div>
+        <span class="pred-label">市场预测</span>
+        <span class="pred-score">盘口未挂出</span>
+      </div>
+    </div>
+    
 
     
     <div class="status-row">
@@ -1959,6 +2501,15 @@
     </div>
 
     
+    <div class="pred-row market-row market-empty">
+      <div>
+        <span class="pred-label">市场预测</span>
+        <span class="pred-score">盘口未挂出</span>
+      </div>
+    </div>
+    
+
+    
     <div class="status-row">
       <span class="tag upcoming">⏳ 未开始</span>
     </div>
@@ -2002,6 +2553,15 @@
         <span>客胜 <strong>16%</strong></span>
       </div>
     </div>
+
+    
+    <div class="pred-row market-row market-empty">
+      <div>
+        <span class="pred-label">市场预测</span>
+        <span class="pred-score">盘口未挂出</span>
+      </div>
+    </div>
+    
 
     
     <div class="status-row">
@@ -2049,6 +2609,15 @@
     </div>
 
     
+    <div class="pred-row market-row market-empty">
+      <div>
+        <span class="pred-label">市场预测</span>
+        <span class="pred-score">盘口未挂出</span>
+      </div>
+    </div>
+    
+
+    
     <div class="status-row">
       <span class="tag upcoming">⏳ 未开始</span>
     </div>
@@ -2092,6 +2661,15 @@
         <span>客胜 <strong>21%</strong></span>
       </div>
     </div>
+
+    
+    <div class="pred-row market-row market-empty">
+      <div>
+        <span class="pred-label">市场预测</span>
+        <span class="pred-score">盘口未挂出</span>
+      </div>
+    </div>
+    
 
     
     <div class="status-row">
@@ -2139,6 +2717,15 @@
     </div>
 
     
+    <div class="pred-row market-row market-empty">
+      <div>
+        <span class="pred-label">市场预测</span>
+        <span class="pred-score">盘口未挂出</span>
+      </div>
+    </div>
+    
+
+    
     <div class="status-row">
       <span class="tag upcoming">⏳ 未开始</span>
     </div>
@@ -2182,6 +2769,15 @@
         <span>客胜 <strong>39%</strong></span>
       </div>
     </div>
+
+    
+    <div class="pred-row market-row market-empty">
+      <div>
+        <span class="pred-label">市场预测</span>
+        <span class="pred-score">盘口未挂出</span>
+      </div>
+    </div>
+    
 
     
     <div class="status-row">
@@ -2229,6 +2825,15 @@
     </div>
 
     
+    <div class="pred-row market-row market-empty">
+      <div>
+        <span class="pred-label">市场预测</span>
+        <span class="pred-score">盘口未挂出</span>
+      </div>
+    </div>
+    
+
+    
     <div class="status-row">
       <span class="tag upcoming">⏳ 未开始</span>
     </div>
@@ -2272,6 +2877,15 @@
         <span>客胜 <strong>22%</strong></span>
       </div>
     </div>
+
+    
+    <div class="pred-row market-row market-empty">
+      <div>
+        <span class="pred-label">市场预测</span>
+        <span class="pred-score">盘口未挂出</span>
+      </div>
+    </div>
+    
 
     
     <div class="status-row">
@@ -2319,6 +2933,15 @@
     </div>
 
     
+    <div class="pred-row market-row market-empty">
+      <div>
+        <span class="pred-label">市场预测</span>
+        <span class="pred-score">盘口未挂出</span>
+      </div>
+    </div>
+    
+
+    
     <div class="status-row">
       <span class="tag upcoming">⏳ 未开始</span>
     </div>
@@ -2362,6 +2985,15 @@
         <span>客胜 <strong>38%</strong></span>
       </div>
     </div>
+
+    
+    <div class="pred-row market-row market-empty">
+      <div>
+        <span class="pred-label">市场预测</span>
+        <span class="pred-score">盘口未挂出</span>
+      </div>
+    </div>
+    
 
     
     <div class="status-row">
@@ -2409,6 +3041,15 @@
     </div>
 
     
+    <div class="pred-row market-row market-empty">
+      <div>
+        <span class="pred-label">市场预测</span>
+        <span class="pred-score">盘口未挂出</span>
+      </div>
+    </div>
+    
+
+    
     <div class="status-row">
       <span class="tag upcoming">⏳ 未开始</span>
     </div>
@@ -2452,6 +3093,15 @@
         <span>客胜 <strong>36%</strong></span>
       </div>
     </div>
+
+    
+    <div class="pred-row market-row market-empty">
+      <div>
+        <span class="pred-label">市场预测</span>
+        <span class="pred-score">盘口未挂出</span>
+      </div>
+    </div>
+    
 
     
     <div class="status-row">
@@ -2499,6 +3149,15 @@
     </div>
 
     
+    <div class="pred-row market-row market-empty">
+      <div>
+        <span class="pred-label">市场预测</span>
+        <span class="pred-score">盘口未挂出</span>
+      </div>
+    </div>
+    
+
+    
     <div class="status-row">
       <span class="tag upcoming">⏳ 未开始</span>
     </div>
@@ -2544,6 +3203,15 @@
     </div>
 
     
+    <div class="pred-row market-row market-empty">
+      <div>
+        <span class="pred-label">市场预测</span>
+        <span class="pred-score">盘口未挂出</span>
+      </div>
+    </div>
+    
+
+    
     <div class="status-row">
       <span class="tag upcoming">⏳ 未开始</span>
     </div>
@@ -2571,8 +3239,8 @@
         
       </div>
       <div class="team away">
-        <span class="flag">🏳</span>
-        <span class="name">Haiti</span>
+        <span class="flag">🇭🇹</span>
+        <span class="name">海地</span>
       </div>
     </div>
 
@@ -2587,6 +3255,15 @@
         <span>客胜 <strong>2%</strong></span>
       </div>
     </div>
+
+    
+    <div class="pred-row market-row market-empty">
+      <div>
+        <span class="pred-label">市场预测</span>
+        <span class="pred-score">盘口未挂出</span>
+      </div>
+    </div>
+    
 
     
     <div class="status-row">
@@ -2634,6 +3311,15 @@
     </div>
 
     
+    <div class="pred-row market-row market-empty">
+      <div>
+        <span class="pred-label">市场预测</span>
+        <span class="pred-score">盘口未挂出</span>
+      </div>
+    </div>
+    
+
+    
     <div class="status-row">
       <span class="tag upcoming">⏳ 未开始</span>
     </div>
@@ -2677,6 +3363,15 @@
         <span>客胜 <strong>64%</strong></span>
       </div>
     </div>
+
+    
+    <div class="pred-row market-row market-empty">
+      <div>
+        <span class="pred-label">市场预测</span>
+        <span class="pred-score">盘口未挂出</span>
+      </div>
+    </div>
+    
 
     
     <div class="status-row">
@@ -2724,6 +3419,15 @@
     </div>
 
     
+    <div class="pred-row market-row market-empty">
+      <div>
+        <span class="pred-label">市场预测</span>
+        <span class="pred-score">盘口未挂出</span>
+      </div>
+    </div>
+    
+
+    
     <div class="status-row">
       <span class="tag upcoming">⏳ 未开始</span>
     </div>
@@ -2767,6 +3471,15 @@
         <span>客胜 <strong>31%</strong></span>
       </div>
     </div>
+
+    
+    <div class="pred-row market-row market-empty">
+      <div>
+        <span class="pred-label">市场预测</span>
+        <span class="pred-score">盘口未挂出</span>
+      </div>
+    </div>
+    
 
     
     <div class="status-row">
@@ -2814,6 +3527,15 @@
     </div>
 
     
+    <div class="pred-row market-row market-empty">
+      <div>
+        <span class="pred-label">市场预测</span>
+        <span class="pred-score">盘口未挂出</span>
+      </div>
+    </div>
+    
+
+    
     <div class="status-row">
       <span class="tag upcoming">⏳ 未开始</span>
     </div>
@@ -2857,6 +3579,15 @@
         <span>客胜 <strong>6%</strong></span>
       </div>
     </div>
+
+    
+    <div class="pred-row market-row market-empty">
+      <div>
+        <span class="pred-label">市场预测</span>
+        <span class="pred-score">盘口未挂出</span>
+      </div>
+    </div>
+    
 
     
     <div class="status-row">
@@ -2904,6 +3635,15 @@
     </div>
 
     
+    <div class="pred-row market-row market-empty">
+      <div>
+        <span class="pred-label">市场预测</span>
+        <span class="pred-score">盘口未挂出</span>
+      </div>
+    </div>
+    
+
+    
     <div class="status-row">
       <span class="tag upcoming">⏳ 未开始</span>
     </div>
@@ -2947,6 +3687,15 @@
         <span>客胜 <strong>78%</strong></span>
       </div>
     </div>
+
+    
+    <div class="pred-row market-row market-empty">
+      <div>
+        <span class="pred-label">市场预测</span>
+        <span class="pred-score">盘口未挂出</span>
+      </div>
+    </div>
+    
 
     
     <div class="status-row">
@@ -2994,6 +3743,15 @@
     </div>
 
     
+    <div class="pred-row market-row market-empty">
+      <div>
+        <span class="pred-label">市场预测</span>
+        <span class="pred-score">盘口未挂出</span>
+      </div>
+    </div>
+    
+
+    
     <div class="status-row">
       <span class="tag upcoming">⏳ 未开始</span>
     </div>
@@ -3037,6 +3795,15 @@
         <span>客胜 <strong>13%</strong></span>
       </div>
     </div>
+
+    
+    <div class="pred-row market-row market-empty">
+      <div>
+        <span class="pred-label">市场预测</span>
+        <span class="pred-score">盘口未挂出</span>
+      </div>
+    </div>
+    
 
     
     <div class="status-row">
@@ -3084,6 +3851,15 @@
     </div>
 
     
+    <div class="pred-row market-row market-empty">
+      <div>
+        <span class="pred-label">市场预测</span>
+        <span class="pred-score">盘口未挂出</span>
+      </div>
+    </div>
+    
+
+    
     <div class="status-row">
       <span class="tag upcoming">⏳ 未开始</span>
     </div>
@@ -3127,6 +3903,15 @@
         <span>客胜 <strong>59%</strong></span>
       </div>
     </div>
+
+    
+    <div class="pred-row market-row market-empty">
+      <div>
+        <span class="pred-label">市场预测</span>
+        <span class="pred-score">盘口未挂出</span>
+      </div>
+    </div>
+    
 
     
     <div class="status-row">
@@ -3174,6 +3959,15 @@
     </div>
 
     
+    <div class="pred-row market-row market-empty">
+      <div>
+        <span class="pred-label">市场预测</span>
+        <span class="pred-score">盘口未挂出</span>
+      </div>
+    </div>
+    
+
+    
     <div class="status-row">
       <span class="tag upcoming">⏳ 未开始</span>
     </div>
@@ -3217,6 +4011,15 @@
         <span>客胜 <strong>52%</strong></span>
       </div>
     </div>
+
+    
+    <div class="pred-row market-row market-empty">
+      <div>
+        <span class="pred-label">市场预测</span>
+        <span class="pred-score">盘口未挂出</span>
+      </div>
+    </div>
+    
 
     
     <div class="status-row">
@@ -3264,6 +4067,15 @@
     </div>
 
     
+    <div class="pred-row market-row market-empty">
+      <div>
+        <span class="pred-label">市场预测</span>
+        <span class="pred-score">盘口未挂出</span>
+      </div>
+    </div>
+    
+
+    
     <div class="status-row">
       <span class="tag upcoming">⏳ 未开始</span>
     </div>
@@ -3307,6 +4119,15 @@
         <span>客胜 <strong>15%</strong></span>
       </div>
     </div>
+
+    
+    <div class="pred-row market-row market-empty">
+      <div>
+        <span class="pred-label">市场预测</span>
+        <span class="pred-score">盘口未挂出</span>
+      </div>
+    </div>
+    
 
     
     <div class="status-row">
@@ -3354,6 +4175,15 @@
     </div>
 
     
+    <div class="pred-row market-row market-empty">
+      <div>
+        <span class="pred-label">市场预测</span>
+        <span class="pred-score">盘口未挂出</span>
+      </div>
+    </div>
+    
+
+    
     <div class="status-row">
       <span class="tag upcoming">⏳ 未开始</span>
     </div>
@@ -3397,6 +4227,15 @@
         <span>客胜 <strong>72%</strong></span>
       </div>
     </div>
+
+    
+    <div class="pred-row market-row market-empty">
+      <div>
+        <span class="pred-label">市场预测</span>
+        <span class="pred-score">盘口未挂出</span>
+      </div>
+    </div>
+    
 
     
     <div class="status-row">
@@ -3444,6 +4283,15 @@
     </div>
 
     
+    <div class="pred-row market-row market-empty">
+      <div>
+        <span class="pred-label">市场预测</span>
+        <span class="pred-score">盘口未挂出</span>
+      </div>
+    </div>
+    
+
+    
     <div class="status-row">
       <span class="tag upcoming">⏳ 未开始</span>
     </div>
@@ -3487,6 +4335,15 @@
         <span>客胜 <strong>19%</strong></span>
       </div>
     </div>
+
+    
+    <div class="pred-row market-row market-empty">
+      <div>
+        <span class="pred-label">市场预测</span>
+        <span class="pred-score">盘口未挂出</span>
+      </div>
+    </div>
+    
 
     
     <div class="status-row">

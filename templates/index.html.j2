@@ -71,6 +71,86 @@
     border-radius: 12px; border: 1px solid rgba(99, 102, 241, 0.2);
   }
 
+  /* Stats dashboard */
+  .dashboard {
+    background: rgba(30, 41, 59, 0.6);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 16px;
+    margin-bottom: 20px;
+    backdrop-filter: blur(8px);
+  }
+  .dashboard-title {
+    font-size: 0.75rem; font-weight: 700; letter-spacing: 0.08em;
+    text-transform: uppercase; color: var(--muted); margin-bottom: 12px;
+  }
+  .stat-grid {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px;
+  }
+  .stat {
+    background: rgba(15, 23, 42, 0.5);
+    border-radius: 10px; padding: 10px 12px;
+  }
+  .stat .stat-label {
+    font-size: 0.7rem; color: var(--muted); margin-bottom: 4px;
+    font-weight: 500;
+  }
+  .stat .stat-value {
+    font-size: 1.6rem; font-weight: 800; line-height: 1;
+    font-variant-numeric: tabular-nums;
+  }
+  .stat.model .stat-value { color: var(--accent-light); }
+  .stat.market .stat-value { color: #fbbf24; }
+  .stat .stat-sample {
+    font-size: 0.7rem; color: var(--muted); margin-top: 4px;
+  }
+  .sparkline-wrap {
+    margin-top: 14px; padding-top: 12px;
+    border-top: 1px solid var(--border);
+  }
+  .sparkline-legend {
+    display: flex; gap: 14px; font-size: 0.72rem;
+    color: var(--muted); margin-bottom: 8px;
+  }
+  .legend-dot {
+    display: inline-block; width: 10px; height: 3px;
+    border-radius: 2px; vertical-align: middle; margin-right: 4px;
+  }
+  .legend-dot.model { background: var(--accent-light); }
+  .legend-dot.market { background: #fbbf24; }
+  .sparkline {
+    width: 100%; height: 80px; display: block;
+    overflow: visible;
+  }
+  .sparkline .grid { stroke: rgba(148, 163, 184, 0.12); stroke-width: 1; }
+  .sparkline .axis-label {
+    fill: var(--muted); font-size: 9px; font-family: inherit;
+  }
+  .sparkline .line-model {
+    fill: none; stroke: var(--accent-light); stroke-width: 2;
+    stroke-linecap: round; stroke-linejoin: round;
+  }
+  .sparkline .line-market {
+    fill: none; stroke: #fbbf24; stroke-width: 2;
+    stroke-linecap: round; stroke-linejoin: round;
+    stroke-dasharray: 4 3;
+  }
+  .dashboard-empty {
+    color: var(--muted); font-size: 0.85rem; text-align: center;
+    padding: 8px 0;
+  }
+  @media (max-width: 600px) {
+    .stat-grid { grid-template-columns: repeat(2, 1fr); }
+    .stat .stat-value { font-size: 1.3rem; }
+  }
+
+  /* Market unavailable placeholder */
+  .pred-row.market-empty .pred-score {
+    background: rgba(148, 163, 184, 0.08);
+    color: var(--muted); font-weight: 500;
+    font-size: 0.78rem;
+  }
+
   .filters {
     display: flex; flex-wrap: wrap; gap: 8px;
     margin-bottom: 24px; justify-content: center;
@@ -229,6 +309,56 @@
     <div class="updated">最后更新 · {{ updated_at }}</div>
   </header>
 
+  <div class="dashboard">
+    <div class="dashboard-title">📊 累计命中率（已结束 {{ stats.finished_total }} 场）</div>
+    {% if stats.finished_total > 0 %}
+    <div class="stat-grid">
+      <div class="stat model">
+        <div class="stat-label">模型 · 胜负</div>
+        <div class="stat-value">{{ stats.model_outcome_hit_pct }}%</div>
+        <div class="stat-sample">/ {{ stats.finished_total }} 场</div>
+      </div>
+      <div class="stat model">
+        <div class="stat-label">模型 · 比分</div>
+        <div class="stat-value">{{ stats.model_score_hit_pct }}%</div>
+        <div class="stat-sample">/ {{ stats.finished_total }} 场</div>
+      </div>
+      <div class="stat market">
+        <div class="stat-label">市场 · 胜负</div>
+        <div class="stat-value">{{ stats.market_outcome_hit_pct }}%</div>
+        <div class="stat-sample">/ {{ stats.market_total }} 场</div>
+      </div>
+      <div class="stat market">
+        <div class="stat-label">市场 · 比分</div>
+        <div class="stat-value">{{ stats.market_score_hit_pct }}%</div>
+        <div class="stat-sample">/ {{ stats.market_total }} 场</div>
+      </div>
+    </div>
+    {% if sparkline.n > 1 %}
+    <div class="sparkline-wrap">
+      <div class="sparkline-legend">
+        <span><span class="legend-dot model"></span>模型胜负命中率</span>
+        <span><span class="legend-dot market"></span>市场胜负命中率</span>
+      </div>
+      <svg class="sparkline" viewBox="0 0 320 80" preserveAspectRatio="none">
+        <line class="grid" x1="0" y1="0" x2="320" y2="0"/>
+        <line class="grid" x1="0" y1="40" x2="320" y2="40"/>
+        <line class="grid" x1="0" y1="80" x2="320" y2="80"/>
+        <text class="axis-label" x="2" y="9">100%</text>
+        <text class="axis-label" x="2" y="44">50%</text>
+        <text class="axis-label" x="2" y="78">0%</text>
+        <polyline class="line-model" points="{{ sparkline.model }}"/>
+        {% if sparkline.market %}
+        <polyline class="line-market" points="{{ sparkline.market }}"/>
+        {% endif %}
+      </svg>
+    </div>
+    {% endif %}
+    {% else %}
+    <div class="dashboard-empty">还没有已结束的比赛 · 等比赛开始就有数据了 ⚽</div>
+    {% endif %}
+  </div>
+
   <div class="filters">
     <button class="filter-btn active" data-filter="all">全部</button>
     <button class="filter-btn" data-filter="group">小组赛</button>
@@ -290,6 +420,13 @@
         <span>客胜 <strong>{{ match.mkt_prob_away_pct }}%</strong></span>
       </div>
     </div>
+    {% else %}
+    <div class="pred-row market-row market-empty">
+      <div>
+        <span class="pred-label">市场预测</span>
+        <span class="pred-score">盘口未挂出</span>
+      </div>
+    </div>
     {% endif %}
 
     {% if match.status == 'FINISHED' %}
@@ -317,6 +454,9 @@
         {% else %}
           <span class="tag miss">✗ 比分</span>
         {% endif %}
+      {% else %}
+        <span class="hit-label market-label">市场</span>
+        <span style="color: var(--muted); font-size: 0.72rem;">无盘口</span>
       {% endif %}
     </div>
     {% else %}

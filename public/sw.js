@@ -4,7 +4,7 @@
 //   - 3rd-party assets (twemoji, google fonts): cache-first (rarely change)
 // Bumping VERSION evicts old caches.
 
-const VERSION = 'wc2026-v1';
+const VERSION = 'wc2026-v2';
 const SHELL = ['./', './index.html', './icon.svg', './manifest.json'];
 
 self.addEventListener('install', e => {

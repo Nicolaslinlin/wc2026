@@ -4,6 +4,8 @@
 
 **线上访问：** https://nicolaslinlin.github.io/wc2026/
 
+**📲 装到手机/桌面**：[INSTALL.md](./INSTALL.md)（iPhone / Android / Windows / Mac 全平台说明）
+
 ## 工作原理
 
 1. 历史国际比赛数据来自 [martj42/international_results](https://github.com/martj42/international_results)（开源 CSV）

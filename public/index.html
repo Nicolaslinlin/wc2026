@@ -144,6 +144,60 @@
     .stat .stat-value { font-size: 1.3rem; }
   }
 
+  /* Divergence highlights */
+  .divergences {
+    margin-bottom: 20px;
+  }
+  .div-title {
+    font-size: 0.85rem; font-weight: 700; color: var(--text);
+    margin-bottom: 10px; display: flex; align-items: center; gap: 8px;
+  }
+  .div-title .div-subtitle {
+    font-size: 0.72rem; font-weight: 500; color: var(--muted);
+  }
+  .div-card {
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.08), rgba(251, 191, 36, 0.05));
+    border: 1px solid rgba(251, 191, 36, 0.25);
+    border-radius: 12px; padding: 12px 14px; margin-bottom: 8px;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 12px; align-items: center;
+    text-decoration: none; color: var(--text);
+    transition: all 0.15s;
+  }
+  .div-card:hover {
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.15), rgba(251, 191, 36, 0.1));
+    transform: translateX(2px);
+  }
+  .div-card-main { min-width: 0; }
+  .div-teams {
+    font-weight: 600; font-size: 0.95rem; margin-bottom: 4px;
+    display: flex; align-items: center; gap: 6px; flex-wrap: wrap;
+  }
+  .div-vs { color: var(--muted); font-weight: 400; font-size: 0.85rem; }
+  .div-meta { font-size: 0.72rem; color: var(--muted); margin-bottom: 6px; }
+  .div-predictions {
+    display: flex; gap: 16px; font-size: 0.78rem; flex-wrap: wrap;
+  }
+  .div-pred-item { color: var(--muted); }
+  .div-pred-item.model strong { color: var(--accent-light); }
+  .div-pred-item.market strong { color: #fbbf24; }
+  .div-pred-item strong { font-weight: 700; margin-left: 4px; }
+  .div-badge {
+    background: rgba(251, 191, 36, 0.18);
+    color: #fbbf24;
+    border: 1px solid rgba(251, 191, 36, 0.35);
+    border-radius: 8px;
+    padding: 6px 10px;
+    font-size: 0.7rem; font-weight: 700;
+    text-align: center; line-height: 1.2;
+    white-space: nowrap;
+  }
+  .div-badge .div-pct {
+    display: block; font-size: 1.1rem; font-weight: 800;
+    font-variant-numeric: tabular-nums;
+  }
+
   /* Market unavailable placeholder */
   .pred-row.market-empty .pred-score {
     background: rgba(148, 163, 184, 0.08);
@@ -180,9 +234,14 @@
     border-radius: 14px;
     padding: 16px 20px;
     margin-bottom: 12px;
-    transition: all 0.2s;
+    transition: all 0.2s, box-shadow 0.4s;
     position: relative;
     overflow: hidden;
+    scroll-margin-top: 20px;
+  }
+  .match:target {
+    box-shadow: 0 0 0 2px var(--accent-light);
+    background: var(--card-hover);
   }
   .match::before {
     content: '';
@@ -306,7 +365,7 @@
         · 其他 <strong>8 小时</strong>
       </div>
     </div>
-    <div class="updated">最后更新 · 2026-06-16 09:47 JST</div>
+    <div class="updated">最后更新 · 2026-06-16 09:59 JST</div>
   </header>
 
   <div class="dashboard">
@@ -355,6 +414,8 @@
     
   </div>
 
+  
+
   <div class="filters">
     <button class="filter-btn active" data-filter="all">全部</button>
     <button class="filter-btn" data-filter="group">小组赛</button>
@@ -365,6 +426,7 @@
 
   
   <div class="match"
+       id="match-537327"
        data-stage="group"
        data-status="finished">
     <div class="meta">
@@ -429,6 +491,7 @@
   </div>
   
   <div class="match"
+       id="match-537328"
        data-stage="group"
        data-status="finished">
     <div class="meta">
@@ -493,6 +556,7 @@
   </div>
   
   <div class="match"
+       id="match-537333"
        data-stage="group"
        data-status="upcoming">
     <div class="meta">
@@ -547,6 +611,7 @@
   </div>
   
   <div class="match"
+       id="match-537345"
        data-stage="group"
        data-status="finished">
     <div class="meta">
@@ -611,6 +676,7 @@
   </div>
   
   <div class="match"
+       id="match-537334"
        data-stage="group"
        data-status="finished">
     <div class="meta">
@@ -675,6 +741,7 @@
   </div>
   
   <div class="match"
+       id="match-537339"
        data-stage="group"
        data-status="finished">
     <div class="meta">
@@ -739,6 +806,7 @@
   </div>
   
   <div class="match"
+       id="match-537340"
        data-stage="group"
        data-status="finished">
     <div class="meta">
@@ -803,6 +871,7 @@
   </div>
   
   <div class="match"
+       id="match-537346"
        data-stage="group"
        data-status="finished">
     <div class="meta">
@@ -867,6 +936,7 @@
   </div>
   
   <div class="match"
+       id="match-537351"
        data-stage="group"
        data-status="finished">
     <div class="meta">
@@ -931,6 +1001,7 @@
   </div>
   
   <div class="match"
+       id="match-537357"
        data-stage="group"
        data-status="finished">
     <div class="meta">
@@ -995,6 +1066,7 @@
   </div>
   
   <div class="match"
+       id="match-537352"
        data-stage="group"
        data-status="finished">
     <div class="meta">
@@ -1059,6 +1131,7 @@
   </div>
   
   <div class="match"
+       id="match-537358"
        data-stage="group"
        data-status="upcoming">
     <div class="meta">
@@ -1113,6 +1186,7 @@
   </div>
   
   <div class="match"
+       id="match-537369"
        data-stage="group"
        data-status="upcoming">
     <div class="meta">
@@ -1167,6 +1241,7 @@
   </div>
   
   <div class="match"
+       id="match-537363"
        data-stage="group"
        data-status="upcoming">
     <div class="meta">
@@ -1221,6 +1296,7 @@
   </div>
   
   <div class="match"
+       id="match-537370"
        data-stage="group"
        data-status="upcoming">
     <div class="meta">
@@ -1275,6 +1351,7 @@
   </div>
   
   <div class="match"
+       id="match-537364"
        data-stage="group"
        data-status="upcoming">
     <div class="meta">
@@ -1329,6 +1406,7 @@
   </div>
   
   <div class="match"
+       id="match-537391"
        data-stage="group"
        data-status="upcoming">
     <div class="meta">
@@ -1383,6 +1461,7 @@
   </div>
   
   <div class="match"
+       id="match-537392"
        data-stage="group"
        data-status="upcoming">
     <div class="meta">
@@ -1437,6 +1516,7 @@
   </div>
   
   <div class="match"
+       id="match-537397"
        data-stage="group"
        data-status="upcoming">
     <div class="meta">
@@ -1491,6 +1571,7 @@
   </div>
   
   <div class="match"
+       id="match-537398"
        data-stage="group"
        data-status="upcoming">
     <div class="meta">
@@ -1545,6 +1626,7 @@
   </div>
   
   <div class="match"
+       id="match-537403"
        data-stage="group"
        data-status="upcoming">
     <div class="meta">
@@ -1599,6 +1681,7 @@
   </div>
   
   <div class="match"
+       id="match-537409"
        data-stage="group"
        data-status="upcoming">
     <div class="meta">
@@ -1653,6 +1736,7 @@
   </div>
   
   <div class="match"
+       id="match-537410"
        data-stage="group"
        data-status="upcoming">
     <div class="meta">
@@ -1707,6 +1791,7 @@
   </div>
   
   <div class="match"
+       id="match-537404"
        data-stage="group"
        data-status="upcoming">
     <div class="meta">
@@ -1761,6 +1846,7 @@
   </div>
   
   <div class="match"
+       id="match-537329"
        data-stage="group"
        data-status="upcoming">
     <div class="meta">
@@ -1815,6 +1901,7 @@
   </div>
   
   <div class="match"
+       id="match-537335"
        data-stage="group"
        data-status="upcoming">
     <div class="meta">
@@ -1869,6 +1956,7 @@
   </div>
   
   <div class="match"
+       id="match-537336"
        data-stage="group"
        data-status="upcoming">
     <div class="meta">
@@ -1923,6 +2011,7 @@
   </div>
   
   <div class="match"
+       id="match-537330"
        data-stage="group"
        data-status="upcoming">
     <div class="meta">
@@ -1977,6 +2066,7 @@
   </div>
   
   <div class="match"
+       id="match-537348"
        data-stage="group"
        data-status="upcoming">
     <div class="meta">
@@ -2031,6 +2121,7 @@
   </div>
   
   <div class="match"
+       id="match-537342"
        data-stage="group"
        data-status="upcoming">
     <div class="meta">
@@ -2085,6 +2176,7 @@
   </div>
   
   <div class="match"
+       id="match-537341"
        data-stage="group"
        data-status="upcoming">
     <div class="meta">
@@ -2139,6 +2231,7 @@
   </div>
   
   <div class="match"
+       id="match-537347"
        data-stage="group"
        data-status="upcoming">
     <div class="meta">
@@ -2193,6 +2286,7 @@
   </div>
   
   <div class="match"
+       id="match-537359"
        data-stage="group"
        data-status="upcoming">
     <div class="meta">
@@ -2247,6 +2341,7 @@
   </div>
   
   <div class="match"
+       id="match-537353"
        data-stage="group"
        data-status="upcoming">
     <div class="meta">
@@ -2301,6 +2396,7 @@
   </div>
   
   <div class="match"
+       id="match-537354"
        data-stage="group"
        data-status="upcoming">
     <div class="meta">
@@ -2355,6 +2451,7 @@
   </div>
   
   <div class="match"
+       id="match-537360"
        data-stage="group"
        data-status="upcoming">
     <div class="meta">
@@ -2409,6 +2506,7 @@
   </div>
   
   <div class="match"
+       id="match-537371"
        data-stage="group"
        data-status="upcoming">
     <div class="meta">
@@ -2463,6 +2561,7 @@
   </div>
   
   <div class="match"
+       id="match-537365"
        data-stage="group"
        data-status="upcoming">
     <div class="meta">
@@ -2517,6 +2616,7 @@
   </div>
   
   <div class="match"
+       id="match-537372"
        data-stage="group"
        data-status="upcoming">
     <div class="meta">
@@ -2571,6 +2671,7 @@
   </div>
   
   <div class="match"
+       id="match-537366"
        data-stage="group"
        data-status="upcoming">
     <div class="meta">
@@ -2625,6 +2726,7 @@
   </div>
   
   <div class="match"
+       id="match-537399"
        data-stage="group"
        data-status="upcoming">
     <div class="meta">
@@ -2679,6 +2781,7 @@
   </div>
   
   <div class="match"
+       id="match-537393"
        data-stage="group"
        data-status="upcoming">
     <div class="meta">
@@ -2733,6 +2836,7 @@
   </div>
   
   <div class="match"
+       id="match-537394"
        data-stage="group"
        data-status="upcoming">
     <div class="meta">
@@ -2787,6 +2891,7 @@
   </div>
   
   <div class="match"
+       id="match-537400"
        data-stage="group"
        data-status="upcoming">
     <div class="meta">
@@ -2841,6 +2946,7 @@
   </div>
   
   <div class="match"
+       id="match-537405"
        data-stage="group"
        data-status="upcoming">
     <div class="meta">
@@ -2895,6 +3001,7 @@
   </div>
   
   <div class="match"
+       id="match-537411"
        data-stage="group"
        data-status="upcoming">
     <div class="meta">
@@ -2949,6 +3056,7 @@
   </div>
   
   <div class="match"
+       id="match-537412"
        data-stage="group"
        data-status="upcoming">
     <div class="meta">
@@ -3003,6 +3111,7 @@
   </div>
   
   <div class="match"
+       id="match-537406"
        data-stage="group"
        data-status="upcoming">
     <div class="meta">
@@ -3057,6 +3166,7 @@
   </div>
   
   <div class="match"
+       id="match-537337"
        data-stage="group"
        data-status="upcoming">
     <div class="meta">
@@ -3111,6 +3221,7 @@
   </div>
   
   <div class="match"
+       id="match-537338"
        data-stage="group"
        data-status="upcoming">
     <div class="meta">
@@ -3165,6 +3276,7 @@
   </div>
   
   <div class="match"
+       id="match-537343"
        data-stage="group"
        data-status="upcoming">
     <div class="meta">
@@ -3219,6 +3331,7 @@
   </div>
   
   <div class="match"
+       id="match-537344"
        data-stage="group"
        data-status="upcoming">
     <div class="meta">
@@ -3273,6 +3386,7 @@
   </div>
   
   <div class="match"
+       id="match-537331"
        data-stage="group"
        data-status="upcoming">
     <div class="meta">
@@ -3327,6 +3441,7 @@
   </div>
   
   <div class="match"
+       id="match-537332"
        data-stage="group"
        data-status="upcoming">
     <div class="meta">
@@ -3381,6 +3496,7 @@
   </div>
   
   <div class="match"
+       id="match-537355"
        data-stage="group"
        data-status="upcoming">
     <div class="meta">
@@ -3435,6 +3551,7 @@
   </div>
   
   <div class="match"
+       id="match-537356"
        data-stage="group"
        data-status="upcoming">
     <div class="meta">
@@ -3489,6 +3606,7 @@
   </div>
   
   <div class="match"
+       id="match-537361"
        data-stage="group"
        data-status="upcoming">
     <div class="meta">
@@ -3543,6 +3661,7 @@
   </div>
   
   <div class="match"
+       id="match-537362"
        data-stage="group"
        data-status="upcoming">
     <div class="meta">
@@ -3597,6 +3716,7 @@
   </div>
   
   <div class="match"
+       id="match-537349"
        data-stage="group"
        data-status="upcoming">
     <div class="meta">
@@ -3651,6 +3771,7 @@
   </div>
   
   <div class="match"
+       id="match-537350"
        data-stage="group"
        data-status="upcoming">
     <div class="meta">
@@ -3705,6 +3826,7 @@
   </div>
   
   <div class="match"
+       id="match-537395"
        data-stage="group"
        data-status="upcoming">
     <div class="meta">
@@ -3759,6 +3881,7 @@
   </div>
   
   <div class="match"
+       id="match-537396"
        data-stage="group"
        data-status="upcoming">
     <div class="meta">
@@ -3813,6 +3936,7 @@
   </div>
   
   <div class="match"
+       id="match-537373"
        data-stage="group"
        data-status="upcoming">
     <div class="meta">
@@ -3867,6 +3991,7 @@
   </div>
   
   <div class="match"
+       id="match-537374"
        data-stage="group"
        data-status="upcoming">
     <div class="meta">
@@ -3921,6 +4046,7 @@
   </div>
   
   <div class="match"
+       id="match-537367"
        data-stage="group"
        data-status="upcoming">
     <div class="meta">
@@ -3975,6 +4101,7 @@
   </div>
   
   <div class="match"
+       id="match-537368"
        data-stage="group"
        data-status="upcoming">
     <div class="meta">
@@ -4029,6 +4156,7 @@
   </div>
   
   <div class="match"
+       id="match-537413"
        data-stage="group"
        data-status="upcoming">
     <div class="meta">
@@ -4083,6 +4211,7 @@
   </div>
   
   <div class="match"
+       id="match-537414"
        data-stage="group"
        data-status="upcoming">
     <div class="meta">
@@ -4137,6 +4266,7 @@
   </div>
   
   <div class="match"
+       id="match-537407"
        data-stage="group"
        data-status="upcoming">
     <div class="meta">
@@ -4191,6 +4321,7 @@
   </div>
   
   <div class="match"
+       id="match-537408"
        data-stage="group"
        data-status="upcoming">
     <div class="meta">
@@ -4245,6 +4376,7 @@
   </div>
   
   <div class="match"
+       id="match-537401"
        data-stage="group"
        data-status="upcoming">
     <div class="meta">
@@ -4299,6 +4431,7 @@
   </div>
   
   <div class="match"
+       id="match-537402"
        data-stage="group"
        data-status="upcoming">
     <div class="meta">
@@ -4367,6 +4500,14 @@
   if (window.twemoji) {
     twemoji.parse(document.body, { folder: 'svg', ext: '.svg' });
   }
+
+  // Divergence anchor → make sure target match is visible (reset filter)
+  document.querySelectorAll('.div-card').forEach(card => card.addEventListener('click', () => {
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    const allBtn = document.querySelector('.filter-btn[data-filter="all"]');
+    if (allBtn) allBtn.classList.add('active');
+    document.querySelectorAll('.match').forEach(m => m.style.display = '');
+  }));
 
   // Filter buttons
   const buttons = document.querySelectorAll('.filter-btn');

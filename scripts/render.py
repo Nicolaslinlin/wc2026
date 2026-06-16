@@ -116,6 +116,32 @@ def build_match_view(row: dict[str, Any]) -> dict[str, Any]:
     }
 
 
+def total_variation_distance(p: tuple, q: tuple) -> float:
+    """TVD between two discrete distributions over H/D/A. Range [0, 1]."""
+    return 0.5 * sum(abs(a - b) for a, b in zip(p, q))
+
+
+def find_top_divergences(rows: list[dict], n: int = 5) -> list[dict]:
+    """Return up to n upcoming matches sorted by model-vs-market TVD desc."""
+    candidates = []
+    for r in rows:
+        if r.get("status") == "FINISHED":
+            continue
+        if r.get("mkt_home_score") is None:
+            continue
+        if r.get("pred_home_score") is None:
+            continue
+        d = total_variation_distance(
+            (r["prob_home_win"], r["prob_draw"], r["prob_away_win"]),
+            (r["mkt_prob_home_win"], r["mkt_prob_draw"], r["mkt_prob_away_win"]),
+        )
+        row_with_div = dict(r)
+        row_with_div["divergence_pct"] = round(d * 100)
+        candidates.append(row_with_div)
+    candidates.sort(key=lambda r: -r["divergence_pct"])
+    return candidates[:n]
+
+
 def compute_stats(rows: list[dict]) -> dict:
     """Aggregate model + market outcome/score hit rates across finished matches."""
     finished_total = 0
@@ -208,7 +234,8 @@ def timeline_to_svg_paths(timeline: list[dict], width: int = 320, height: int = 
 def render(matches: list[dict], updated_at: str, out_path: Path,
            template_dir: Path,
            stats: dict | None = None,
-           sparkline: dict | None = None) -> None:
+           sparkline: dict | None = None,
+           divergences: list[dict] | None = None) -> None:
     env = Environment(
         loader=FileSystemLoader(template_dir),
         autoescape=select_autoescape(["html"]),
@@ -223,6 +250,7 @@ def render(matches: list[dict], updated_at: str, out_path: Path,
         updated_at=updated_at,
         stats=stats or empty_stats,
         sparkline=sparkline or {"model": "", "market": "", "n": 0},
+        divergences=divergences or [],
     )
     out_path.parent.mkdir(parents=True, exist_ok=True)
     out_path.write_text(html, encoding="utf-8")
@@ -255,9 +283,19 @@ def main() -> int:
     stats = compute_stats(dict_rows)
     timeline = build_timeline(dict_rows)
     sparkline = timeline_to_svg_paths(timeline)
+    top_div_rows = find_top_divergences(dict_rows, n=5)
+    divergence_views = []
+    for r in top_div_rows:
+        view = build_match_view(r)
+        view["divergence_pct"] = r["divergence_pct"]
+        divergence_views.append(view)
     matches = [build_match_view(r) for r in dict_rows]
     updated = datetime.now(ZoneInfo("Asia/Tokyo")).strftime("%Y-%m-%d %H:%M JST")
-    render(matches, updated, out_path, template_dir, stats=stats, sparkline=sparkline)
+    render(
+        matches, updated, out_path, template_dir,
+        stats=stats, sparkline=sparkline,
+        divergences=divergence_views,
+    )
     print(f"Rendered {len(matches)} matches to {out_path}")
     return 0
 

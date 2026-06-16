@@ -11,3 +11,8 @@ wheels/
 .pytest_cache/
 .env
 
+# Local sensitive files — never commit
+ほかの情報/
+*.xlsx
+secrets/
+

@@ -584,10 +584,12 @@
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twemoji/14.0.2/twemoji.min.js" crossorigin="anonymous"></script>
+<script type="application/json" id="i18n-data">{{ i18n_json|safe }}</script>
+<script type="application/json" id="ja-names-data">{{ ja_names_json|safe }}</script>
 <script>
   // ---------- i18n ----------
-  const I18N = {{ i18n_json|safe }};
-  const JA_NAMES = {{ ja_names_json|safe }};
+  const I18N = JSON.parse(document.getElementById('i18n-data').textContent);
+  const JA_NAMES = JSON.parse(document.getElementById('ja-names-data').textContent);
 
   function applyLang(lang) {
     const dict = I18N[lang] || I18N.zh;

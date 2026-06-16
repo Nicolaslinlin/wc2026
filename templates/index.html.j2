@@ -37,7 +37,20 @@
 
   .container { max-width: 860px; margin: 0 auto; padding: 32px 20px 60px; }
 
-  header { text-align: center; margin-bottom: 32px; }
+  header { text-align: center; margin-bottom: 32px; position: relative; }
+  .lang-switch {
+    position: absolute; top: 0; right: 0;
+    display: flex; gap: 4px; background: rgba(30, 41, 59, 0.6);
+    border: 1px solid var(--border); border-radius: 18px; padding: 3px;
+  }
+  .lang-btn {
+    border: none; background: transparent; color: var(--muted);
+    cursor: pointer; padding: 4px 10px; border-radius: 14px;
+    font-size: 0.72rem; font-weight: 600; font-family: inherit;
+    transition: all 0.15s;
+  }
+  .lang-btn.active { background: var(--accent); color: white; }
+  .lang-btn:hover:not(.active) { color: var(--text); }
   header .trophy {
     font-size: 3rem; display: block; margin-bottom: 8px;
     filter: drop-shadow(0 4px 12px rgba(99, 102, 241, 0.4));
@@ -353,51 +366,57 @@
 <body>
 <div class="container">
   <header>
+    <div class="lang-switch">
+      <button class="lang-btn active" data-lang="zh">中文</button>
+      <button class="lang-btn" data-lang="en">EN</button>
+      <button class="lang-btn" data-lang="ja">日本語</button>
+    </div>
     <span class="trophy">🏆</span>
-    <h1>2026 世界杯预测</h1>
+    <h1 data-i18n="title">2026 世界杯预测</h1>
     <div class="subtitle">
-      <div><span class="sub-tag">模型</span> Elo + 泊松 + Dixon-Coles</div>
-      <div><span class="sub-tag">比分</span> 每 <strong>20 分钟</strong> 刷新一次</div>
+      <div><span class="sub-tag" data-i18n="tag_model">模型</span> <span data-i18n="model_name">Elo + 泊松 + Dixon-Coles</span></div>
+      <div><span class="sub-tag" data-i18n="tag_score">比分</span> <span data-i18n="score_refresh">每 <strong>20 分钟</strong> 刷新一次</span></div>
       <div>
-        <span class="sub-tag">盘口</span>
-        临赛 3h 内 <strong>20 分钟</strong>
-        · 24h 内 <strong>3 小时</strong>
-        · 其他 <strong>8 小时</strong>
+        <span class="sub-tag" data-i18n="tag_odds">盘口</span>
+        <span data-i18n-html="odds_tiered">临赛 3h 内 <strong>20 分钟</strong> · 24h 内 <strong>3 小时</strong> · 其他 <strong>8 小时</strong></span>
       </div>
     </div>
-    <div class="updated">最后更新 · {{ updated_at }}</div>
+    <div class="updated"><span data-i18n="updated">最后更新</span> · {{ updated_at }}</div>
   </header>
 
   <div class="dashboard">
-    <div class="dashboard-title">📊 累计命中率（已结束 {{ stats.finished_total }} 场）</div>
+    <div class="dashboard-title">
+      <span data-i18n="dashboard_title">📊 累计命中率</span>
+      <span>（<span data-i18n-tpl="finished_count" data-i18n-n="{{ stats.finished_total }}">已结束 {{ stats.finished_total }} 场</span>）</span>
+    </div>
     {% if stats.finished_total > 0 %}
     <div class="stat-grid">
       <div class="stat model">
-        <div class="stat-label">模型 · 胜负</div>
+        <div class="stat-label" data-i18n="model_outcome">模型 · 胜负</div>
         <div class="stat-value">{{ stats.model_outcome_hit_pct }}%</div>
-        <div class="stat-sample">/ {{ stats.finished_total }} 场</div>
+        <div class="stat-sample" data-i18n-tpl="stat_sample" data-i18n-n="{{ stats.finished_total }}">/ {{ stats.finished_total }} 场</div>
       </div>
       <div class="stat model">
-        <div class="stat-label">模型 · 比分</div>
+        <div class="stat-label" data-i18n="model_score">模型 · 比分</div>
         <div class="stat-value">{{ stats.model_score_hit_pct }}%</div>
-        <div class="stat-sample">/ {{ stats.finished_total }} 场</div>
+        <div class="stat-sample" data-i18n-tpl="stat_sample" data-i18n-n="{{ stats.finished_total }}">/ {{ stats.finished_total }} 场</div>
       </div>
       <div class="stat market">
-        <div class="stat-label">市场 · 胜负</div>
+        <div class="stat-label" data-i18n="market_outcome">市场 · 胜负</div>
         <div class="stat-value">{{ stats.market_outcome_hit_pct }}%</div>
-        <div class="stat-sample">/ {{ stats.market_total }} 场</div>
+        <div class="stat-sample" data-i18n-tpl="stat_sample" data-i18n-n="{{ stats.market_total }}">/ {{ stats.market_total }} 场</div>
       </div>
       <div class="stat market">
-        <div class="stat-label">市场 · 比分</div>
+        <div class="stat-label" data-i18n="market_score">市场 · 比分</div>
         <div class="stat-value">{{ stats.market_score_hit_pct }}%</div>
-        <div class="stat-sample">/ {{ stats.market_total }} 场</div>
+        <div class="stat-sample" data-i18n-tpl="stat_sample" data-i18n-n="{{ stats.market_total }}">/ {{ stats.market_total }} 场</div>
       </div>
     </div>
     {% if sparkline.n > 1 %}
     <div class="sparkline-wrap">
       <div class="sparkline-legend">
-        <span><span class="legend-dot model"></span>模型胜负命中率</span>
-        <span><span class="legend-dot market"></span>市场胜负命中率</span>
+        <span><span class="legend-dot model"></span><span data-i18n="legend_model">模型胜负命中率</span></span>
+        <span><span class="legend-dot market"></span><span data-i18n="legend_market">市场胜负命中率</span></span>
       </div>
       <svg class="sparkline" viewBox="0 0 320 80" preserveAspectRatio="none">
         <line class="grid" x1="0" y1="0" x2="320" y2="0"/>
@@ -414,32 +433,32 @@
     </div>
     {% endif %}
     {% else %}
-    <div class="dashboard-empty">还没有已结束的比赛 · 等比赛开始就有数据了 ⚽</div>
+    <div class="dashboard-empty" data-i18n="dashboard_empty">还没有已结束的比赛 · 等比赛开始就有数据了 ⚽</div>
     {% endif %}
   </div>
 
   {% if divergences %}
   <div class="divergences">
     <div class="div-title">
-      🎯 模型 vs 市场 · 分歧最大
-      <span class="div-subtitle">点击跳转到完整卡片</span>
+      <span data-i18n="div_title">🎯 模型 vs 市场 · 分歧最大</span>
+      <span class="div-subtitle" data-i18n="div_subtitle">点击跳转到完整卡片</span>
     </div>
     {% for m in divergences %}
     <a class="div-card" href="#match-{{ m.match_id }}">
       <div class="div-card-main">
         <div class="div-teams">
-          <span>{{ m.home_flag }} {{ m.home_team }}</span>
+          <span>{{ m.home_flag }} <span class="team-name" data-team-en="{{ m.home_team_en }}">{{ m.home_team }}</span></span>
           <span class="div-vs">vs</span>
-          <span>{{ m.away_team }} {{ m.away_flag }}</span>
+          <span><span class="team-name" data-team-en="{{ m.away_team_en }}">{{ m.away_team }}</span> {{ m.away_flag }}</span>
         </div>
-        <div class="div-meta">{{ m.kickoff_local }}{% if m.group_code %} · {{ m.stage_label }} {{ m.group_code }}{% endif %}</div>
+        <div class="div-meta">{{ m.kickoff_local }}{% if m.group_code %} · <span data-i18n="stage_{{ m.stage }}">{{ m.stage_label }}</span> {{ m.group_code }}{% endif %}</div>
         <div class="div-predictions">
-          <span class="div-pred-item model">模型 <strong>{{ m.pred_home }}-{{ m.pred_away }}</strong> · 主胜 {{ m.prob_home_pct }}%</span>
-          <span class="div-pred-item market">市场 <strong>{{ m.mkt_home }}-{{ m.mkt_away }}</strong> · 主胜 {{ m.mkt_prob_home_pct }}%</span>
+          <span class="div-pred-item model"><span data-i18n="model_pred">模型</span> <strong>{{ m.pred_home }}-{{ m.pred_away }}</strong> · <span data-i18n="home_win">主胜</span> {{ m.prob_home_pct }}%</span>
+          <span class="div-pred-item market"><span data-i18n="market_pred">市场</span> <strong>{{ m.mkt_home }}-{{ m.mkt_away }}</strong> · <span data-i18n="home_win">主胜</span> {{ m.mkt_prob_home_pct }}%</span>
         </div>
       </div>
       <div class="div-badge">
-        分歧
+        <span data-i18n="div_badge_label">分歧</span>
         <span class="div-pct">{{ m.divergence_pct }}%</span>
       </div>
     </a>
@@ -448,11 +467,11 @@
   {% endif %}
 
   <div class="filters">
-    <button class="filter-btn active" data-filter="all">全部</button>
-    <button class="filter-btn" data-filter="group">小组赛</button>
-    <button class="filter-btn" data-filter="knockout">淘汰赛</button>
-    <button class="filter-btn" data-filter="finished">已结束</button>
-    <button class="filter-btn" data-filter="upcoming">未开始</button>
+    <button class="filter-btn active" data-filter="all" data-i18n="filter_all">全部</button>
+    <button class="filter-btn" data-filter="group" data-i18n="filter_group">小组赛</button>
+    <button class="filter-btn" data-filter="knockout" data-i18n="filter_knockout">淘汰赛</button>
+    <button class="filter-btn" data-filter="finished" data-i18n="filter_finished">已结束</button>
+    <button class="filter-btn" data-filter="upcoming" data-i18n="filter_upcoming">未开始</button>
   </div>
 
   {% for match in matches %}
@@ -464,12 +483,12 @@
       <span>{{ match.kickoff_local }}</span>
       {% if match.venue %}<span class="dot">·</span><span>{{ match.venue }}</span>{% endif %}
       <span class="dot">·</span>
-      <span class="stage-badge">{{ match.stage_label }}{% if match.group_code %} {{ match.group_code }}{% endif %}</span>
+      <span class="stage-badge"><span data-i18n="stage_{{ match.stage }}">{{ match.stage_label }}</span>{% if match.group_code %} {{ match.group_code }}{% endif %}</span>
     </div>
 
     <div class="teams">
       <div class="team home">
-        <span class="name">{{ match.home_team }}</span>
+        <span class="name team-name" data-team-en="{{ match.home_team_en }}">{{ match.home_team }}</span>
         <span class="flag">{{ match.home_flag }}</span>
       </div>
       <div class="score-box{% if match.status == 'FINISHED' %} actual-box{% endif %}">
@@ -481,91 +500,146 @@
       </div>
       <div class="team away">
         <span class="flag">{{ match.away_flag }}</span>
-        <span class="name">{{ match.away_team }}</span>
+        <span class="name team-name" data-team-en="{{ match.away_team_en }}">{{ match.away_team }}</span>
       </div>
     </div>
 
     <div class="pred-row">
       <div>
-        <span class="pred-label">模型预测</span>
+        <span class="pred-label" data-i18n="model_pred">模型预测</span>
         <span class="pred-score">{{ match.pred_home }} - {{ match.pred_away }}</span>
       </div>
       <div class="probs">
-        <span>主胜 <strong>{{ match.prob_home_pct }}%</strong></span>
-        <span>平 <strong>{{ match.prob_draw_pct }}%</strong></span>
-        <span>客胜 <strong>{{ match.prob_away_pct }}%</strong></span>
+        <span><span data-i18n="home_win">主胜</span> <strong>{{ match.prob_home_pct }}%</strong></span>
+        <span><span data-i18n="draw">平</span> <strong>{{ match.prob_draw_pct }}%</strong></span>
+        <span><span data-i18n="away_win">客胜</span> <strong>{{ match.prob_away_pct }}%</strong></span>
       </div>
     </div>
 
     {% if match.has_market %}
     <div class="pred-row market-row">
       <div>
-        <span class="pred-label">市场预测</span>
+        <span class="pred-label" data-i18n="market_pred">市场预测</span>
         <span class="pred-score market-score">{{ match.mkt_home }} - {{ match.mkt_away }}</span>
       </div>
       <div class="probs">
-        <span>主胜 <strong>{{ match.mkt_prob_home_pct }}%</strong></span>
-        <span>平 <strong>{{ match.mkt_prob_draw_pct }}%</strong></span>
-        <span>客胜 <strong>{{ match.mkt_prob_away_pct }}%</strong></span>
+        <span><span data-i18n="home_win">主胜</span> <strong>{{ match.mkt_prob_home_pct }}%</strong></span>
+        <span><span data-i18n="draw">平</span> <strong>{{ match.mkt_prob_draw_pct }}%</strong></span>
+        <span><span data-i18n="away_win">客胜</span> <strong>{{ match.mkt_prob_away_pct }}%</strong></span>
       </div>
     </div>
     {% else %}
     <div class="pred-row market-row market-empty">
       <div>
-        <span class="pred-label">市场预测</span>
-        <span class="pred-score">盘口未挂出</span>
+        <span class="pred-label" data-i18n="market_pred">市场预测</span>
+        <span class="pred-score" data-i18n="odds_unavailable">盘口未挂出</span>
       </div>
     </div>
     {% endif %}
 
     {% if match.status == 'FINISHED' %}
     <div class="status-row">
-      <span class="hit-label">模型</span>
+      <span class="hit-label" data-i18n="model_pred">模型</span>
       {% if match.outcome_hit %}
-        <span class="tag hit">✓ 胜负</span>
+        <span class="tag hit" data-i18n="outcome_hit">✓ 胜负</span>
       {% else %}
-        <span class="tag miss">✗ 胜负</span>
+        <span class="tag miss" data-i18n="outcome_miss">✗ 胜负</span>
       {% endif %}
       {% if match.score_hit %}
-        <span class="tag hit">✓ 比分</span>
+        <span class="tag hit" data-i18n="score_hit">✓ 比分</span>
       {% else %}
-        <span class="tag miss">✗ 比分</span>
+        <span class="tag miss" data-i18n="score_miss">✗ 比分</span>
       {% endif %}
       {% if match.has_market %}
-        <span class="hit-label market-label">市场</span>
+        <span class="hit-label market-label" data-i18n="market_pred">市场</span>
         {% if match.market_outcome_hit %}
-          <span class="tag hit">✓ 胜负</span>
+          <span class="tag hit" data-i18n="outcome_hit">✓ 胜负</span>
         {% else %}
-          <span class="tag miss">✗ 胜负</span>
+          <span class="tag miss" data-i18n="outcome_miss">✗ 胜负</span>
         {% endif %}
         {% if match.market_score_hit %}
-          <span class="tag hit">✓ 比分</span>
+          <span class="tag hit" data-i18n="score_hit">✓ 比分</span>
         {% else %}
-          <span class="tag miss">✗ 比分</span>
+          <span class="tag miss" data-i18n="score_miss">✗ 比分</span>
         {% endif %}
       {% else %}
-        <span class="hit-label market-label">市场</span>
-        <span style="color: var(--muted); font-size: 0.72rem;">无盘口</span>
+        <span class="hit-label market-label" data-i18n="market_pred">市场</span>
+        <span style="color: var(--muted); font-size: 0.72rem;" data-i18n="no_odds">无盘口</span>
       {% endif %}
     </div>
     {% else %}
     <div class="status-row">
-      <span class="tag upcoming">⏳ 未开始</span>
+      <span class="tag upcoming" data-i18n="upcoming_label">⏳ 未开始</span>
     </div>
     {% endif %}
   </div>
   {% endfor %}
 
   <footer>
-    数据：<a href="https://www.football-data.org/" target="_blank" rel="noopener">football-data.org</a>
-    · 历史：<a href="https://github.com/martj42/international_results" target="_blank" rel="noopener">martj42</a><br>
-    模型：Elo 评分 + 泊松分布（独立 xG）· 这是一个学习项目，预测仅供娱乐<br>
-    源码：<a href="https://github.com/Nicolaslinlin/wc2026" target="_blank" rel="noopener">GitHub</a>
+    <span data-i18n="footer_data">数据</span>：<a href="https://www.football-data.org/" target="_blank" rel="noopener">football-data.org</a>
+    · <span data-i18n="footer_history">历史</span>：<a href="https://github.com/martj42/international_results" target="_blank" rel="noopener">martj42</a><br>
+    <span data-i18n="footer_model">模型</span>：Elo + Poisson + Dixon-Coles · <span data-i18n="footer_disclaimer">这是一个学习项目，预测仅供娱乐</span><br>
+    <span data-i18n="footer_source">源码</span>：<a href="https://github.com/Nicolaslinlin/wc2026" target="_blank" rel="noopener">GitHub</a>
   </footer>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twemoji/14.0.2/twemoji.min.js" crossorigin="anonymous"></script>
 <script>
+  // ---------- i18n ----------
+  const I18N = {{ i18n_json|safe }};
+  const JA_NAMES = {{ ja_names_json|safe }};
+
+  function applyLang(lang) {
+    const dict = I18N[lang] || I18N.zh;
+    document.documentElement.lang = lang === 'ja' ? 'ja' : (lang === 'en' ? 'en' : 'zh-CN');
+
+    // text replacements
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+      const key = el.dataset.i18n;
+      if (dict[key] != null) el.textContent = dict[key];
+    });
+    document.querySelectorAll('[data-i18n-html]').forEach(el => {
+      const key = el.dataset.i18nHtml;
+      if (dict[key] != null) el.innerHTML = dict[key];
+    });
+    // templated strings with {n}
+    document.querySelectorAll('[data-i18n-tpl]').forEach(el => {
+      const key = el.dataset.i18nTpl;
+      const n = el.dataset.i18nN;
+      if (dict[key] != null) el.textContent = dict[key].replace('{n}', n);
+    });
+    // team name swap (en uses data-team-en key directly; ja looks up JA_NAMES)
+    document.querySelectorAll('.team-name').forEach(el => {
+      const en = el.dataset.teamEn;
+      if (lang === 'en') el.textContent = en;
+      else if (lang === 'ja') el.textContent = JA_NAMES[en] || en;
+      // for zh, keep server-rendered Chinese name (no override needed unless we restore;
+      // store original Chinese on first run)
+      else el.textContent = el.dataset.zhOriginal || el.textContent;
+    });
+
+    // update lang button active state
+    document.querySelectorAll('.lang-btn').forEach(b =>
+      b.classList.toggle('active', b.dataset.lang === lang)
+    );
+
+    // re-parse twemoji in case content was replaced
+    if (window.twemoji) twemoji.parse(document.body, { folder: 'svg', ext: '.svg' });
+
+    localStorage.setItem('wc2026_lang', lang);
+  }
+
+  // snapshot Chinese team names so zh switch can restore them
+  document.querySelectorAll('.team-name').forEach(el => {
+    el.dataset.zhOriginal = el.textContent;
+  });
+
+  document.querySelectorAll('.lang-btn').forEach(btn =>
+    btn.addEventListener('click', () => applyLang(btn.dataset.lang))
+  );
+
+  const savedLang = localStorage.getItem('wc2026_lang');
+  if (savedLang && savedLang !== 'zh') applyLang(savedLang);
   // Replace flag emojis with Twemoji images (so Windows/older browsers render flags too)
   if (window.twemoji) {
     twemoji.parse(document.body, { folder: 'svg', ext: '.svg' });

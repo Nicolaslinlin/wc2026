@@ -9,7 +9,10 @@ from zoneinfo import ZoneInfo
 
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 
+import json
+
 from wc2026.db import get_connection
+from wc2026.i18n import JAPANESE_NAMES, UI_STRINGS
 from wc2026.team_names_cn import to_chinese
 
 FLAGS = {
@@ -93,6 +96,8 @@ def build_match_view(row: dict[str, Any]) -> dict[str, Any]:
         "venue": row["venue"],
         "home_team": to_chinese(row["home_team"]),
         "away_team": to_chinese(row["away_team"]),
+        "home_team_en": row["home_team"],
+        "away_team_en": row["away_team"],
         "home_flag": FLAGS.get(row["home_team"], "🏳"),
         "away_flag": FLAGS.get(row["away_team"], "🏳"),
         "status": row["status"] if is_finished else "UPCOMING",
@@ -231,6 +236,15 @@ def timeline_to_svg_paths(timeline: list[dict], width: int = 320, height: int = 
     return {"model": model_pts, "market": market_pts, "n": n}
 
 
+def build_i18n_payload() -> dict:
+    """Build a flat per-language map for client-side text swapping."""
+    payload = {"zh": {}, "en": {}, "ja": {}}
+    for key, langs in UI_STRINGS.items():
+        for lang in ("zh", "en", "ja"):
+            payload[lang][key] = langs.get(lang, langs.get("zh"))
+    return payload
+
+
 def render(matches: list[dict], updated_at: str, out_path: Path,
            template_dir: Path,
            stats: dict | None = None,
@@ -245,12 +259,16 @@ def render(matches: list[dict], updated_at: str, out_path: Path,
         "market_total": 0, "market_outcome_hit_pct": 0, "market_score_hit_pct": 0,
     }
     template = env.get_template("index.html.j2")
+    i18n_payload = build_i18n_payload()
+    ja_names = JAPANESE_NAMES
     html = template.render(
         matches=matches,
         updated_at=updated_at,
         stats=stats or empty_stats,
         sparkline=sparkline or {"model": "", "market": "", "n": 0},
         divergences=divergences or [],
+        i18n_json=json.dumps(i18n_payload, ensure_ascii=False),
+        ja_names_json=json.dumps(ja_names, ensure_ascii=False),
     )
     out_path.parent.mkdir(parents=True, exist_ok=True)
     out_path.write_text(html, encoding="utf-8")

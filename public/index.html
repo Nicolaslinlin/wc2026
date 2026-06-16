@@ -37,7 +37,20 @@
 
   .container { max-width: 860px; margin: 0 auto; padding: 32px 20px 60px; }
 
-  header { text-align: center; margin-bottom: 32px; }
+  header { text-align: center; margin-bottom: 32px; position: relative; }
+  .lang-switch {
+    position: absolute; top: 0; right: 0;
+    display: flex; gap: 4px; background: rgba(30, 41, 59, 0.6);
+    border: 1px solid var(--border); border-radius: 18px; padding: 3px;
+  }
+  .lang-btn {
+    border: none; background: transparent; color: var(--muted);
+    cursor: pointer; padding: 4px 10px; border-radius: 14px;
+    font-size: 0.72rem; font-weight: 600; font-family: inherit;
+    transition: all 0.15s;
+  }
+  .lang-btn.active { background: var(--accent); color: white; }
+  .lang-btn:hover:not(.active) { color: var(--text); }
   header .trophy {
     font-size: 3rem; display: block; margin-bottom: 8px;
     filter: drop-shadow(0 4px 12px rgba(99, 102, 241, 0.4));
@@ -353,51 +366,57 @@
 <body>
 <div class="container">
   <header>
+    <div class="lang-switch">
+      <button class="lang-btn active" data-lang="zh">中文</button>
+      <button class="lang-btn" data-lang="en">EN</button>
+      <button class="lang-btn" data-lang="ja">日本語</button>
+    </div>
     <span class="trophy">🏆</span>
-    <h1>2026 世界杯预测</h1>
+    <h1 data-i18n="title">2026 世界杯预测</h1>
     <div class="subtitle">
-      <div><span class="sub-tag">模型</span> Elo + 泊松 + Dixon-Coles</div>
-      <div><span class="sub-tag">比分</span> 每 <strong>20 分钟</strong> 刷新一次</div>
+      <div><span class="sub-tag" data-i18n="tag_model">模型</span> <span data-i18n="model_name">Elo + 泊松 + Dixon-Coles</span></div>
+      <div><span class="sub-tag" data-i18n="tag_score">比分</span> <span data-i18n="score_refresh">每 <strong>20 分钟</strong> 刷新一次</span></div>
       <div>
-        <span class="sub-tag">盘口</span>
-        临赛 3h 内 <strong>20 分钟</strong>
-        · 24h 内 <strong>3 小时</strong>
-        · 其他 <strong>8 小时</strong>
+        <span class="sub-tag" data-i18n="tag_odds">盘口</span>
+        <span data-i18n-html="odds_tiered">临赛 3h 内 <strong>20 分钟</strong> · 24h 内 <strong>3 小时</strong> · 其他 <strong>8 小时</strong></span>
       </div>
     </div>
-    <div class="updated">最后更新 · 2026-06-16 09:59 JST</div>
+    <div class="updated"><span data-i18n="updated">最后更新</span> · 2026-06-16 10:25 JST</div>
   </header>
 
   <div class="dashboard">
-    <div class="dashboard-title">📊 累计命中率（已结束 10 场）</div>
+    <div class="dashboard-title">
+      <span data-i18n="dashboard_title">📊 累计命中率</span>
+      <span>（<span data-i18n-tpl="finished_count" data-i18n-n="10">已结束 10 场</span>）</span>
+    </div>
     
     <div class="stat-grid">
       <div class="stat model">
-        <div class="stat-label">模型 · 胜负</div>
+        <div class="stat-label" data-i18n="model_outcome">模型 · 胜负</div>
         <div class="stat-value">50%</div>
-        <div class="stat-sample">/ 10 场</div>
+        <div class="stat-sample" data-i18n-tpl="stat_sample" data-i18n-n="10">/ 10 场</div>
       </div>
       <div class="stat model">
-        <div class="stat-label">模型 · 比分</div>
+        <div class="stat-label" data-i18n="model_score">模型 · 比分</div>
         <div class="stat-value">10%</div>
-        <div class="stat-sample">/ 10 场</div>
+        <div class="stat-sample" data-i18n-tpl="stat_sample" data-i18n-n="10">/ 10 场</div>
       </div>
       <div class="stat market">
-        <div class="stat-label">市场 · 胜负</div>
+        <div class="stat-label" data-i18n="market_outcome">市场 · 胜负</div>
         <div class="stat-value">0%</div>
-        <div class="stat-sample">/ 0 场</div>
+        <div class="stat-sample" data-i18n-tpl="stat_sample" data-i18n-n="0">/ 0 场</div>
       </div>
       <div class="stat market">
-        <div class="stat-label">市场 · 比分</div>
+        <div class="stat-label" data-i18n="market_score">市场 · 比分</div>
         <div class="stat-value">0%</div>
-        <div class="stat-sample">/ 0 场</div>
+        <div class="stat-sample" data-i18n-tpl="stat_sample" data-i18n-n="0">/ 0 场</div>
       </div>
     </div>
     
     <div class="sparkline-wrap">
       <div class="sparkline-legend">
-        <span><span class="legend-dot model"></span>模型胜负命中率</span>
-        <span><span class="legend-dot market"></span>市场胜负命中率</span>
+        <span><span class="legend-dot model"></span><span data-i18n="legend_model">模型胜负命中率</span></span>
+        <span><span class="legend-dot market"></span><span data-i18n="legend_market">市场胜负命中率</span></span>
       </div>
       <svg class="sparkline" viewBox="0 0 320 80" preserveAspectRatio="none">
         <line class="grid" x1="0" y1="0" x2="320" y2="0"/>
@@ -417,11 +436,11 @@
   
 
   <div class="filters">
-    <button class="filter-btn active" data-filter="all">全部</button>
-    <button class="filter-btn" data-filter="group">小组赛</button>
-    <button class="filter-btn" data-filter="knockout">淘汰赛</button>
-    <button class="filter-btn" data-filter="finished">已结束</button>
-    <button class="filter-btn" data-filter="upcoming">未开始</button>
+    <button class="filter-btn active" data-filter="all" data-i18n="filter_all">全部</button>
+    <button class="filter-btn" data-filter="group" data-i18n="filter_group">小组赛</button>
+    <button class="filter-btn" data-filter="knockout" data-i18n="filter_knockout">淘汰赛</button>
+    <button class="filter-btn" data-filter="finished" data-i18n="filter_finished">已结束</button>
+    <button class="filter-btn" data-filter="upcoming" data-i18n="filter_upcoming">未开始</button>
   </div>
 
   
@@ -433,12 +452,12 @@
       <span>06/12 (五) 04:00 JST</span>
       
       <span class="dot">·</span>
-      <span class="stage-badge">小组赛 GROUP_A</span>
+      <span class="stage-badge"><span data-i18n="stage_GROUP_STAGE">小组赛</span> GROUP_A</span>
     </div>
 
     <div class="teams">
       <div class="team home">
-        <span class="name">墨西哥</span>
+        <span class="name team-name" data-team-en="Mexico">墨西哥</span>
         <span class="flag">🇲🇽</span>
       </div>
       <div class="score-box actual-box">
@@ -448,43 +467,43 @@
       </div>
       <div class="team away">
         <span class="flag">🇿🇦</span>
-        <span class="name">南非</span>
+        <span class="name team-name" data-team-en="South Africa">南非</span>
       </div>
     </div>
 
     <div class="pred-row">
       <div>
-        <span class="pred-label">模型预测</span>
+        <span class="pred-label" data-i18n="model_pred">模型预测</span>
         <span class="pred-score">2 - 0</span>
       </div>
       <div class="probs">
-        <span>主胜 <strong>72%</strong></span>
-        <span>平 <strong>17%</strong></span>
-        <span>客胜 <strong>11%</strong></span>
+        <span><span data-i18n="home_win">主胜</span> <strong>72%</strong></span>
+        <span><span data-i18n="draw">平</span> <strong>17%</strong></span>
+        <span><span data-i18n="away_win">客胜</span> <strong>11%</strong></span>
       </div>
     </div>
 
     
     <div class="pred-row market-row market-empty">
       <div>
-        <span class="pred-label">市场预测</span>
-        <span class="pred-score">盘口未挂出</span>
+        <span class="pred-label" data-i18n="market_pred">市场预测</span>
+        <span class="pred-score" data-i18n="odds_unavailable">盘口未挂出</span>
       </div>
     </div>
     
 
     
     <div class="status-row">
-      <span class="hit-label">模型</span>
+      <span class="hit-label" data-i18n="model_pred">模型</span>
       
-        <span class="tag hit">✓ 胜负</span>
-      
-      
-        <span class="tag hit">✓ 比分</span>
+        <span class="tag hit" data-i18n="outcome_hit">✓ 胜负</span>
       
       
-        <span class="hit-label market-label">市场</span>
-        <span style="color: var(--muted); font-size: 0.72rem;">无盘口</span>
+        <span class="tag hit" data-i18n="score_hit">✓ 比分</span>
+      
+      
+        <span class="hit-label market-label" data-i18n="market_pred">市场</span>
+        <span style="color: var(--muted); font-size: 0.72rem;" data-i18n="no_odds">无盘口</span>
       
     </div>
     
@@ -498,12 +517,12 @@
       <span>06/12 (五) 11:00 JST</span>
       
       <span class="dot">·</span>
-      <span class="stage-badge">小组赛 GROUP_A</span>
+      <span class="stage-badge"><span data-i18n="stage_GROUP_STAGE">小组赛</span> GROUP_A</span>
     </div>
 
     <div class="teams">
       <div class="team home">
-        <span class="name">韩国</span>
+        <span class="name team-name" data-team-en="South Korea">韩国</span>
         <span class="flag">🇰🇷</span>
       </div>
       <div class="score-box actual-box">
@@ -513,43 +532,43 @@
       </div>
       <div class="team away">
         <span class="flag">🇨🇿</span>
-        <span class="name">捷克</span>
+        <span class="name team-name" data-team-en="Czech Republic">捷克</span>
       </div>
     </div>
 
     <div class="pred-row">
       <div>
-        <span class="pred-label">模型预测</span>
+        <span class="pred-label" data-i18n="model_pred">模型预测</span>
         <span class="pred-score">1 - 0</span>
       </div>
       <div class="probs">
-        <span>主胜 <strong>61%</strong></span>
-        <span>平 <strong>21%</strong></span>
-        <span>客胜 <strong>17%</strong></span>
+        <span><span data-i18n="home_win">主胜</span> <strong>61%</strong></span>
+        <span><span data-i18n="draw">平</span> <strong>21%</strong></span>
+        <span><span data-i18n="away_win">客胜</span> <strong>17%</strong></span>
       </div>
     </div>
 
     
     <div class="pred-row market-row market-empty">
       <div>
-        <span class="pred-label">市场预测</span>
-        <span class="pred-score">盘口未挂出</span>
+        <span class="pred-label" data-i18n="market_pred">市场预测</span>
+        <span class="pred-score" data-i18n="odds_unavailable">盘口未挂出</span>
       </div>
     </div>
     
 
     
     <div class="status-row">
-      <span class="hit-label">模型</span>
+      <span class="hit-label" data-i18n="model_pred">模型</span>
       
-        <span class="tag hit">✓ 胜负</span>
-      
-      
-        <span class="tag miss">✗ 比分</span>
+        <span class="tag hit" data-i18n="outcome_hit">✓ 胜负</span>
       
       
-        <span class="hit-label market-label">市场</span>
-        <span style="color: var(--muted); font-size: 0.72rem;">无盘口</span>
+        <span class="tag miss" data-i18n="score_miss">✗ 比分</span>
+      
+      
+        <span class="hit-label market-label" data-i18n="market_pred">市场</span>
+        <span style="color: var(--muted); font-size: 0.72rem;" data-i18n="no_odds">无盘口</span>
       
     </div>
     
@@ -563,12 +582,12 @@
       <span>06/13 (六) 04:00 JST</span>
       
       <span class="dot">·</span>
-      <span class="stage-badge">小组赛 GROUP_B</span>
+      <span class="stage-badge"><span data-i18n="stage_GROUP_STAGE">小组赛</span> GROUP_B</span>
     </div>
 
     <div class="teams">
       <div class="team home">
-        <span class="name">加拿大</span>
+        <span class="name team-name" data-team-en="Canada">加拿大</span>
         <span class="flag">🇨🇦</span>
       </div>
       <div class="score-box">
@@ -578,34 +597,34 @@
       </div>
       <div class="team away">
         <span class="flag">🏳</span>
-        <span class="name">Bosnia-Herzegovina</span>
+        <span class="name team-name" data-team-en="Bosnia-Herzegovina">Bosnia-Herzegovina</span>
       </div>
     </div>
 
     <div class="pred-row">
       <div>
-        <span class="pred-label">模型预测</span>
+        <span class="pred-label" data-i18n="model_pred">模型预测</span>
         <span class="pred-score">2 - 0</span>
       </div>
       <div class="probs">
-        <span>主胜 <strong>75%</strong></span>
-        <span>平 <strong>16%</strong></span>
-        <span>客胜 <strong>9%</strong></span>
+        <span><span data-i18n="home_win">主胜</span> <strong>75%</strong></span>
+        <span><span data-i18n="draw">平</span> <strong>16%</strong></span>
+        <span><span data-i18n="away_win">客胜</span> <strong>9%</strong></span>
       </div>
     </div>
 
     
     <div class="pred-row market-row market-empty">
       <div>
-        <span class="pred-label">市场预测</span>
-        <span class="pred-score">盘口未挂出</span>
+        <span class="pred-label" data-i18n="market_pred">市场预测</span>
+        <span class="pred-score" data-i18n="odds_unavailable">盘口未挂出</span>
       </div>
     </div>
     
 
     
     <div class="status-row">
-      <span class="tag upcoming">⏳ 未开始</span>
+      <span class="tag upcoming" data-i18n="upcoming_label">⏳ 未开始</span>
     </div>
     
   </div>
@@ -618,12 +637,12 @@
       <span>06/13 (六) 10:00 JST</span>
       
       <span class="dot">·</span>
-      <span class="stage-badge">小组赛 GROUP_D</span>
+      <span class="stage-badge"><span data-i18n="stage_GROUP_STAGE">小组赛</span> GROUP_D</span>
     </div>
 
     <div class="teams">
       <div class="team home">
-        <span class="name">美国</span>
+        <span class="name team-name" data-team-en="United States">美国</span>
         <span class="flag">🇺🇸</span>
       </div>
       <div class="score-box actual-box">
@@ -633,43 +652,43 @@
       </div>
       <div class="team away">
         <span class="flag">🇵🇾</span>
-        <span class="name">巴拉圭</span>
+        <span class="name team-name" data-team-en="Paraguay">巴拉圭</span>
       </div>
     </div>
 
     <div class="pred-row">
       <div>
-        <span class="pred-label">模型预测</span>
+        <span class="pred-label" data-i18n="model_pred">模型预测</span>
         <span class="pred-score">2 - 0</span>
       </div>
       <div class="probs">
-        <span>主胜 <strong>68%</strong></span>
-        <span>平 <strong>19%</strong></span>
-        <span>客胜 <strong>13%</strong></span>
+        <span><span data-i18n="home_win">主胜</span> <strong>68%</strong></span>
+        <span><span data-i18n="draw">平</span> <strong>19%</strong></span>
+        <span><span data-i18n="away_win">客胜</span> <strong>13%</strong></span>
       </div>
     </div>
 
     
     <div class="pred-row market-row market-empty">
       <div>
-        <span class="pred-label">市场预测</span>
-        <span class="pred-score">盘口未挂出</span>
+        <span class="pred-label" data-i18n="market_pred">市场预测</span>
+        <span class="pred-score" data-i18n="odds_unavailable">盘口未挂出</span>
       </div>
     </div>
     
 
     
     <div class="status-row">
-      <span class="hit-label">模型</span>
+      <span class="hit-label" data-i18n="model_pred">模型</span>
       
-        <span class="tag hit">✓ 胜负</span>
-      
-      
-        <span class="tag miss">✗ 比分</span>
+        <span class="tag hit" data-i18n="outcome_hit">✓ 胜负</span>
       
       
-        <span class="hit-label market-label">市场</span>
-        <span style="color: var(--muted); font-size: 0.72rem;">无盘口</span>
+        <span class="tag miss" data-i18n="score_miss">✗ 比分</span>
+      
+      
+        <span class="hit-label market-label" data-i18n="market_pred">市场</span>
+        <span style="color: var(--muted); font-size: 0.72rem;" data-i18n="no_odds">无盘口</span>
       
     </div>
     
@@ -683,12 +702,12 @@
       <span>06/14 (日) 04:00 JST</span>
       
       <span class="dot">·</span>
-      <span class="stage-badge">小组赛 GROUP_B</span>
+      <span class="stage-badge"><span data-i18n="stage_GROUP_STAGE">小组赛</span> GROUP_B</span>
     </div>
 
     <div class="teams">
       <div class="team home">
-        <span class="name">卡塔尔</span>
+        <span class="name team-name" data-team-en="Qatar">卡塔尔</span>
         <span class="flag">🇶🇦</span>
       </div>
       <div class="score-box actual-box">
@@ -698,43 +717,43 @@
       </div>
       <div class="team away">
         <span class="flag">🇨🇭</span>
-        <span class="name">瑞士</span>
+        <span class="name team-name" data-team-en="Switzerland">瑞士</span>
       </div>
     </div>
 
     <div class="pred-row">
       <div>
-        <span class="pred-label">模型预测</span>
+        <span class="pred-label" data-i18n="model_pred">模型预测</span>
         <span class="pred-score">0 - 2</span>
       </div>
       <div class="probs">
-        <span>主胜 <strong>10%</strong></span>
-        <span>平 <strong>16%</strong></span>
-        <span>客胜 <strong>74%</strong></span>
+        <span><span data-i18n="home_win">主胜</span> <strong>10%</strong></span>
+        <span><span data-i18n="draw">平</span> <strong>16%</strong></span>
+        <span><span data-i18n="away_win">客胜</span> <strong>74%</strong></span>
       </div>
     </div>
 
     
     <div class="pred-row market-row market-empty">
       <div>
-        <span class="pred-label">市场预测</span>
-        <span class="pred-score">盘口未挂出</span>
+        <span class="pred-label" data-i18n="market_pred">市场预测</span>
+        <span class="pred-score" data-i18n="odds_unavailable">盘口未挂出</span>
       </div>
     </div>
     
 
     
     <div class="status-row">
-      <span class="hit-label">模型</span>
+      <span class="hit-label" data-i18n="model_pred">模型</span>
       
-        <span class="tag miss">✗ 胜负</span>
-      
-      
-        <span class="tag miss">✗ 比分</span>
+        <span class="tag miss" data-i18n="outcome_miss">✗ 胜负</span>
       
       
-        <span class="hit-label market-label">市场</span>
-        <span style="color: var(--muted); font-size: 0.72rem;">无盘口</span>
+        <span class="tag miss" data-i18n="score_miss">✗ 比分</span>
+      
+      
+        <span class="hit-label market-label" data-i18n="market_pred">市场</span>
+        <span style="color: var(--muted); font-size: 0.72rem;" data-i18n="no_odds">无盘口</span>
       
     </div>
     
@@ -748,12 +767,12 @@
       <span>06/14 (日) 07:00 JST</span>
       
       <span class="dot">·</span>
-      <span class="stage-badge">小组赛 GROUP_C</span>
+      <span class="stage-badge"><span data-i18n="stage_GROUP_STAGE">小组赛</span> GROUP_C</span>
     </div>
 
     <div class="teams">
       <div class="team home">
-        <span class="name">巴西</span>
+        <span class="name team-name" data-team-en="Brazil">巴西</span>
         <span class="flag">🇧🇷</span>
       </div>
       <div class="score-box actual-box">
@@ -763,43 +782,43 @@
       </div>
       <div class="team away">
         <span class="flag">🇲🇦</span>
-        <span class="name">摩洛哥</span>
+        <span class="name team-name" data-team-en="Morocco">摩洛哥</span>
       </div>
     </div>
 
     <div class="pred-row">
       <div>
-        <span class="pred-label">模型预测</span>
+        <span class="pred-label" data-i18n="model_pred">模型预测</span>
         <span class="pred-score">0 - 2</span>
       </div>
       <div class="probs">
-        <span>主胜 <strong>14%</strong></span>
-        <span>平 <strong>19%</strong></span>
-        <span>客胜 <strong>67%</strong></span>
+        <span><span data-i18n="home_win">主胜</span> <strong>14%</strong></span>
+        <span><span data-i18n="draw">平</span> <strong>19%</strong></span>
+        <span><span data-i18n="away_win">客胜</span> <strong>67%</strong></span>
       </div>
     </div>
 
     
     <div class="pred-row market-row market-empty">
       <div>
-        <span class="pred-label">市场预测</span>
-        <span class="pred-score">盘口未挂出</span>
+        <span class="pred-label" data-i18n="market_pred">市场预测</span>
+        <span class="pred-score" data-i18n="odds_unavailable">盘口未挂出</span>
       </div>
     </div>
     
 
     
     <div class="status-row">
-      <span class="hit-label">模型</span>
+      <span class="hit-label" data-i18n="model_pred">模型</span>
       
-        <span class="tag miss">✗ 胜负</span>
-      
-      
-        <span class="tag miss">✗ 比分</span>
+        <span class="tag miss" data-i18n="outcome_miss">✗ 胜负</span>
       
       
-        <span class="hit-label market-label">市场</span>
-        <span style="color: var(--muted); font-size: 0.72rem;">无盘口</span>
+        <span class="tag miss" data-i18n="score_miss">✗ 比分</span>
+      
+      
+        <span class="hit-label market-label" data-i18n="market_pred">市场</span>
+        <span style="color: var(--muted); font-size: 0.72rem;" data-i18n="no_odds">无盘口</span>
       
     </div>
     
@@ -813,12 +832,12 @@
       <span>06/14 (日) 10:00 JST</span>
       
       <span class="dot">·</span>
-      <span class="stage-badge">小组赛 GROUP_C</span>
+      <span class="stage-badge"><span data-i18n="stage_GROUP_STAGE">小组赛</span> GROUP_C</span>
     </div>
 
     <div class="teams">
       <div class="team home">
-        <span class="name">海地</span>
+        <span class="name team-name" data-team-en="Haiti">海地</span>
         <span class="flag">🇭🇹</span>
       </div>
       <div class="score-box actual-box">
@@ -828,43 +847,43 @@
       </div>
       <div class="team away">
         <span class="flag">🏴</span>
-        <span class="name">苏格兰</span>
+        <span class="name team-name" data-team-en="Scotland">苏格兰</span>
       </div>
     </div>
 
     <div class="pred-row">
       <div>
-        <span class="pred-label">模型预测</span>
+        <span class="pred-label" data-i18n="model_pred">模型预测</span>
         <span class="pred-score">1 - 1</span>
       </div>
       <div class="probs">
-        <span>主胜 <strong>28%</strong></span>
-        <span>平 <strong>25%</strong></span>
-        <span>客胜 <strong>47%</strong></span>
+        <span><span data-i18n="home_win">主胜</span> <strong>28%</strong></span>
+        <span><span data-i18n="draw">平</span> <strong>25%</strong></span>
+        <span><span data-i18n="away_win">客胜</span> <strong>47%</strong></span>
       </div>
     </div>
 
     
     <div class="pred-row market-row market-empty">
       <div>
-        <span class="pred-label">市场预测</span>
-        <span class="pred-score">盘口未挂出</span>
+        <span class="pred-label" data-i18n="market_pred">市场预测</span>
+        <span class="pred-score" data-i18n="odds_unavailable">盘口未挂出</span>
       </div>
     </div>
     
 
     
     <div class="status-row">
-      <span class="hit-label">模型</span>
+      <span class="hit-label" data-i18n="model_pred">模型</span>
       
-        <span class="tag miss">✗ 胜负</span>
-      
-      
-        <span class="tag miss">✗ 比分</span>
+        <span class="tag miss" data-i18n="outcome_miss">✗ 胜负</span>
       
       
-        <span class="hit-label market-label">市场</span>
-        <span style="color: var(--muted); font-size: 0.72rem;">无盘口</span>
+        <span class="tag miss" data-i18n="score_miss">✗ 比分</span>
+      
+      
+        <span class="hit-label market-label" data-i18n="market_pred">市场</span>
+        <span style="color: var(--muted); font-size: 0.72rem;" data-i18n="no_odds">无盘口</span>
       
     </div>
     
@@ -878,12 +897,12 @@
       <span>06/14 (日) 13:00 JST</span>
       
       <span class="dot">·</span>
-      <span class="stage-badge">小组赛 GROUP_D</span>
+      <span class="stage-badge"><span data-i18n="stage_GROUP_STAGE">小组赛</span> GROUP_D</span>
     </div>
 
     <div class="teams">
       <div class="team home">
-        <span class="name">澳大利亚</span>
+        <span class="name team-name" data-team-en="Australia">澳大利亚</span>
         <span class="flag">🇦🇺</span>
       </div>
       <div class="score-box actual-box">
@@ -893,43 +912,43 @@
       </div>
       <div class="team away">
         <span class="flag">🇹🇷</span>
-        <span class="name">土耳其</span>
+        <span class="name team-name" data-team-en="Turkey">土耳其</span>
       </div>
     </div>
 
     <div class="pred-row">
       <div>
-        <span class="pred-label">模型预测</span>
+        <span class="pred-label" data-i18n="model_pred">模型预测</span>
         <span class="pred-score">1 - 1</span>
       </div>
       <div class="probs">
-        <span>主胜 <strong>57%</strong></span>
-        <span>平 <strong>23%</strong></span>
-        <span>客胜 <strong>21%</strong></span>
+        <span><span data-i18n="home_win">主胜</span> <strong>57%</strong></span>
+        <span><span data-i18n="draw">平</span> <strong>23%</strong></span>
+        <span><span data-i18n="away_win">客胜</span> <strong>21%</strong></span>
       </div>
     </div>
 
     
     <div class="pred-row market-row market-empty">
       <div>
-        <span class="pred-label">市场预测</span>
-        <span class="pred-score">盘口未挂出</span>
+        <span class="pred-label" data-i18n="market_pred">市场预测</span>
+        <span class="pred-score" data-i18n="odds_unavailable">盘口未挂出</span>
       </div>
     </div>
     
 
     
     <div class="status-row">
-      <span class="hit-label">模型</span>
+      <span class="hit-label" data-i18n="model_pred">模型</span>
       
-        <span class="tag miss">✗ 胜负</span>
-      
-      
-        <span class="tag miss">✗ 比分</span>
+        <span class="tag miss" data-i18n="outcome_miss">✗ 胜负</span>
       
       
-        <span class="hit-label market-label">市场</span>
-        <span style="color: var(--muted); font-size: 0.72rem;">无盘口</span>
+        <span class="tag miss" data-i18n="score_miss">✗ 比分</span>
+      
+      
+        <span class="hit-label market-label" data-i18n="market_pred">市场</span>
+        <span style="color: var(--muted); font-size: 0.72rem;" data-i18n="no_odds">无盘口</span>
       
     </div>
     
@@ -943,12 +962,12 @@
       <span>06/15 (一) 02:00 JST</span>
       
       <span class="dot">·</span>
-      <span class="stage-badge">小组赛 GROUP_E</span>
+      <span class="stage-badge"><span data-i18n="stage_GROUP_STAGE">小组赛</span> GROUP_E</span>
     </div>
 
     <div class="teams">
       <div class="team home">
-        <span class="name">德国</span>
+        <span class="name team-name" data-team-en="Germany">德国</span>
         <span class="flag">🇩🇪</span>
       </div>
       <div class="score-box actual-box">
@@ -958,43 +977,43 @@
       </div>
       <div class="team away">
         <span class="flag">🇨🇼</span>
-        <span class="name">库拉索</span>
+        <span class="name team-name" data-team-en="Curaçao">库拉索</span>
       </div>
     </div>
 
     <div class="pred-row">
       <div>
-        <span class="pred-label">模型预测</span>
+        <span class="pred-label" data-i18n="model_pred">模型预测</span>
         <span class="pred-score">2 - 0</span>
       </div>
       <div class="probs">
-        <span>主胜 <strong>78%</strong></span>
-        <span>平 <strong>14%</strong></span>
-        <span>客胜 <strong>8%</strong></span>
+        <span><span data-i18n="home_win">主胜</span> <strong>78%</strong></span>
+        <span><span data-i18n="draw">平</span> <strong>14%</strong></span>
+        <span><span data-i18n="away_win">客胜</span> <strong>8%</strong></span>
       </div>
     </div>
 
     
     <div class="pred-row market-row market-empty">
       <div>
-        <span class="pred-label">市场预测</span>
-        <span class="pred-score">盘口未挂出</span>
+        <span class="pred-label" data-i18n="market_pred">市场预测</span>
+        <span class="pred-score" data-i18n="odds_unavailable">盘口未挂出</span>
       </div>
     </div>
     
 
     
     <div class="status-row">
-      <span class="hit-label">模型</span>
+      <span class="hit-label" data-i18n="model_pred">模型</span>
       
-        <span class="tag hit">✓ 胜负</span>
-      
-      
-        <span class="tag miss">✗ 比分</span>
+        <span class="tag hit" data-i18n="outcome_hit">✓ 胜负</span>
       
       
-        <span class="hit-label market-label">市场</span>
-        <span style="color: var(--muted); font-size: 0.72rem;">无盘口</span>
+        <span class="tag miss" data-i18n="score_miss">✗ 比分</span>
+      
+      
+        <span class="hit-label market-label" data-i18n="market_pred">市场</span>
+        <span style="color: var(--muted); font-size: 0.72rem;" data-i18n="no_odds">无盘口</span>
       
     </div>
     
@@ -1008,12 +1027,12 @@
       <span>06/15 (一) 05:00 JST</span>
       
       <span class="dot">·</span>
-      <span class="stage-badge">小组赛 GROUP_F</span>
+      <span class="stage-badge"><span data-i18n="stage_GROUP_STAGE">小组赛</span> GROUP_F</span>
     </div>
 
     <div class="teams">
       <div class="team home">
-        <span class="name">荷兰</span>
+        <span class="name team-name" data-team-en="Netherlands">荷兰</span>
         <span class="flag">🇳🇱</span>
       </div>
       <div class="score-box actual-box">
@@ -1023,43 +1042,43 @@
       </div>
       <div class="team away">
         <span class="flag">🇯🇵</span>
-        <span class="name">日本</span>
+        <span class="name team-name" data-team-en="Japan">日本</span>
       </div>
     </div>
 
     <div class="pred-row">
       <div>
-        <span class="pred-label">模型预测</span>
+        <span class="pred-label" data-i18n="model_pred">模型预测</span>
         <span class="pred-score">1 - 1</span>
       </div>
       <div class="probs">
-        <span>主胜 <strong>23%</strong></span>
-        <span>平 <strong>24%</strong></span>
-        <span>客胜 <strong>53%</strong></span>
+        <span><span data-i18n="home_win">主胜</span> <strong>23%</strong></span>
+        <span><span data-i18n="draw">平</span> <strong>24%</strong></span>
+        <span><span data-i18n="away_win">客胜</span> <strong>53%</strong></span>
       </div>
     </div>
 
     
     <div class="pred-row market-row market-empty">
       <div>
-        <span class="pred-label">市场预测</span>
-        <span class="pred-score">盘口未挂出</span>
+        <span class="pred-label" data-i18n="market_pred">市场预测</span>
+        <span class="pred-score" data-i18n="odds_unavailable">盘口未挂出</span>
       </div>
     </div>
     
 
     
     <div class="status-row">
-      <span class="hit-label">模型</span>
+      <span class="hit-label" data-i18n="model_pred">模型</span>
       
-        <span class="tag hit">✓ 胜负</span>
-      
-      
-        <span class="tag miss">✗ 比分</span>
+        <span class="tag hit" data-i18n="outcome_hit">✓ 胜负</span>
       
       
-        <span class="hit-label market-label">市场</span>
-        <span style="color: var(--muted); font-size: 0.72rem;">无盘口</span>
+        <span class="tag miss" data-i18n="score_miss">✗ 比分</span>
+      
+      
+        <span class="hit-label market-label" data-i18n="market_pred">市场</span>
+        <span style="color: var(--muted); font-size: 0.72rem;" data-i18n="no_odds">无盘口</span>
       
     </div>
     
@@ -1073,12 +1092,12 @@
       <span>06/15 (一) 08:00 JST</span>
       
       <span class="dot">·</span>
-      <span class="stage-badge">小组赛 GROUP_E</span>
+      <span class="stage-badge"><span data-i18n="stage_GROUP_STAGE">小组赛</span> GROUP_E</span>
     </div>
 
     <div class="teams">
       <div class="team home">
-        <span class="name">科特迪瓦</span>
+        <span class="name team-name" data-team-en="Côte d'Ivoire">科特迪瓦</span>
         <span class="flag">🇨🇮</span>
       </div>
       <div class="score-box actual-box">
@@ -1088,43 +1107,43 @@
       </div>
       <div class="team away">
         <span class="flag">🇪🇨</span>
-        <span class="name">厄瓜多尔</span>
+        <span class="name team-name" data-team-en="Ecuador">厄瓜多尔</span>
       </div>
     </div>
 
     <div class="pred-row">
       <div>
-        <span class="pred-label">模型预测</span>
+        <span class="pred-label" data-i18n="model_pred">模型预测</span>
         <span class="pred-score">0 - 2</span>
       </div>
       <div class="probs">
-        <span>主胜 <strong>13%</strong></span>
-        <span>平 <strong>18%</strong></span>
-        <span>客胜 <strong>69%</strong></span>
+        <span><span data-i18n="home_win">主胜</span> <strong>13%</strong></span>
+        <span><span data-i18n="draw">平</span> <strong>18%</strong></span>
+        <span><span data-i18n="away_win">客胜</span> <strong>69%</strong></span>
       </div>
     </div>
 
     
     <div class="pred-row market-row market-empty">
       <div>
-        <span class="pred-label">市场预测</span>
-        <span class="pred-score">盘口未挂出</span>
+        <span class="pred-label" data-i18n="market_pred">市场预测</span>
+        <span class="pred-score" data-i18n="odds_unavailable">盘口未挂出</span>
       </div>
     </div>
     
 
     
     <div class="status-row">
-      <span class="hit-label">模型</span>
+      <span class="hit-label" data-i18n="model_pred">模型</span>
       
-        <span class="tag miss">✗ 胜负</span>
-      
-      
-        <span class="tag miss">✗ 比分</span>
+        <span class="tag miss" data-i18n="outcome_miss">✗ 胜负</span>
       
       
-        <span class="hit-label market-label">市场</span>
-        <span style="color: var(--muted); font-size: 0.72rem;">无盘口</span>
+        <span class="tag miss" data-i18n="score_miss">✗ 比分</span>
+      
+      
+        <span class="hit-label market-label" data-i18n="market_pred">市场</span>
+        <span style="color: var(--muted); font-size: 0.72rem;" data-i18n="no_odds">无盘口</span>
       
     </div>
     
@@ -1138,12 +1157,12 @@
       <span>06/15 (一) 11:00 JST</span>
       
       <span class="dot">·</span>
-      <span class="stage-badge">小组赛 GROUP_F</span>
+      <span class="stage-badge"><span data-i18n="stage_GROUP_STAGE">小组赛</span> GROUP_F</span>
     </div>
 
     <div class="teams">
       <div class="team home">
-        <span class="name">瑞典</span>
+        <span class="name team-name" data-team-en="Sweden">瑞典</span>
         <span class="flag">🇸🇪</span>
       </div>
       <div class="score-box">
@@ -1153,34 +1172,34 @@
       </div>
       <div class="team away">
         <span class="flag">🇹🇳</span>
-        <span class="name">突尼斯</span>
+        <span class="name team-name" data-team-en="Tunisia">突尼斯</span>
       </div>
     </div>
 
     <div class="pred-row">
       <div>
-        <span class="pred-label">模型预测</span>
+        <span class="pred-label" data-i18n="model_pred">模型预测</span>
         <span class="pred-score">1 - 1</span>
       </div>
       <div class="probs">
-        <span>主胜 <strong>28%</strong></span>
-        <span>平 <strong>25%</strong></span>
-        <span>客胜 <strong>47%</strong></span>
+        <span><span data-i18n="home_win">主胜</span> <strong>28%</strong></span>
+        <span><span data-i18n="draw">平</span> <strong>25%</strong></span>
+        <span><span data-i18n="away_win">客胜</span> <strong>47%</strong></span>
       </div>
     </div>
 
     
     <div class="pred-row market-row market-empty">
       <div>
-        <span class="pred-label">市场预测</span>
-        <span class="pred-score">盘口未挂出</span>
+        <span class="pred-label" data-i18n="market_pred">市场预测</span>
+        <span class="pred-score" data-i18n="odds_unavailable">盘口未挂出</span>
       </div>
     </div>
     
 
     
     <div class="status-row">
-      <span class="tag upcoming">⏳ 未开始</span>
+      <span class="tag upcoming" data-i18n="upcoming_label">⏳ 未开始</span>
     </div>
     
   </div>
@@ -1193,12 +1212,12 @@
       <span>06/16 (二) 01:00 JST</span>
       
       <span class="dot">·</span>
-      <span class="stage-badge">小组赛 GROUP_H</span>
+      <span class="stage-badge"><span data-i18n="stage_GROUP_STAGE">小组赛</span> GROUP_H</span>
     </div>
 
     <div class="teams">
       <div class="team home">
-        <span class="name">西班牙</span>
+        <span class="name team-name" data-team-en="Spain">西班牙</span>
         <span class="flag">🇪🇸</span>
       </div>
       <div class="score-box">
@@ -1208,34 +1227,34 @@
       </div>
       <div class="team away">
         <span class="flag">🏳</span>
-        <span class="name">Cape Verde Islands</span>
+        <span class="name team-name" data-team-en="Cape Verde Islands">Cape Verde Islands</span>
       </div>
     </div>
 
     <div class="pred-row">
       <div>
-        <span class="pred-label">模型预测</span>
+        <span class="pred-label" data-i18n="model_pred">模型预测</span>
         <span class="pred-score">4 - 0</span>
       </div>
       <div class="probs">
-        <span>主胜 <strong>92%</strong></span>
-        <span>平 <strong>4%</strong></span>
-        <span>客胜 <strong>1%</strong></span>
+        <span><span data-i18n="home_win">主胜</span> <strong>92%</strong></span>
+        <span><span data-i18n="draw">平</span> <strong>4%</strong></span>
+        <span><span data-i18n="away_win">客胜</span> <strong>1%</strong></span>
       </div>
     </div>
 
     
     <div class="pred-row market-row market-empty">
       <div>
-        <span class="pred-label">市场预测</span>
-        <span class="pred-score">盘口未挂出</span>
+        <span class="pred-label" data-i18n="market_pred">市场预测</span>
+        <span class="pred-score" data-i18n="odds_unavailable">盘口未挂出</span>
       </div>
     </div>
     
 
     
     <div class="status-row">
-      <span class="tag upcoming">⏳ 未开始</span>
+      <span class="tag upcoming" data-i18n="upcoming_label">⏳ 未开始</span>
     </div>
     
   </div>
@@ -1248,12 +1267,12 @@
       <span>06/16 (二) 04:00 JST</span>
       
       <span class="dot">·</span>
-      <span class="stage-badge">小组赛 GROUP_G</span>
+      <span class="stage-badge"><span data-i18n="stage_GROUP_STAGE">小组赛</span> GROUP_G</span>
     </div>
 
     <div class="teams">
       <div class="team home">
-        <span class="name">比利时</span>
+        <span class="name team-name" data-team-en="Belgium">比利时</span>
         <span class="flag">🇧🇪</span>
       </div>
       <div class="score-box">
@@ -1263,34 +1282,34 @@
       </div>
       <div class="team away">
         <span class="flag">🇪🇬</span>
-        <span class="name">埃及</span>
+        <span class="name team-name" data-team-en="Egypt">埃及</span>
       </div>
     </div>
 
     <div class="pred-row">
       <div>
-        <span class="pred-label">模型预测</span>
+        <span class="pred-label" data-i18n="model_pred">模型预测</span>
         <span class="pred-score">1 - 1</span>
       </div>
       <div class="probs">
-        <span>主胜 <strong>41%</strong></span>
-        <span>平 <strong>26%</strong></span>
-        <span>客胜 <strong>33%</strong></span>
+        <span><span data-i18n="home_win">主胜</span> <strong>41%</strong></span>
+        <span><span data-i18n="draw">平</span> <strong>26%</strong></span>
+        <span><span data-i18n="away_win">客胜</span> <strong>33%</strong></span>
       </div>
     </div>
 
     
     <div class="pred-row market-row market-empty">
       <div>
-        <span class="pred-label">市场预测</span>
-        <span class="pred-score">盘口未挂出</span>
+        <span class="pred-label" data-i18n="market_pred">市场预测</span>
+        <span class="pred-score" data-i18n="odds_unavailable">盘口未挂出</span>
       </div>
     </div>
     
 
     
     <div class="status-row">
-      <span class="tag upcoming">⏳ 未开始</span>
+      <span class="tag upcoming" data-i18n="upcoming_label">⏳ 未开始</span>
     </div>
     
   </div>
@@ -1303,12 +1322,12 @@
       <span>06/16 (二) 07:00 JST</span>
       
       <span class="dot">·</span>
-      <span class="stage-badge">小组赛 GROUP_H</span>
+      <span class="stage-badge"><span data-i18n="stage_GROUP_STAGE">小组赛</span> GROUP_H</span>
     </div>
 
     <div class="teams">
       <div class="team home">
-        <span class="name">沙特</span>
+        <span class="name team-name" data-team-en="Saudi Arabia">沙特</span>
         <span class="flag">🇸🇦</span>
       </div>
       <div class="score-box">
@@ -1318,34 +1337,34 @@
       </div>
       <div class="team away">
         <span class="flag">🇺🇾</span>
-        <span class="name">乌拉圭</span>
+        <span class="name team-name" data-team-en="Uruguay">乌拉圭</span>
       </div>
     </div>
 
     <div class="pred-row">
       <div>
-        <span class="pred-label">模型预测</span>
+        <span class="pred-label" data-i18n="model_pred">模型预测</span>
         <span class="pred-score">1 - 1</span>
       </div>
       <div class="probs">
-        <span>主胜 <strong>33%</strong></span>
-        <span>平 <strong>26%</strong></span>
-        <span>客胜 <strong>41%</strong></span>
+        <span><span data-i18n="home_win">主胜</span> <strong>33%</strong></span>
+        <span><span data-i18n="draw">平</span> <strong>26%</strong></span>
+        <span><span data-i18n="away_win">客胜</span> <strong>41%</strong></span>
       </div>
     </div>
 
     
     <div class="pred-row market-row market-empty">
       <div>
-        <span class="pred-label">市场预测</span>
-        <span class="pred-score">盘口未挂出</span>
+        <span class="pred-label" data-i18n="market_pred">市场预测</span>
+        <span class="pred-score" data-i18n="odds_unavailable">盘口未挂出</span>
       </div>
     </div>
     
 
     
     <div class="status-row">
-      <span class="tag upcoming">⏳ 未开始</span>
+      <span class="tag upcoming" data-i18n="upcoming_label">⏳ 未开始</span>
     </div>
     
   </div>
@@ -1358,12 +1377,12 @@
       <span>06/16 (二) 10:00 JST</span>
       
       <span class="dot">·</span>
-      <span class="stage-badge">小组赛 GROUP_G</span>
+      <span class="stage-badge"><span data-i18n="stage_GROUP_STAGE">小组赛</span> GROUP_G</span>
     </div>
 
     <div class="teams">
       <div class="team home">
-        <span class="name">伊朗</span>
+        <span class="name team-name" data-team-en="Iran">伊朗</span>
         <span class="flag">🇮🇷</span>
       </div>
       <div class="score-box">
@@ -1373,34 +1392,34 @@
       </div>
       <div class="team away">
         <span class="flag">🇳🇿</span>
-        <span class="name">新西兰</span>
+        <span class="name team-name" data-team-en="New Zealand">新西兰</span>
       </div>
     </div>
 
     <div class="pred-row">
       <div>
-        <span class="pred-label">模型预测</span>
+        <span class="pred-label" data-i18n="model_pred">模型预测</span>
         <span class="pred-score">2 - 0</span>
       </div>
       <div class="probs">
-        <span>主胜 <strong>79%</strong></span>
-        <span>平 <strong>13%</strong></span>
-        <span>客胜 <strong>7%</strong></span>
+        <span><span data-i18n="home_win">主胜</span> <strong>79%</strong></span>
+        <span><span data-i18n="draw">平</span> <strong>13%</strong></span>
+        <span><span data-i18n="away_win">客胜</span> <strong>7%</strong></span>
       </div>
     </div>
 
     
     <div class="pred-row market-row market-empty">
       <div>
-        <span class="pred-label">市场预测</span>
-        <span class="pred-score">盘口未挂出</span>
+        <span class="pred-label" data-i18n="market_pred">市场预测</span>
+        <span class="pred-score" data-i18n="odds_unavailable">盘口未挂出</span>
       </div>
     </div>
     
 
     
     <div class="status-row">
-      <span class="tag upcoming">⏳ 未开始</span>
+      <span class="tag upcoming" data-i18n="upcoming_label">⏳ 未开始</span>
     </div>
     
   </div>
@@ -1413,12 +1432,12 @@
       <span>06/17 (三) 04:00 JST</span>
       
       <span class="dot">·</span>
-      <span class="stage-badge">小组赛 GROUP_I</span>
+      <span class="stage-badge"><span data-i18n="stage_GROUP_STAGE">小组赛</span> GROUP_I</span>
     </div>
 
     <div class="teams">
       <div class="team home">
-        <span class="name">法国</span>
+        <span class="name team-name" data-team-en="France">法国</span>
         <span class="flag">🇫🇷</span>
       </div>
       <div class="score-box">
@@ -1428,34 +1447,34 @@
       </div>
       <div class="team away">
         <span class="flag">🇸🇳</span>
-        <span class="name">塞内加尔</span>
+        <span class="name team-name" data-team-en="Senegal">塞内加尔</span>
       </div>
     </div>
 
     <div class="pred-row">
       <div>
-        <span class="pred-label">模型预测</span>
+        <span class="pred-label" data-i18n="model_pred">模型预测</span>
         <span class="pred-score">1 - 1</span>
       </div>
       <div class="probs">
-        <span>主胜 <strong>35%</strong></span>
-        <span>平 <strong>26%</strong></span>
-        <span>客胜 <strong>39%</strong></span>
+        <span><span data-i18n="home_win">主胜</span> <strong>35%</strong></span>
+        <span><span data-i18n="draw">平</span> <strong>26%</strong></span>
+        <span><span data-i18n="away_win">客胜</span> <strong>39%</strong></span>
       </div>
     </div>
 
     
     <div class="pred-row market-row market-empty">
       <div>
-        <span class="pred-label">市场预测</span>
-        <span class="pred-score">盘口未挂出</span>
+        <span class="pred-label" data-i18n="market_pred">市场预测</span>
+        <span class="pred-score" data-i18n="odds_unavailable">盘口未挂出</span>
       </div>
     </div>
     
 
     
     <div class="status-row">
-      <span class="tag upcoming">⏳ 未开始</span>
+      <span class="tag upcoming" data-i18n="upcoming_label">⏳ 未开始</span>
     </div>
     
   </div>
@@ -1468,12 +1487,12 @@
       <span>06/17 (三) 07:00 JST</span>
       
       <span class="dot">·</span>
-      <span class="stage-badge">小组赛 GROUP_I</span>
+      <span class="stage-badge"><span data-i18n="stage_GROUP_STAGE">小组赛</span> GROUP_I</span>
     </div>
 
     <div class="teams">
       <div class="team home">
-        <span class="name">伊拉克</span>
+        <span class="name team-name" data-team-en="Iraq">伊拉克</span>
         <span class="flag">🇮🇶</span>
       </div>
       <div class="score-box">
@@ -1483,34 +1502,34 @@
       </div>
       <div class="team away">
         <span class="flag">🇳🇴</span>
-        <span class="name">挪威</span>
+        <span class="name team-name" data-team-en="Norway">挪威</span>
       </div>
     </div>
 
     <div class="pred-row">
       <div>
-        <span class="pred-label">模型预测</span>
+        <span class="pred-label" data-i18n="model_pred">模型预测</span>
         <span class="pred-score">0 - 2</span>
       </div>
       <div class="probs">
-        <span>主胜 <strong>14%</strong></span>
-        <span>平 <strong>20%</strong></span>
-        <span>客胜 <strong>66%</strong></span>
+        <span><span data-i18n="home_win">主胜</span> <strong>14%</strong></span>
+        <span><span data-i18n="draw">平</span> <strong>20%</strong></span>
+        <span><span data-i18n="away_win">客胜</span> <strong>66%</strong></span>
       </div>
     </div>
 
     
     <div class="pred-row market-row market-empty">
       <div>
-        <span class="pred-label">市场预测</span>
-        <span class="pred-score">盘口未挂出</span>
+        <span class="pred-label" data-i18n="market_pred">市场预测</span>
+        <span class="pred-score" data-i18n="odds_unavailable">盘口未挂出</span>
       </div>
     </div>
     
 
     
     <div class="status-row">
-      <span class="tag upcoming">⏳ 未开始</span>
+      <span class="tag upcoming" data-i18n="upcoming_label">⏳ 未开始</span>
     </div>
     
   </div>
@@ -1523,12 +1542,12 @@
       <span>06/17 (三) 10:00 JST</span>
       
       <span class="dot">·</span>
-      <span class="stage-badge">小组赛 GROUP_J</span>
+      <span class="stage-badge"><span data-i18n="stage_GROUP_STAGE">小组赛</span> GROUP_J</span>
     </div>
 
     <div class="teams">
       <div class="team home">
-        <span class="name">阿根廷</span>
+        <span class="name team-name" data-team-en="Argentina">阿根廷</span>
         <span class="flag">🇦🇷</span>
       </div>
       <div class="score-box">
@@ -1538,34 +1557,34 @@
       </div>
       <div class="team away">
         <span class="flag">🇩🇿</span>
-        <span class="name">阿尔及利亚</span>
+        <span class="name team-name" data-team-en="Algeria">阿尔及利亚</span>
       </div>
     </div>
 
     <div class="pred-row">
       <div>
-        <span class="pred-label">模型预测</span>
+        <span class="pred-label" data-i18n="model_pred">模型预测</span>
         <span class="pred-score">1 - 1</span>
       </div>
       <div class="probs">
-        <span>主胜 <strong>34%</strong></span>
-        <span>平 <strong>26%</strong></span>
-        <span>客胜 <strong>40%</strong></span>
+        <span><span data-i18n="home_win">主胜</span> <strong>34%</strong></span>
+        <span><span data-i18n="draw">平</span> <strong>26%</strong></span>
+        <span><span data-i18n="away_win">客胜</span> <strong>40%</strong></span>
       </div>
     </div>
 
     
     <div class="pred-row market-row market-empty">
       <div>
-        <span class="pred-label">市场预测</span>
-        <span class="pred-score">盘口未挂出</span>
+        <span class="pred-label" data-i18n="market_pred">市场预测</span>
+        <span class="pred-score" data-i18n="odds_unavailable">盘口未挂出</span>
       </div>
     </div>
     
 
     
     <div class="status-row">
-      <span class="tag upcoming">⏳ 未开始</span>
+      <span class="tag upcoming" data-i18n="upcoming_label">⏳ 未开始</span>
     </div>
     
   </div>
@@ -1578,12 +1597,12 @@
       <span>06/17 (三) 13:00 JST</span>
       
       <span class="dot">·</span>
-      <span class="stage-badge">小组赛 GROUP_J</span>
+      <span class="stage-badge"><span data-i18n="stage_GROUP_STAGE">小组赛</span> GROUP_J</span>
     </div>
 
     <div class="teams">
       <div class="team home">
-        <span class="name">奥地利</span>
+        <span class="name team-name" data-team-en="Austria">奥地利</span>
         <span class="flag">🇦🇹</span>
       </div>
       <div class="score-box">
@@ -1593,34 +1612,34 @@
       </div>
       <div class="team away">
         <span class="flag">🇯🇴</span>
-        <span class="name">约旦</span>
+        <span class="name team-name" data-team-en="Jordan">约旦</span>
       </div>
     </div>
 
     <div class="pred-row">
       <div>
-        <span class="pred-label">模型预测</span>
+        <span class="pred-label" data-i18n="model_pred">模型预测</span>
         <span class="pred-score">1 - 1</span>
       </div>
       <div class="probs">
-        <span>主胜 <strong>56%</strong></span>
-        <span>平 <strong>23%</strong></span>
-        <span>客胜 <strong>21%</strong></span>
+        <span><span data-i18n="home_win">主胜</span> <strong>56%</strong></span>
+        <span><span data-i18n="draw">平</span> <strong>23%</strong></span>
+        <span><span data-i18n="away_win">客胜</span> <strong>21%</strong></span>
       </div>
     </div>
 
     
     <div class="pred-row market-row market-empty">
       <div>
-        <span class="pred-label">市场预测</span>
-        <span class="pred-score">盘口未挂出</span>
+        <span class="pred-label" data-i18n="market_pred">市场预测</span>
+        <span class="pred-score" data-i18n="odds_unavailable">盘口未挂出</span>
       </div>
     </div>
     
 
     
     <div class="status-row">
-      <span class="tag upcoming">⏳ 未开始</span>
+      <span class="tag upcoming" data-i18n="upcoming_label">⏳ 未开始</span>
     </div>
     
   </div>
@@ -1633,12 +1652,12 @@
       <span>06/18 (四) 02:00 JST</span>
       
       <span class="dot">·</span>
-      <span class="stage-badge">小组赛 GROUP_K</span>
+      <span class="stage-badge"><span data-i18n="stage_GROUP_STAGE">小组赛</span> GROUP_K</span>
     </div>
 
     <div class="teams">
       <div class="team home">
-        <span class="name">葡萄牙</span>
+        <span class="name team-name" data-team-en="Portugal">葡萄牙</span>
         <span class="flag">🇵🇹</span>
       </div>
       <div class="score-box">
@@ -1648,34 +1667,34 @@
       </div>
       <div class="team away">
         <span class="flag">🏳</span>
-        <span class="name">Congo DR</span>
+        <span class="name team-name" data-team-en="Congo DR">Congo DR</span>
       </div>
     </div>
 
     <div class="pred-row">
       <div>
-        <span class="pred-label">模型预测</span>
+        <span class="pred-label" data-i18n="model_pred">模型预测</span>
         <span class="pred-score">3 - 0</span>
       </div>
       <div class="probs">
-        <span>主胜 <strong>85%</strong></span>
-        <span>平 <strong>10%</strong></span>
-        <span>客胜 <strong>5%</strong></span>
+        <span><span data-i18n="home_win">主胜</span> <strong>85%</strong></span>
+        <span><span data-i18n="draw">平</span> <strong>10%</strong></span>
+        <span><span data-i18n="away_win">客胜</span> <strong>5%</strong></span>
       </div>
     </div>
 
     
     <div class="pred-row market-row market-empty">
       <div>
-        <span class="pred-label">市场预测</span>
-        <span class="pred-score">盘口未挂出</span>
+        <span class="pred-label" data-i18n="market_pred">市场预测</span>
+        <span class="pred-score" data-i18n="odds_unavailable">盘口未挂出</span>
       </div>
     </div>
     
 
     
     <div class="status-row">
-      <span class="tag upcoming">⏳ 未开始</span>
+      <span class="tag upcoming" data-i18n="upcoming_label">⏳ 未开始</span>
     </div>
     
   </div>
@@ -1688,12 +1707,12 @@
       <span>06/18 (四) 05:00 JST</span>
       
       <span class="dot">·</span>
-      <span class="stage-badge">小组赛 GROUP_L</span>
+      <span class="stage-badge"><span data-i18n="stage_GROUP_STAGE">小组赛</span> GROUP_L</span>
     </div>
 
     <div class="teams">
       <div class="team home">
-        <span class="name">英格兰</span>
+        <span class="name team-name" data-team-en="England">英格兰</span>
         <span class="flag">🏴</span>
       </div>
       <div class="score-box">
@@ -1703,34 +1722,34 @@
       </div>
       <div class="team away">
         <span class="flag">🇭🇷</span>
-        <span class="name">克罗地亚</span>
+        <span class="name team-name" data-team-en="Croatia">克罗地亚</span>
       </div>
     </div>
 
     <div class="pred-row">
       <div>
-        <span class="pred-label">模型预测</span>
+        <span class="pred-label" data-i18n="model_pred">模型预测</span>
         <span class="pred-score">1 - 0</span>
       </div>
       <div class="probs">
-        <span>主胜 <strong>62%</strong></span>
-        <span>平 <strong>21%</strong></span>
-        <span>客胜 <strong>17%</strong></span>
+        <span><span data-i18n="home_win">主胜</span> <strong>62%</strong></span>
+        <span><span data-i18n="draw">平</span> <strong>21%</strong></span>
+        <span><span data-i18n="away_win">客胜</span> <strong>17%</strong></span>
       </div>
     </div>
 
     
     <div class="pred-row market-row market-empty">
       <div>
-        <span class="pred-label">市场预测</span>
-        <span class="pred-score">盘口未挂出</span>
+        <span class="pred-label" data-i18n="market_pred">市场预测</span>
+        <span class="pred-score" data-i18n="odds_unavailable">盘口未挂出</span>
       </div>
     </div>
     
 
     
     <div class="status-row">
-      <span class="tag upcoming">⏳ 未开始</span>
+      <span class="tag upcoming" data-i18n="upcoming_label">⏳ 未开始</span>
     </div>
     
   </div>
@@ -1743,12 +1762,12 @@
       <span>06/18 (四) 08:00 JST</span>
       
       <span class="dot">·</span>
-      <span class="stage-badge">小组赛 GROUP_L</span>
+      <span class="stage-badge"><span data-i18n="stage_GROUP_STAGE">小组赛</span> GROUP_L</span>
     </div>
 
     <div class="teams">
       <div class="team home">
-        <span class="name">加纳</span>
+        <span class="name team-name" data-team-en="Ghana">加纳</span>
         <span class="flag">🇬🇭</span>
       </div>
       <div class="score-box">
@@ -1758,34 +1777,34 @@
       </div>
       <div class="team away">
         <span class="flag">🇵🇦</span>
-        <span class="name">巴拿马</span>
+        <span class="name team-name" data-team-en="Panama">巴拿马</span>
       </div>
     </div>
 
     <div class="pred-row">
       <div>
-        <span class="pred-label">模型预测</span>
+        <span class="pred-label" data-i18n="model_pred">模型预测</span>
         <span class="pred-score">0 - 2</span>
       </div>
       <div class="probs">
-        <span>主胜 <strong>15%</strong></span>
-        <span>平 <strong>20%</strong></span>
-        <span>客胜 <strong>64%</strong></span>
+        <span><span data-i18n="home_win">主胜</span> <strong>15%</strong></span>
+        <span><span data-i18n="draw">平</span> <strong>20%</strong></span>
+        <span><span data-i18n="away_win">客胜</span> <strong>64%</strong></span>
       </div>
     </div>
 
     
     <div class="pred-row market-row market-empty">
       <div>
-        <span class="pred-label">市场预测</span>
-        <span class="pred-score">盘口未挂出</span>
+        <span class="pred-label" data-i18n="market_pred">市场预测</span>
+        <span class="pred-score" data-i18n="odds_unavailable">盘口未挂出</span>
       </div>
     </div>
     
 
     
     <div class="status-row">
-      <span class="tag upcoming">⏳ 未开始</span>
+      <span class="tag upcoming" data-i18n="upcoming_label">⏳ 未开始</span>
     </div>
     
   </div>
@@ -1798,12 +1817,12 @@
       <span>06/18 (四) 11:00 JST</span>
       
       <span class="dot">·</span>
-      <span class="stage-badge">小组赛 GROUP_K</span>
+      <span class="stage-badge"><span data-i18n="stage_GROUP_STAGE">小组赛</span> GROUP_K</span>
     </div>
 
     <div class="teams">
       <div class="team home">
-        <span class="name">乌兹别克斯坦</span>
+        <span class="name team-name" data-team-en="Uzbekistan">乌兹别克斯坦</span>
         <span class="flag">🇺🇿</span>
       </div>
       <div class="score-box">
@@ -1813,34 +1832,34 @@
       </div>
       <div class="team away">
         <span class="flag">🇨🇴</span>
-        <span class="name">哥伦比亚</span>
+        <span class="name team-name" data-team-en="Colombia">哥伦比亚</span>
       </div>
     </div>
 
     <div class="pred-row">
       <div>
-        <span class="pred-label">模型预测</span>
+        <span class="pred-label" data-i18n="model_pred">模型预测</span>
         <span class="pred-score">1 - 1</span>
       </div>
       <div class="probs">
-        <span>主胜 <strong>24%</strong></span>
-        <span>平 <strong>24%</strong></span>
-        <span>客胜 <strong>51%</strong></span>
+        <span><span data-i18n="home_win">主胜</span> <strong>24%</strong></span>
+        <span><span data-i18n="draw">平</span> <strong>24%</strong></span>
+        <span><span data-i18n="away_win">客胜</span> <strong>51%</strong></span>
       </div>
     </div>
 
     
     <div class="pred-row market-row market-empty">
       <div>
-        <span class="pred-label">市场预测</span>
-        <span class="pred-score">盘口未挂出</span>
+        <span class="pred-label" data-i18n="market_pred">市场预测</span>
+        <span class="pred-score" data-i18n="odds_unavailable">盘口未挂出</span>
       </div>
     </div>
     
 
     
     <div class="status-row">
-      <span class="tag upcoming">⏳ 未开始</span>
+      <span class="tag upcoming" data-i18n="upcoming_label">⏳ 未开始</span>
     </div>
     
   </div>
@@ -1853,12 +1872,12 @@
       <span>06/19 (五) 01:00 JST</span>
       
       <span class="dot">·</span>
-      <span class="stage-badge">小组赛 GROUP_A</span>
+      <span class="stage-badge"><span data-i18n="stage_GROUP_STAGE">小组赛</span> GROUP_A</span>
     </div>
 
     <div class="teams">
       <div class="team home">
-        <span class="name">捷克</span>
+        <span class="name team-name" data-team-en="Czech Republic">捷克</span>
         <span class="flag">🇨🇿</span>
       </div>
       <div class="score-box">
@@ -1868,34 +1887,34 @@
       </div>
       <div class="team away">
         <span class="flag">🇿🇦</span>
-        <span class="name">南非</span>
+        <span class="name team-name" data-team-en="South Africa">南非</span>
       </div>
     </div>
 
     <div class="pred-row">
       <div>
-        <span class="pred-label">模型预测</span>
+        <span class="pred-label" data-i18n="model_pred">模型预测</span>
         <span class="pred-score">1 - 1</span>
       </div>
       <div class="probs">
-        <span>主胜 <strong>39%</strong></span>
-        <span>平 <strong>26%</strong></span>
-        <span>客胜 <strong>35%</strong></span>
+        <span><span data-i18n="home_win">主胜</span> <strong>39%</strong></span>
+        <span><span data-i18n="draw">平</span> <strong>26%</strong></span>
+        <span><span data-i18n="away_win">客胜</span> <strong>35%</strong></span>
       </div>
     </div>
 
     
     <div class="pred-row market-row market-empty">
       <div>
-        <span class="pred-label">市场预测</span>
-        <span class="pred-score">盘口未挂出</span>
+        <span class="pred-label" data-i18n="market_pred">市场预测</span>
+        <span class="pred-score" data-i18n="odds_unavailable">盘口未挂出</span>
       </div>
     </div>
     
 
     
     <div class="status-row">
-      <span class="tag upcoming">⏳ 未开始</span>
+      <span class="tag upcoming" data-i18n="upcoming_label">⏳ 未开始</span>
     </div>
     
   </div>
@@ -1908,12 +1927,12 @@
       <span>06/19 (五) 04:00 JST</span>
       
       <span class="dot">·</span>
-      <span class="stage-badge">小组赛 GROUP_B</span>
+      <span class="stage-badge"><span data-i18n="stage_GROUP_STAGE">小组赛</span> GROUP_B</span>
     </div>
 
     <div class="teams">
       <div class="team home">
-        <span class="name">瑞士</span>
+        <span class="name team-name" data-team-en="Switzerland">瑞士</span>
         <span class="flag">🇨🇭</span>
       </div>
       <div class="score-box">
@@ -1923,34 +1942,34 @@
       </div>
       <div class="team away">
         <span class="flag">🏳</span>
-        <span class="name">Bosnia-Herzegovina</span>
+        <span class="name team-name" data-team-en="Bosnia-Herzegovina">Bosnia-Herzegovina</span>
       </div>
     </div>
 
     <div class="pred-row">
       <div>
-        <span class="pred-label">模型预测</span>
+        <span class="pred-label" data-i18n="model_pred">模型预测</span>
         <span class="pred-score">2 - 0</span>
       </div>
       <div class="probs">
-        <span>主胜 <strong>76%</strong></span>
-        <span>平 <strong>15%</strong></span>
-        <span>客胜 <strong>9%</strong></span>
+        <span><span data-i18n="home_win">主胜</span> <strong>76%</strong></span>
+        <span><span data-i18n="draw">平</span> <strong>15%</strong></span>
+        <span><span data-i18n="away_win">客胜</span> <strong>9%</strong></span>
       </div>
     </div>
 
     
     <div class="pred-row market-row market-empty">
       <div>
-        <span class="pred-label">市场预测</span>
-        <span class="pred-score">盘口未挂出</span>
+        <span class="pred-label" data-i18n="market_pred">市场预测</span>
+        <span class="pred-score" data-i18n="odds_unavailable">盘口未挂出</span>
       </div>
     </div>
     
 
     
     <div class="status-row">
-      <span class="tag upcoming">⏳ 未开始</span>
+      <span class="tag upcoming" data-i18n="upcoming_label">⏳ 未开始</span>
     </div>
     
   </div>
@@ -1963,12 +1982,12 @@
       <span>06/19 (五) 07:00 JST</span>
       
       <span class="dot">·</span>
-      <span class="stage-badge">小组赛 GROUP_B</span>
+      <span class="stage-badge"><span data-i18n="stage_GROUP_STAGE">小组赛</span> GROUP_B</span>
     </div>
 
     <div class="teams">
       <div class="team home">
-        <span class="name">加拿大</span>
+        <span class="name team-name" data-team-en="Canada">加拿大</span>
         <span class="flag">🇨🇦</span>
       </div>
       <div class="score-box">
@@ -1978,34 +1997,34 @@
       </div>
       <div class="team away">
         <span class="flag">🇶🇦</span>
-        <span class="name">卡塔尔</span>
+        <span class="name team-name" data-team-en="Qatar">卡塔尔</span>
       </div>
     </div>
 
     <div class="pred-row">
       <div>
-        <span class="pred-label">模型预测</span>
+        <span class="pred-label" data-i18n="model_pred">模型预测</span>
         <span class="pred-score">2 - 0</span>
       </div>
       <div class="probs">
-        <span>主胜 <strong>73%</strong></span>
-        <span>平 <strong>17%</strong></span>
-        <span>客胜 <strong>10%</strong></span>
+        <span><span data-i18n="home_win">主胜</span> <strong>73%</strong></span>
+        <span><span data-i18n="draw">平</span> <strong>17%</strong></span>
+        <span><span data-i18n="away_win">客胜</span> <strong>10%</strong></span>
       </div>
     </div>
 
     
     <div class="pred-row market-row market-empty">
       <div>
-        <span class="pred-label">市场预测</span>
-        <span class="pred-score">盘口未挂出</span>
+        <span class="pred-label" data-i18n="market_pred">市场预测</span>
+        <span class="pred-score" data-i18n="odds_unavailable">盘口未挂出</span>
       </div>
     </div>
     
 
     
     <div class="status-row">
-      <span class="tag upcoming">⏳ 未开始</span>
+      <span class="tag upcoming" data-i18n="upcoming_label">⏳ 未开始</span>
     </div>
     
   </div>
@@ -2018,12 +2037,12 @@
       <span>06/19 (五) 10:00 JST</span>
       
       <span class="dot">·</span>
-      <span class="stage-badge">小组赛 GROUP_A</span>
+      <span class="stage-badge"><span data-i18n="stage_GROUP_STAGE">小组赛</span> GROUP_A</span>
     </div>
 
     <div class="teams">
       <div class="team home">
-        <span class="name">墨西哥</span>
+        <span class="name team-name" data-team-en="Mexico">墨西哥</span>
         <span class="flag">🇲🇽</span>
       </div>
       <div class="score-box">
@@ -2033,34 +2052,34 @@
       </div>
       <div class="team away">
         <span class="flag">🇰🇷</span>
-        <span class="name">韩国</span>
+        <span class="name team-name" data-team-en="South Korea">韩国</span>
       </div>
     </div>
 
     <div class="pred-row">
       <div>
-        <span class="pred-label">模型预测</span>
+        <span class="pred-label" data-i18n="model_pred">模型预测</span>
         <span class="pred-score">1 - 1</span>
       </div>
       <div class="probs">
-        <span>主胜 <strong>46%</strong></span>
-        <span>平 <strong>25%</strong></span>
-        <span>客胜 <strong>29%</strong></span>
+        <span><span data-i18n="home_win">主胜</span> <strong>46%</strong></span>
+        <span><span data-i18n="draw">平</span> <strong>25%</strong></span>
+        <span><span data-i18n="away_win">客胜</span> <strong>29%</strong></span>
       </div>
     </div>
 
     
     <div class="pred-row market-row market-empty">
       <div>
-        <span class="pred-label">市场预测</span>
-        <span class="pred-score">盘口未挂出</span>
+        <span class="pred-label" data-i18n="market_pred">市场预测</span>
+        <span class="pred-score" data-i18n="odds_unavailable">盘口未挂出</span>
       </div>
     </div>
     
 
     
     <div class="status-row">
-      <span class="tag upcoming">⏳ 未开始</span>
+      <span class="tag upcoming" data-i18n="upcoming_label">⏳ 未开始</span>
     </div>
     
   </div>
@@ -2073,12 +2092,12 @@
       <span>06/20 (六) 04:00 JST</span>
       
       <span class="dot">·</span>
-      <span class="stage-badge">小组赛 GROUP_D</span>
+      <span class="stage-badge"><span data-i18n="stage_GROUP_STAGE">小组赛</span> GROUP_D</span>
     </div>
 
     <div class="teams">
       <div class="team home">
-        <span class="name">美国</span>
+        <span class="name team-name" data-team-en="United States">美国</span>
         <span class="flag">🇺🇸</span>
       </div>
       <div class="score-box">
@@ -2088,34 +2107,34 @@
       </div>
       <div class="team away">
         <span class="flag">🇦🇺</span>
-        <span class="name">澳大利亚</span>
+        <span class="name team-name" data-team-en="Australia">澳大利亚</span>
       </div>
     </div>
 
     <div class="pred-row">
       <div>
-        <span class="pred-label">模型预测</span>
+        <span class="pred-label" data-i18n="model_pred">模型预测</span>
         <span class="pred-score">1 - 1</span>
       </div>
       <div class="probs">
-        <span>主胜 <strong>26%</strong></span>
-        <span>平 <strong>25%</strong></span>
-        <span>客胜 <strong>49%</strong></span>
+        <span><span data-i18n="home_win">主胜</span> <strong>26%</strong></span>
+        <span><span data-i18n="draw">平</span> <strong>25%</strong></span>
+        <span><span data-i18n="away_win">客胜</span> <strong>49%</strong></span>
       </div>
     </div>
 
     
     <div class="pred-row market-row market-empty">
       <div>
-        <span class="pred-label">市场预测</span>
-        <span class="pred-score">盘口未挂出</span>
+        <span class="pred-label" data-i18n="market_pred">市场预测</span>
+        <span class="pred-score" data-i18n="odds_unavailable">盘口未挂出</span>
       </div>
     </div>
     
 
     
     <div class="status-row">
-      <span class="tag upcoming">⏳ 未开始</span>
+      <span class="tag upcoming" data-i18n="upcoming_label">⏳ 未开始</span>
     </div>
     
   </div>
@@ -2128,12 +2147,12 @@
       <span>06/20 (六) 07:00 JST</span>
       
       <span class="dot">·</span>
-      <span class="stage-badge">小组赛 GROUP_C</span>
+      <span class="stage-badge"><span data-i18n="stage_GROUP_STAGE">小组赛</span> GROUP_C</span>
     </div>
 
     <div class="teams">
       <div class="team home">
-        <span class="name">苏格兰</span>
+        <span class="name team-name" data-team-en="Scotland">苏格兰</span>
         <span class="flag">🏴</span>
       </div>
       <div class="score-box">
@@ -2143,34 +2162,34 @@
       </div>
       <div class="team away">
         <span class="flag">🇲🇦</span>
-        <span class="name">摩洛哥</span>
+        <span class="name team-name" data-team-en="Morocco">摩洛哥</span>
       </div>
     </div>
 
     <div class="pred-row">
       <div>
-        <span class="pred-label">模型预测</span>
+        <span class="pred-label" data-i18n="model_pred">模型预测</span>
         <span class="pred-score">0 - 3</span>
       </div>
       <div class="probs">
-        <span>主胜 <strong>4%</strong></span>
-        <span>平 <strong>10%</strong></span>
-        <span>客胜 <strong>86%</strong></span>
+        <span><span data-i18n="home_win">主胜</span> <strong>4%</strong></span>
+        <span><span data-i18n="draw">平</span> <strong>10%</strong></span>
+        <span><span data-i18n="away_win">客胜</span> <strong>86%</strong></span>
       </div>
     </div>
 
     
     <div class="pred-row market-row market-empty">
       <div>
-        <span class="pred-label">市场预测</span>
-        <span class="pred-score">盘口未挂出</span>
+        <span class="pred-label" data-i18n="market_pred">市场预测</span>
+        <span class="pred-score" data-i18n="odds_unavailable">盘口未挂出</span>
       </div>
     </div>
     
 
     
     <div class="status-row">
-      <span class="tag upcoming">⏳ 未开始</span>
+      <span class="tag upcoming" data-i18n="upcoming_label">⏳ 未开始</span>
     </div>
     
   </div>
@@ -2183,12 +2202,12 @@
       <span>06/20 (六) 09:30 JST</span>
       
       <span class="dot">·</span>
-      <span class="stage-badge">小组赛 GROUP_C</span>
+      <span class="stage-badge"><span data-i18n="stage_GROUP_STAGE">小组赛</span> GROUP_C</span>
     </div>
 
     <div class="teams">
       <div class="team home">
-        <span class="name">巴西</span>
+        <span class="name team-name" data-team-en="Brazil">巴西</span>
         <span class="flag">🇧🇷</span>
       </div>
       <div class="score-box">
@@ -2198,34 +2217,34 @@
       </div>
       <div class="team away">
         <span class="flag">🇭🇹</span>
-        <span class="name">海地</span>
+        <span class="name team-name" data-team-en="Haiti">海地</span>
       </div>
     </div>
 
     <div class="pred-row">
       <div>
-        <span class="pred-label">模型预测</span>
+        <span class="pred-label" data-i18n="model_pred">模型预测</span>
         <span class="pred-score">2 - 0</span>
       </div>
       <div class="probs">
-        <span>主胜 <strong>71%</strong></span>
-        <span>平 <strong>18%</strong></span>
-        <span>客胜 <strong>11%</strong></span>
+        <span><span data-i18n="home_win">主胜</span> <strong>71%</strong></span>
+        <span><span data-i18n="draw">平</span> <strong>18%</strong></span>
+        <span><span data-i18n="away_win">客胜</span> <strong>11%</strong></span>
       </div>
     </div>
 
     
     <div class="pred-row market-row market-empty">
       <div>
-        <span class="pred-label">市场预测</span>
-        <span class="pred-score">盘口未挂出</span>
+        <span class="pred-label" data-i18n="market_pred">市场预测</span>
+        <span class="pred-score" data-i18n="odds_unavailable">盘口未挂出</span>
       </div>
     </div>
     
 
     
     <div class="status-row">
-      <span class="tag upcoming">⏳ 未开始</span>
+      <span class="tag upcoming" data-i18n="upcoming_label">⏳ 未开始</span>
     </div>
     
   </div>
@@ -2238,12 +2257,12 @@
       <span>06/20 (六) 12:00 JST</span>
       
       <span class="dot">·</span>
-      <span class="stage-badge">小组赛 GROUP_D</span>
+      <span class="stage-badge"><span data-i18n="stage_GROUP_STAGE">小组赛</span> GROUP_D</span>
     </div>
 
     <div class="teams">
       <div class="team home">
-        <span class="name">土耳其</span>
+        <span class="name team-name" data-team-en="Turkey">土耳其</span>
         <span class="flag">🇹🇷</span>
       </div>
       <div class="score-box">
@@ -2253,34 +2272,34 @@
       </div>
       <div class="team away">
         <span class="flag">🇵🇾</span>
-        <span class="name">巴拉圭</span>
+        <span class="name team-name" data-team-en="Paraguay">巴拉圭</span>
       </div>
     </div>
 
     <div class="pred-row">
       <div>
-        <span class="pred-label">模型预测</span>
+        <span class="pred-label" data-i18n="model_pred">模型预测</span>
         <span class="pred-score">1 - 0</span>
       </div>
       <div class="probs">
-        <span>主胜 <strong>61%</strong></span>
-        <span>平 <strong>22%</strong></span>
-        <span>客胜 <strong>18%</strong></span>
+        <span><span data-i18n="home_win">主胜</span> <strong>61%</strong></span>
+        <span><span data-i18n="draw">平</span> <strong>22%</strong></span>
+        <span><span data-i18n="away_win">客胜</span> <strong>18%</strong></span>
       </div>
     </div>
 
     
     <div class="pred-row market-row market-empty">
       <div>
-        <span class="pred-label">市场预测</span>
-        <span class="pred-score">盘口未挂出</span>
+        <span class="pred-label" data-i18n="market_pred">市场预测</span>
+        <span class="pred-score" data-i18n="odds_unavailable">盘口未挂出</span>
       </div>
     </div>
     
 
     
     <div class="status-row">
-      <span class="tag upcoming">⏳ 未开始</span>
+      <span class="tag upcoming" data-i18n="upcoming_label">⏳ 未开始</span>
     </div>
     
   </div>
@@ -2293,12 +2312,12 @@
       <span>06/21 (日) 02:00 JST</span>
       
       <span class="dot">·</span>
-      <span class="stage-badge">小组赛 GROUP_F</span>
+      <span class="stage-badge"><span data-i18n="stage_GROUP_STAGE">小组赛</span> GROUP_F</span>
     </div>
 
     <div class="teams">
       <div class="team home">
-        <span class="name">荷兰</span>
+        <span class="name team-name" data-team-en="Netherlands">荷兰</span>
         <span class="flag">🇳🇱</span>
       </div>
       <div class="score-box">
@@ -2308,34 +2327,34 @@
       </div>
       <div class="team away">
         <span class="flag">🇸🇪</span>
-        <span class="name">瑞典</span>
+        <span class="name team-name" data-team-en="Sweden">瑞典</span>
       </div>
     </div>
 
     <div class="pred-row">
       <div>
-        <span class="pred-label">模型预测</span>
+        <span class="pred-label" data-i18n="model_pred">模型预测</span>
         <span class="pred-score">2 - 0</span>
       </div>
       <div class="probs">
-        <span>主胜 <strong>69%</strong></span>
-        <span>平 <strong>19%</strong></span>
-        <span>客胜 <strong>13%</strong></span>
+        <span><span data-i18n="home_win">主胜</span> <strong>69%</strong></span>
+        <span><span data-i18n="draw">平</span> <strong>19%</strong></span>
+        <span><span data-i18n="away_win">客胜</span> <strong>13%</strong></span>
       </div>
     </div>
 
     
     <div class="pred-row market-row market-empty">
       <div>
-        <span class="pred-label">市场预测</span>
-        <span class="pred-score">盘口未挂出</span>
+        <span class="pred-label" data-i18n="market_pred">市场预测</span>
+        <span class="pred-score" data-i18n="odds_unavailable">盘口未挂出</span>
       </div>
     </div>
     
 
     
     <div class="status-row">
-      <span class="tag upcoming">⏳ 未开始</span>
+      <span class="tag upcoming" data-i18n="upcoming_label">⏳ 未开始</span>
     </div>
     
   </div>
@@ -2348,12 +2367,12 @@
       <span>06/21 (日) 05:00 JST</span>
       
       <span class="dot">·</span>
-      <span class="stage-badge">小组赛 GROUP_E</span>
+      <span class="stage-badge"><span data-i18n="stage_GROUP_STAGE">小组赛</span> GROUP_E</span>
     </div>
 
     <div class="teams">
       <div class="team home">
-        <span class="name">德国</span>
+        <span class="name team-name" data-team-en="Germany">德国</span>
         <span class="flag">🇩🇪</span>
       </div>
       <div class="score-box">
@@ -2363,34 +2382,34 @@
       </div>
       <div class="team away">
         <span class="flag">🇨🇮</span>
-        <span class="name">科特迪瓦</span>
+        <span class="name team-name" data-team-en="Côte d'Ivoire">科特迪瓦</span>
       </div>
     </div>
 
     <div class="pred-row">
       <div>
-        <span class="pred-label">模型预测</span>
+        <span class="pred-label" data-i18n="model_pred">模型预测</span>
         <span class="pred-score">2 - 0</span>
       </div>
       <div class="probs">
-        <span>主胜 <strong>83%</strong></span>
-        <span>平 <strong>11%</strong></span>
-        <span>客胜 <strong>6%</strong></span>
+        <span><span data-i18n="home_win">主胜</span> <strong>83%</strong></span>
+        <span><span data-i18n="draw">平</span> <strong>11%</strong></span>
+        <span><span data-i18n="away_win">客胜</span> <strong>6%</strong></span>
       </div>
     </div>
 
     
     <div class="pred-row market-row market-empty">
       <div>
-        <span class="pred-label">市场预测</span>
-        <span class="pred-score">盘口未挂出</span>
+        <span class="pred-label" data-i18n="market_pred">市场预测</span>
+        <span class="pred-score" data-i18n="odds_unavailable">盘口未挂出</span>
       </div>
     </div>
     
 
     
     <div class="status-row">
-      <span class="tag upcoming">⏳ 未开始</span>
+      <span class="tag upcoming" data-i18n="upcoming_label">⏳ 未开始</span>
     </div>
     
   </div>
@@ -2403,12 +2422,12 @@
       <span>06/21 (日) 09:00 JST</span>
       
       <span class="dot">·</span>
-      <span class="stage-badge">小组赛 GROUP_E</span>
+      <span class="stage-badge"><span data-i18n="stage_GROUP_STAGE">小组赛</span> GROUP_E</span>
     </div>
 
     <div class="teams">
       <div class="team home">
-        <span class="name">厄瓜多尔</span>
+        <span class="name team-name" data-team-en="Ecuador">厄瓜多尔</span>
         <span class="flag">🇪🇨</span>
       </div>
       <div class="score-box">
@@ -2418,34 +2437,34 @@
       </div>
       <div class="team away">
         <span class="flag">🇨🇼</span>
-        <span class="name">库拉索</span>
+        <span class="name team-name" data-team-en="Curaçao">库拉索</span>
       </div>
     </div>
 
     <div class="pred-row">
       <div>
-        <span class="pred-label">模型预测</span>
+        <span class="pred-label" data-i18n="model_pred">模型预测</span>
         <span class="pred-score">1 - 0</span>
       </div>
       <div class="probs">
-        <span>主胜 <strong>62%</strong></span>
-        <span>平 <strong>21%</strong></span>
-        <span>客胜 <strong>17%</strong></span>
+        <span><span data-i18n="home_win">主胜</span> <strong>62%</strong></span>
+        <span><span data-i18n="draw">平</span> <strong>21%</strong></span>
+        <span><span data-i18n="away_win">客胜</span> <strong>17%</strong></span>
       </div>
     </div>
 
     
     <div class="pred-row market-row market-empty">
       <div>
-        <span class="pred-label">市场预测</span>
-        <span class="pred-score">盘口未挂出</span>
+        <span class="pred-label" data-i18n="market_pred">市场预测</span>
+        <span class="pred-score" data-i18n="odds_unavailable">盘口未挂出</span>
       </div>
     </div>
     
 
     
     <div class="status-row">
-      <span class="tag upcoming">⏳ 未开始</span>
+      <span class="tag upcoming" data-i18n="upcoming_label">⏳ 未开始</span>
     </div>
     
   </div>
@@ -2458,12 +2477,12 @@
       <span>06/21 (日) 13:00 JST</span>
       
       <span class="dot">·</span>
-      <span class="stage-badge">小组赛 GROUP_F</span>
+      <span class="stage-badge"><span data-i18n="stage_GROUP_STAGE">小组赛</span> GROUP_F</span>
     </div>
 
     <div class="teams">
       <div class="team home">
-        <span class="name">突尼斯</span>
+        <span class="name team-name" data-team-en="Tunisia">突尼斯</span>
         <span class="flag">🇹🇳</span>
       </div>
       <div class="score-box">
@@ -2473,34 +2492,34 @@
       </div>
       <div class="team away">
         <span class="flag">🇯🇵</span>
-        <span class="name">日本</span>
+        <span class="name team-name" data-team-en="Japan">日本</span>
       </div>
     </div>
 
     <div class="pred-row">
       <div>
-        <span class="pred-label">模型预测</span>
+        <span class="pred-label" data-i18n="model_pred">模型预测</span>
         <span class="pred-score">0 - 2</span>
       </div>
       <div class="probs">
-        <span>主胜 <strong>10%</strong></span>
-        <span>平 <strong>16%</strong></span>
-        <span>客胜 <strong>73%</strong></span>
+        <span><span data-i18n="home_win">主胜</span> <strong>10%</strong></span>
+        <span><span data-i18n="draw">平</span> <strong>16%</strong></span>
+        <span><span data-i18n="away_win">客胜</span> <strong>73%</strong></span>
       </div>
     </div>
 
     
     <div class="pred-row market-row market-empty">
       <div>
-        <span class="pred-label">市场预测</span>
-        <span class="pred-score">盘口未挂出</span>
+        <span class="pred-label" data-i18n="market_pred">市场预测</span>
+        <span class="pred-score" data-i18n="odds_unavailable">盘口未挂出</span>
       </div>
     </div>
     
 
     
     <div class="status-row">
-      <span class="tag upcoming">⏳ 未开始</span>
+      <span class="tag upcoming" data-i18n="upcoming_label">⏳ 未开始</span>
     </div>
     
   </div>
@@ -2513,12 +2532,12 @@
       <span>06/22 (一) 01:00 JST</span>
       
       <span class="dot">·</span>
-      <span class="stage-badge">小组赛 GROUP_H</span>
+      <span class="stage-badge"><span data-i18n="stage_GROUP_STAGE">小组赛</span> GROUP_H</span>
     </div>
 
     <div class="teams">
       <div class="team home">
-        <span class="name">西班牙</span>
+        <span class="name team-name" data-team-en="Spain">西班牙</span>
         <span class="flag">🇪🇸</span>
       </div>
       <div class="score-box">
@@ -2528,34 +2547,34 @@
       </div>
       <div class="team away">
         <span class="flag">🇸🇦</span>
-        <span class="name">沙特</span>
+        <span class="name team-name" data-team-en="Saudi Arabia">沙特</span>
       </div>
     </div>
 
     <div class="pred-row">
       <div>
-        <span class="pred-label">模型预测</span>
+        <span class="pred-label" data-i18n="model_pred">模型预测</span>
         <span class="pred-score">2 - 0</span>
       </div>
       <div class="probs">
-        <span>主胜 <strong>83%</strong></span>
-        <span>平 <strong>12%</strong></span>
-        <span>客胜 <strong>6%</strong></span>
+        <span><span data-i18n="home_win">主胜</span> <strong>83%</strong></span>
+        <span><span data-i18n="draw">平</span> <strong>12%</strong></span>
+        <span><span data-i18n="away_win">客胜</span> <strong>6%</strong></span>
       </div>
     </div>
 
     
     <div class="pred-row market-row market-empty">
       <div>
-        <span class="pred-label">市场预测</span>
-        <span class="pred-score">盘口未挂出</span>
+        <span class="pred-label" data-i18n="market_pred">市场预测</span>
+        <span class="pred-score" data-i18n="odds_unavailable">盘口未挂出</span>
       </div>
     </div>
     
 
     
     <div class="status-row">
-      <span class="tag upcoming">⏳ 未开始</span>
+      <span class="tag upcoming" data-i18n="upcoming_label">⏳ 未开始</span>
     </div>
     
   </div>
@@ -2568,12 +2587,12 @@
       <span>06/22 (一) 04:00 JST</span>
       
       <span class="dot">·</span>
-      <span class="stage-badge">小组赛 GROUP_G</span>
+      <span class="stage-badge"><span data-i18n="stage_GROUP_STAGE">小组赛</span> GROUP_G</span>
     </div>
 
     <div class="teams">
       <div class="team home">
-        <span class="name">比利时</span>
+        <span class="name team-name" data-team-en="Belgium">比利时</span>
         <span class="flag">🇧🇪</span>
       </div>
       <div class="score-box">
@@ -2583,34 +2602,34 @@
       </div>
       <div class="team away">
         <span class="flag">🇮🇷</span>
-        <span class="name">伊朗</span>
+        <span class="name team-name" data-team-en="Iran">伊朗</span>
       </div>
     </div>
 
     <div class="pred-row">
       <div>
-        <span class="pred-label">模型预测</span>
+        <span class="pred-label" data-i18n="model_pred">模型预测</span>
         <span class="pred-score">1 - 1</span>
       </div>
       <div class="probs">
-        <span>主胜 <strong>27%</strong></span>
-        <span>平 <strong>25%</strong></span>
-        <span>客胜 <strong>48%</strong></span>
+        <span><span data-i18n="home_win">主胜</span> <strong>27%</strong></span>
+        <span><span data-i18n="draw">平</span> <strong>25%</strong></span>
+        <span><span data-i18n="away_win">客胜</span> <strong>48%</strong></span>
       </div>
     </div>
 
     
     <div class="pred-row market-row market-empty">
       <div>
-        <span class="pred-label">市场预测</span>
-        <span class="pred-score">盘口未挂出</span>
+        <span class="pred-label" data-i18n="market_pred">市场预测</span>
+        <span class="pred-score" data-i18n="odds_unavailable">盘口未挂出</span>
       </div>
     </div>
     
 
     
     <div class="status-row">
-      <span class="tag upcoming">⏳ 未开始</span>
+      <span class="tag upcoming" data-i18n="upcoming_label">⏳ 未开始</span>
     </div>
     
   </div>
@@ -2623,12 +2642,12 @@
       <span>06/22 (一) 07:00 JST</span>
       
       <span class="dot">·</span>
-      <span class="stage-badge">小组赛 GROUP_H</span>
+      <span class="stage-badge"><span data-i18n="stage_GROUP_STAGE">小组赛</span> GROUP_H</span>
     </div>
 
     <div class="teams">
       <div class="team home">
-        <span class="name">乌拉圭</span>
+        <span class="name team-name" data-team-en="Uruguay">乌拉圭</span>
         <span class="flag">🇺🇾</span>
       </div>
       <div class="score-box">
@@ -2638,34 +2657,34 @@
       </div>
       <div class="team away">
         <span class="flag">🏳</span>
-        <span class="name">Cape Verde Islands</span>
+        <span class="name team-name" data-team-en="Cape Verde Islands">Cape Verde Islands</span>
       </div>
     </div>
 
     <div class="pred-row">
       <div>
-        <span class="pred-label">模型预测</span>
+        <span class="pred-label" data-i18n="model_pred">模型预测</span>
         <span class="pred-score">2 - 0</span>
       </div>
       <div class="probs">
-        <span>主胜 <strong>63%</strong></span>
-        <span>平 <strong>21%</strong></span>
-        <span>客胜 <strong>16%</strong></span>
+        <span><span data-i18n="home_win">主胜</span> <strong>63%</strong></span>
+        <span><span data-i18n="draw">平</span> <strong>21%</strong></span>
+        <span><span data-i18n="away_win">客胜</span> <strong>16%</strong></span>
       </div>
     </div>
 
     
     <div class="pred-row market-row market-empty">
       <div>
-        <span class="pred-label">市场预测</span>
-        <span class="pred-score">盘口未挂出</span>
+        <span class="pred-label" data-i18n="market_pred">市场预测</span>
+        <span class="pred-score" data-i18n="odds_unavailable">盘口未挂出</span>
       </div>
     </div>
     
 
     
     <div class="status-row">
-      <span class="tag upcoming">⏳ 未开始</span>
+      <span class="tag upcoming" data-i18n="upcoming_label">⏳ 未开始</span>
     </div>
     
   </div>
@@ -2678,12 +2697,12 @@
       <span>06/22 (一) 10:00 JST</span>
       
       <span class="dot">·</span>
-      <span class="stage-badge">小组赛 GROUP_G</span>
+      <span class="stage-badge"><span data-i18n="stage_GROUP_STAGE">小组赛</span> GROUP_G</span>
     </div>
 
     <div class="teams">
       <div class="team home">
-        <span class="name">新西兰</span>
+        <span class="name team-name" data-team-en="New Zealand">新西兰</span>
         <span class="flag">🇳🇿</span>
       </div>
       <div class="score-box">
@@ -2693,34 +2712,34 @@
       </div>
       <div class="team away">
         <span class="flag">🇪🇬</span>
-        <span class="name">埃及</span>
+        <span class="name team-name" data-team-en="Egypt">埃及</span>
       </div>
     </div>
 
     <div class="pred-row">
       <div>
-        <span class="pred-label">模型预测</span>
+        <span class="pred-label" data-i18n="model_pred">模型预测</span>
         <span class="pred-score">0 - 2</span>
       </div>
       <div class="probs">
-        <span>主胜 <strong>14%</strong></span>
-        <span>平 <strong>19%</strong></span>
-        <span>客胜 <strong>67%</strong></span>
+        <span><span data-i18n="home_win">主胜</span> <strong>14%</strong></span>
+        <span><span data-i18n="draw">平</span> <strong>19%</strong></span>
+        <span><span data-i18n="away_win">客胜</span> <strong>67%</strong></span>
       </div>
     </div>
 
     
     <div class="pred-row market-row market-empty">
       <div>
-        <span class="pred-label">市场预测</span>
-        <span class="pred-score">盘口未挂出</span>
+        <span class="pred-label" data-i18n="market_pred">市场预测</span>
+        <span class="pred-score" data-i18n="odds_unavailable">盘口未挂出</span>
       </div>
     </div>
     
 
     
     <div class="status-row">
-      <span class="tag upcoming">⏳ 未开始</span>
+      <span class="tag upcoming" data-i18n="upcoming_label">⏳ 未开始</span>
     </div>
     
   </div>
@@ -2733,12 +2752,12 @@
       <span>06/23 (二) 02:00 JST</span>
       
       <span class="dot">·</span>
-      <span class="stage-badge">小组赛 GROUP_J</span>
+      <span class="stage-badge"><span data-i18n="stage_GROUP_STAGE">小组赛</span> GROUP_J</span>
     </div>
 
     <div class="teams">
       <div class="team home">
-        <span class="name">阿根廷</span>
+        <span class="name team-name" data-team-en="Argentina">阿根廷</span>
         <span class="flag">🇦🇷</span>
       </div>
       <div class="score-box">
@@ -2748,34 +2767,34 @@
       </div>
       <div class="team away">
         <span class="flag">🇦🇹</span>
-        <span class="name">奥地利</span>
+        <span class="name team-name" data-team-en="Austria">奥地利</span>
       </div>
     </div>
 
     <div class="pred-row">
       <div>
-        <span class="pred-label">模型预测</span>
+        <span class="pred-label" data-i18n="model_pred">模型预测</span>
         <span class="pred-score">1 - 1</span>
       </div>
       <div class="probs">
-        <span>主胜 <strong>56%</strong></span>
-        <span>平 <strong>23%</strong></span>
-        <span>客胜 <strong>21%</strong></span>
+        <span><span data-i18n="home_win">主胜</span> <strong>56%</strong></span>
+        <span><span data-i18n="draw">平</span> <strong>23%</strong></span>
+        <span><span data-i18n="away_win">客胜</span> <strong>21%</strong></span>
       </div>
     </div>
 
     
     <div class="pred-row market-row market-empty">
       <div>
-        <span class="pred-label">市场预测</span>
-        <span class="pred-score">盘口未挂出</span>
+        <span class="pred-label" data-i18n="market_pred">市场预测</span>
+        <span class="pred-score" data-i18n="odds_unavailable">盘口未挂出</span>
       </div>
     </div>
     
 
     
     <div class="status-row">
-      <span class="tag upcoming">⏳ 未开始</span>
+      <span class="tag upcoming" data-i18n="upcoming_label">⏳ 未开始</span>
     </div>
     
   </div>
@@ -2788,12 +2807,12 @@
       <span>06/23 (二) 06:00 JST</span>
       
       <span class="dot">·</span>
-      <span class="stage-badge">小组赛 GROUP_I</span>
+      <span class="stage-badge"><span data-i18n="stage_GROUP_STAGE">小组赛</span> GROUP_I</span>
     </div>
 
     <div class="teams">
       <div class="team home">
-        <span class="name">法国</span>
+        <span class="name team-name" data-team-en="France">法国</span>
         <span class="flag">🇫🇷</span>
       </div>
       <div class="score-box">
@@ -2803,34 +2822,34 @@
       </div>
       <div class="team away">
         <span class="flag">🇮🇶</span>
-        <span class="name">伊拉克</span>
+        <span class="name team-name" data-team-en="Iraq">伊拉克</span>
       </div>
     </div>
 
     <div class="pred-row">
       <div>
-        <span class="pred-label">模型预测</span>
+        <span class="pred-label" data-i18n="model_pred">模型预测</span>
         <span class="pred-score">2 - 0</span>
       </div>
       <div class="probs">
-        <span>主胜 <strong>66%</strong></span>
-        <span>平 <strong>20%</strong></span>
-        <span>客胜 <strong>14%</strong></span>
+        <span><span data-i18n="home_win">主胜</span> <strong>66%</strong></span>
+        <span><span data-i18n="draw">平</span> <strong>20%</strong></span>
+        <span><span data-i18n="away_win">客胜</span> <strong>14%</strong></span>
       </div>
     </div>
 
     
     <div class="pred-row market-row market-empty">
       <div>
-        <span class="pred-label">市场预测</span>
-        <span class="pred-score">盘口未挂出</span>
+        <span class="pred-label" data-i18n="market_pred">市场预测</span>
+        <span class="pred-score" data-i18n="odds_unavailable">盘口未挂出</span>
       </div>
     </div>
     
 
     
     <div class="status-row">
-      <span class="tag upcoming">⏳ 未开始</span>
+      <span class="tag upcoming" data-i18n="upcoming_label">⏳ 未开始</span>
     </div>
     
   </div>
@@ -2843,12 +2862,12 @@
       <span>06/23 (二) 09:00 JST</span>
       
       <span class="dot">·</span>
-      <span class="stage-badge">小组赛 GROUP_I</span>
+      <span class="stage-badge"><span data-i18n="stage_GROUP_STAGE">小组赛</span> GROUP_I</span>
     </div>
 
     <div class="teams">
       <div class="team home">
-        <span class="name">挪威</span>
+        <span class="name team-name" data-team-en="Norway">挪威</span>
         <span class="flag">🇳🇴</span>
       </div>
       <div class="score-box">
@@ -2858,34 +2877,34 @@
       </div>
       <div class="team away">
         <span class="flag">🇸🇳</span>
-        <span class="name">塞内加尔</span>
+        <span class="name team-name" data-team-en="Senegal">塞内加尔</span>
       </div>
     </div>
 
     <div class="pred-row">
       <div>
-        <span class="pred-label">模型预测</span>
+        <span class="pred-label" data-i18n="model_pred">模型预测</span>
         <span class="pred-score">1 - 1</span>
       </div>
       <div class="probs">
-        <span>主胜 <strong>35%</strong></span>
-        <span>平 <strong>26%</strong></span>
-        <span>客胜 <strong>39%</strong></span>
+        <span><span data-i18n="home_win">主胜</span> <strong>35%</strong></span>
+        <span><span data-i18n="draw">平</span> <strong>26%</strong></span>
+        <span><span data-i18n="away_win">客胜</span> <strong>39%</strong></span>
       </div>
     </div>
 
     
     <div class="pred-row market-row market-empty">
       <div>
-        <span class="pred-label">市场预测</span>
-        <span class="pred-score">盘口未挂出</span>
+        <span class="pred-label" data-i18n="market_pred">市场预测</span>
+        <span class="pred-score" data-i18n="odds_unavailable">盘口未挂出</span>
       </div>
     </div>
     
 
     
     <div class="status-row">
-      <span class="tag upcoming">⏳ 未开始</span>
+      <span class="tag upcoming" data-i18n="upcoming_label">⏳ 未开始</span>
     </div>
     
   </div>
@@ -2898,12 +2917,12 @@
       <span>06/23 (二) 12:00 JST</span>
       
       <span class="dot">·</span>
-      <span class="stage-badge">小组赛 GROUP_J</span>
+      <span class="stage-badge"><span data-i18n="stage_GROUP_STAGE">小组赛</span> GROUP_J</span>
     </div>
 
     <div class="teams">
       <div class="team home">
-        <span class="name">约旦</span>
+        <span class="name team-name" data-team-en="Jordan">约旦</span>
         <span class="flag">🇯🇴</span>
       </div>
       <div class="score-box">
@@ -2913,34 +2932,34 @@
       </div>
       <div class="team away">
         <span class="flag">🇩🇿</span>
-        <span class="name">阿尔及利亚</span>
+        <span class="name team-name" data-team-en="Algeria">阿尔及利亚</span>
       </div>
     </div>
 
     <div class="pred-row">
       <div>
-        <span class="pred-label">模型预测</span>
+        <span class="pred-label" data-i18n="model_pred">模型预测</span>
         <span class="pred-score">0 - 2</span>
       </div>
       <div class="probs">
-        <span>主胜 <strong>8%</strong></span>
-        <span>平 <strong>15%</strong></span>
-        <span>客胜 <strong>77%</strong></span>
+        <span><span data-i18n="home_win">主胜</span> <strong>8%</strong></span>
+        <span><span data-i18n="draw">平</span> <strong>15%</strong></span>
+        <span><span data-i18n="away_win">客胜</span> <strong>77%</strong></span>
       </div>
     </div>
 
     
     <div class="pred-row market-row market-empty">
       <div>
-        <span class="pred-label">市场预测</span>
-        <span class="pred-score">盘口未挂出</span>
+        <span class="pred-label" data-i18n="market_pred">市场预测</span>
+        <span class="pred-score" data-i18n="odds_unavailable">盘口未挂出</span>
       </div>
     </div>
     
 
     
     <div class="status-row">
-      <span class="tag upcoming">⏳ 未开始</span>
+      <span class="tag upcoming" data-i18n="upcoming_label">⏳ 未开始</span>
     </div>
     
   </div>
@@ -2953,12 +2972,12 @@
       <span>06/24 (三) 02:00 JST</span>
       
       <span class="dot">·</span>
-      <span class="stage-badge">小组赛 GROUP_K</span>
+      <span class="stage-badge"><span data-i18n="stage_GROUP_STAGE">小组赛</span> GROUP_K</span>
     </div>
 
     <div class="teams">
       <div class="team home">
-        <span class="name">葡萄牙</span>
+        <span class="name team-name" data-team-en="Portugal">葡萄牙</span>
         <span class="flag">🇵🇹</span>
       </div>
       <div class="score-box">
@@ -2968,34 +2987,34 @@
       </div>
       <div class="team away">
         <span class="flag">🇺🇿</span>
-        <span class="name">乌兹别克斯坦</span>
+        <span class="name team-name" data-team-en="Uzbekistan">乌兹别克斯坦</span>
       </div>
     </div>
 
     <div class="pred-row">
       <div>
-        <span class="pred-label">模型预测</span>
+        <span class="pred-label" data-i18n="model_pred">模型预测</span>
         <span class="pred-score">1 - 1</span>
       </div>
       <div class="probs">
-        <span>主胜 <strong>54%</strong></span>
-        <span>平 <strong>24%</strong></span>
-        <span>客胜 <strong>22%</strong></span>
+        <span><span data-i18n="home_win">主胜</span> <strong>54%</strong></span>
+        <span><span data-i18n="draw">平</span> <strong>24%</strong></span>
+        <span><span data-i18n="away_win">客胜</span> <strong>22%</strong></span>
       </div>
     </div>
 
     
     <div class="pred-row market-row market-empty">
       <div>
-        <span class="pred-label">市场预测</span>
-        <span class="pred-score">盘口未挂出</span>
+        <span class="pred-label" data-i18n="market_pred">市场预测</span>
+        <span class="pred-score" data-i18n="odds_unavailable">盘口未挂出</span>
       </div>
     </div>
     
 
     
     <div class="status-row">
-      <span class="tag upcoming">⏳ 未开始</span>
+      <span class="tag upcoming" data-i18n="upcoming_label">⏳ 未开始</span>
     </div>
     
   </div>
@@ -3008,12 +3027,12 @@
       <span>06/24 (三) 05:00 JST</span>
       
       <span class="dot">·</span>
-      <span class="stage-badge">小组赛 GROUP_L</span>
+      <span class="stage-badge"><span data-i18n="stage_GROUP_STAGE">小组赛</span> GROUP_L</span>
     </div>
 
     <div class="teams">
       <div class="team home">
-        <span class="name">英格兰</span>
+        <span class="name team-name" data-team-en="England">英格兰</span>
         <span class="flag">🏴</span>
       </div>
       <div class="score-box">
@@ -3023,34 +3042,34 @@
       </div>
       <div class="team away">
         <span class="flag">🇬🇭</span>
-        <span class="name">加纳</span>
+        <span class="name team-name" data-team-en="Ghana">加纳</span>
       </div>
     </div>
 
     <div class="pred-row">
       <div>
-        <span class="pred-label">模型预测</span>
+        <span class="pred-label" data-i18n="model_pred">模型预测</span>
         <span class="pred-score">3 - 0</span>
       </div>
       <div class="probs">
-        <span>主胜 <strong>85%</strong></span>
-        <span>平 <strong>10%</strong></span>
-        <span>客胜 <strong>5%</strong></span>
+        <span><span data-i18n="home_win">主胜</span> <strong>85%</strong></span>
+        <span><span data-i18n="draw">平</span> <strong>10%</strong></span>
+        <span><span data-i18n="away_win">客胜</span> <strong>5%</strong></span>
       </div>
     </div>
 
     
     <div class="pred-row market-row market-empty">
       <div>
-        <span class="pred-label">市场预测</span>
-        <span class="pred-score">盘口未挂出</span>
+        <span class="pred-label" data-i18n="market_pred">市场预测</span>
+        <span class="pred-score" data-i18n="odds_unavailable">盘口未挂出</span>
       </div>
     </div>
     
 
     
     <div class="status-row">
-      <span class="tag upcoming">⏳ 未开始</span>
+      <span class="tag upcoming" data-i18n="upcoming_label">⏳ 未开始</span>
     </div>
     
   </div>
@@ -3063,12 +3082,12 @@
       <span>06/24 (三) 08:00 JST</span>
       
       <span class="dot">·</span>
-      <span class="stage-badge">小组赛 GROUP_L</span>
+      <span class="stage-badge"><span data-i18n="stage_GROUP_STAGE">小组赛</span> GROUP_L</span>
     </div>
 
     <div class="teams">
       <div class="team home">
-        <span class="name">巴拿马</span>
+        <span class="name team-name" data-team-en="Panama">巴拿马</span>
         <span class="flag">🇵🇦</span>
       </div>
       <div class="score-box">
@@ -3078,34 +3097,34 @@
       </div>
       <div class="team away">
         <span class="flag">🇭🇷</span>
-        <span class="name">克罗地亚</span>
+        <span class="name team-name" data-team-en="Croatia">克罗地亚</span>
       </div>
     </div>
 
     <div class="pred-row">
       <div>
-        <span class="pred-label">模型预测</span>
+        <span class="pred-label" data-i18n="model_pred">模型预测</span>
         <span class="pred-score">1 - 1</span>
       </div>
       <div class="probs">
-        <span>主胜 <strong>36%</strong></span>
-        <span>平 <strong>26%</strong></span>
-        <span>客胜 <strong>38%</strong></span>
+        <span><span data-i18n="home_win">主胜</span> <strong>36%</strong></span>
+        <span><span data-i18n="draw">平</span> <strong>26%</strong></span>
+        <span><span data-i18n="away_win">客胜</span> <strong>38%</strong></span>
       </div>
     </div>
 
     
     <div class="pred-row market-row market-empty">
       <div>
-        <span class="pred-label">市场预测</span>
-        <span class="pred-score">盘口未挂出</span>
+        <span class="pred-label" data-i18n="market_pred">市场预测</span>
+        <span class="pred-score" data-i18n="odds_unavailable">盘口未挂出</span>
       </div>
     </div>
     
 
     
     <div class="status-row">
-      <span class="tag upcoming">⏳ 未开始</span>
+      <span class="tag upcoming" data-i18n="upcoming_label">⏳ 未开始</span>
     </div>
     
   </div>
@@ -3118,12 +3137,12 @@
       <span>06/24 (三) 11:00 JST</span>
       
       <span class="dot">·</span>
-      <span class="stage-badge">小组赛 GROUP_K</span>
+      <span class="stage-badge"><span data-i18n="stage_GROUP_STAGE">小组赛</span> GROUP_K</span>
     </div>
 
     <div class="teams">
       <div class="team home">
-        <span class="name">哥伦比亚</span>
+        <span class="name team-name" data-team-en="Colombia">哥伦比亚</span>
         <span class="flag">🇨🇴</span>
       </div>
       <div class="score-box">
@@ -3133,34 +3152,34 @@
       </div>
       <div class="team away">
         <span class="flag">🏳</span>
-        <span class="name">Congo DR</span>
+        <span class="name team-name" data-team-en="Congo DR">Congo DR</span>
       </div>
     </div>
 
     <div class="pred-row">
       <div>
-        <span class="pred-label">模型预测</span>
+        <span class="pred-label" data-i18n="model_pred">模型预测</span>
         <span class="pred-score">2 - 0</span>
       </div>
       <div class="probs">
-        <span>主胜 <strong>83%</strong></span>
-        <span>平 <strong>11%</strong></span>
-        <span>客胜 <strong>5%</strong></span>
+        <span><span data-i18n="home_win">主胜</span> <strong>83%</strong></span>
+        <span><span data-i18n="draw">平</span> <strong>11%</strong></span>
+        <span><span data-i18n="away_win">客胜</span> <strong>5%</strong></span>
       </div>
     </div>
 
     
     <div class="pred-row market-row market-empty">
       <div>
-        <span class="pred-label">市场预测</span>
-        <span class="pred-score">盘口未挂出</span>
+        <span class="pred-label" data-i18n="market_pred">市场预测</span>
+        <span class="pred-score" data-i18n="odds_unavailable">盘口未挂出</span>
       </div>
     </div>
     
 
     
     <div class="status-row">
-      <span class="tag upcoming">⏳ 未开始</span>
+      <span class="tag upcoming" data-i18n="upcoming_label">⏳ 未开始</span>
     </div>
     
   </div>
@@ -3173,12 +3192,12 @@
       <span>06/25 (四) 04:00 JST</span>
       
       <span class="dot">·</span>
-      <span class="stage-badge">小组赛 GROUP_B</span>
+      <span class="stage-badge"><span data-i18n="stage_GROUP_STAGE">小组赛</span> GROUP_B</span>
     </div>
 
     <div class="teams">
       <div class="team home">
-        <span class="name">瑞士</span>
+        <span class="name team-name" data-team-en="Switzerland">瑞士</span>
         <span class="flag">🇨🇭</span>
       </div>
       <div class="score-box">
@@ -3188,34 +3207,34 @@
       </div>
       <div class="team away">
         <span class="flag">🇨🇦</span>
-        <span class="name">加拿大</span>
+        <span class="name team-name" data-team-en="Canada">加拿大</span>
       </div>
     </div>
 
     <div class="pred-row">
       <div>
-        <span class="pred-label">模型预测</span>
+        <span class="pred-label" data-i18n="model_pred">模型预测</span>
         <span class="pred-score">1 - 1</span>
       </div>
       <div class="probs">
-        <span>主胜 <strong>38%</strong></span>
-        <span>平 <strong>26%</strong></span>
-        <span>客胜 <strong>36%</strong></span>
+        <span><span data-i18n="home_win">主胜</span> <strong>38%</strong></span>
+        <span><span data-i18n="draw">平</span> <strong>26%</strong></span>
+        <span><span data-i18n="away_win">客胜</span> <strong>36%</strong></span>
       </div>
     </div>
 
     
     <div class="pred-row market-row market-empty">
       <div>
-        <span class="pred-label">市场预测</span>
-        <span class="pred-score">盘口未挂出</span>
+        <span class="pred-label" data-i18n="market_pred">市场预测</span>
+        <span class="pred-score" data-i18n="odds_unavailable">盘口未挂出</span>
       </div>
     </div>
     
 
     
     <div class="status-row">
-      <span class="tag upcoming">⏳ 未开始</span>
+      <span class="tag upcoming" data-i18n="upcoming_label">⏳ 未开始</span>
     </div>
     
   </div>
@@ -3228,12 +3247,12 @@
       <span>06/25 (四) 04:00 JST</span>
       
       <span class="dot">·</span>
-      <span class="stage-badge">小组赛 GROUP_B</span>
+      <span class="stage-badge"><span data-i18n="stage_GROUP_STAGE">小组赛</span> GROUP_B</span>
     </div>
 
     <div class="teams">
       <div class="team home">
-        <span class="name">Bosnia-Herzegovina</span>
+        <span class="name team-name" data-team-en="Bosnia-Herzegovina">Bosnia-Herzegovina</span>
         <span class="flag">🏳</span>
       </div>
       <div class="score-box">
@@ -3243,34 +3262,34 @@
       </div>
       <div class="team away">
         <span class="flag">🇶🇦</span>
-        <span class="name">卡塔尔</span>
+        <span class="name team-name" data-team-en="Qatar">卡塔尔</span>
       </div>
     </div>
 
     <div class="pred-row">
       <div>
-        <span class="pred-label">模型预测</span>
+        <span class="pred-label" data-i18n="model_pred">模型预测</span>
         <span class="pred-score">1 - 1</span>
       </div>
       <div class="probs">
-        <span>主胜 <strong>35%</strong></span>
-        <span>平 <strong>26%</strong></span>
-        <span>客胜 <strong>39%</strong></span>
+        <span><span data-i18n="home_win">主胜</span> <strong>35%</strong></span>
+        <span><span data-i18n="draw">平</span> <strong>26%</strong></span>
+        <span><span data-i18n="away_win">客胜</span> <strong>39%</strong></span>
       </div>
     </div>
 
     
     <div class="pred-row market-row market-empty">
       <div>
-        <span class="pred-label">市场预测</span>
-        <span class="pred-score">盘口未挂出</span>
+        <span class="pred-label" data-i18n="market_pred">市场预测</span>
+        <span class="pred-score" data-i18n="odds_unavailable">盘口未挂出</span>
       </div>
     </div>
     
 
     
     <div class="status-row">
-      <span class="tag upcoming">⏳ 未开始</span>
+      <span class="tag upcoming" data-i18n="upcoming_label">⏳ 未开始</span>
     </div>
     
   </div>
@@ -3283,12 +3302,12 @@
       <span>06/25 (四) 07:00 JST</span>
       
       <span class="dot">·</span>
-      <span class="stage-badge">小组赛 GROUP_C</span>
+      <span class="stage-badge"><span data-i18n="stage_GROUP_STAGE">小组赛</span> GROUP_C</span>
     </div>
 
     <div class="teams">
       <div class="team home">
-        <span class="name">苏格兰</span>
+        <span class="name team-name" data-team-en="Scotland">苏格兰</span>
         <span class="flag">🏴</span>
       </div>
       <div class="score-box">
@@ -3298,34 +3317,34 @@
       </div>
       <div class="team away">
         <span class="flag">🇧🇷</span>
-        <span class="name">巴西</span>
+        <span class="name team-name" data-team-en="Brazil">巴西</span>
       </div>
     </div>
 
     <div class="pred-row">
       <div>
-        <span class="pred-label">模型预测</span>
+        <span class="pred-label" data-i18n="model_pred">模型预测</span>
         <span class="pred-score">0 - 1</span>
       </div>
       <div class="probs">
-        <span>主胜 <strong>17%</strong></span>
-        <span>平 <strong>21%</strong></span>
-        <span>客胜 <strong>61%</strong></span>
+        <span><span data-i18n="home_win">主胜</span> <strong>17%</strong></span>
+        <span><span data-i18n="draw">平</span> <strong>21%</strong></span>
+        <span><span data-i18n="away_win">客胜</span> <strong>61%</strong></span>
       </div>
     </div>
 
     
     <div class="pred-row market-row market-empty">
       <div>
-        <span class="pred-label">市场预测</span>
-        <span class="pred-score">盘口未挂出</span>
+        <span class="pred-label" data-i18n="market_pred">市场预测</span>
+        <span class="pred-score" data-i18n="odds_unavailable">盘口未挂出</span>
       </div>
     </div>
     
 
     
     <div class="status-row">
-      <span class="tag upcoming">⏳ 未开始</span>
+      <span class="tag upcoming" data-i18n="upcoming_label">⏳ 未开始</span>
     </div>
     
   </div>
@@ -3338,12 +3357,12 @@
       <span>06/25 (四) 07:00 JST</span>
       
       <span class="dot">·</span>
-      <span class="stage-badge">小组赛 GROUP_C</span>
+      <span class="stage-badge"><span data-i18n="stage_GROUP_STAGE">小组赛</span> GROUP_C</span>
     </div>
 
     <div class="teams">
       <div class="team home">
-        <span class="name">摩洛哥</span>
+        <span class="name team-name" data-team-en="Morocco">摩洛哥</span>
         <span class="flag">🇲🇦</span>
       </div>
       <div class="score-box">
@@ -3353,34 +3372,34 @@
       </div>
       <div class="team away">
         <span class="flag">🇭🇹</span>
-        <span class="name">海地</span>
+        <span class="name team-name" data-team-en="Haiti">海地</span>
       </div>
     </div>
 
     <div class="pred-row">
       <div>
-        <span class="pred-label">模型预测</span>
+        <span class="pred-label" data-i18n="model_pred">模型预测</span>
         <span class="pred-score">3 - 0</span>
       </div>
       <div class="probs">
-        <span>主胜 <strong>90%</strong></span>
-        <span>平 <strong>6%</strong></span>
-        <span>客胜 <strong>2%</strong></span>
+        <span><span data-i18n="home_win">主胜</span> <strong>90%</strong></span>
+        <span><span data-i18n="draw">平</span> <strong>6%</strong></span>
+        <span><span data-i18n="away_win">客胜</span> <strong>2%</strong></span>
       </div>
     </div>
 
     
     <div class="pred-row market-row market-empty">
       <div>
-        <span class="pred-label">市场预测</span>
-        <span class="pred-score">盘口未挂出</span>
+        <span class="pred-label" data-i18n="market_pred">市场预测</span>
+        <span class="pred-score" data-i18n="odds_unavailable">盘口未挂出</span>
       </div>
     </div>
     
 
     
     <div class="status-row">
-      <span class="tag upcoming">⏳ 未开始</span>
+      <span class="tag upcoming" data-i18n="upcoming_label">⏳ 未开始</span>
     </div>
     
   </div>
@@ -3393,12 +3412,12 @@
       <span>06/25 (四) 10:00 JST</span>
       
       <span class="dot">·</span>
-      <span class="stage-badge">小组赛 GROUP_A</span>
+      <span class="stage-badge"><span data-i18n="stage_GROUP_STAGE">小组赛</span> GROUP_A</span>
     </div>
 
     <div class="teams">
       <div class="team home">
-        <span class="name">捷克</span>
+        <span class="name team-name" data-team-en="Czech Republic">捷克</span>
         <span class="flag">🇨🇿</span>
       </div>
       <div class="score-box">
@@ -3408,34 +3427,34 @@
       </div>
       <div class="team away">
         <span class="flag">🇲🇽</span>
-        <span class="name">墨西哥</span>
+        <span class="name team-name" data-team-en="Mexico">墨西哥</span>
       </div>
     </div>
 
     <div class="pred-row">
       <div>
-        <span class="pred-label">模型预测</span>
+        <span class="pred-label" data-i18n="model_pred">模型预测</span>
         <span class="pred-score">0 - 2</span>
       </div>
       <div class="probs">
-        <span>主胜 <strong>12%</strong></span>
-        <span>平 <strong>18%</strong></span>
-        <span>客胜 <strong>70%</strong></span>
+        <span><span data-i18n="home_win">主胜</span> <strong>12%</strong></span>
+        <span><span data-i18n="draw">平</span> <strong>18%</strong></span>
+        <span><span data-i18n="away_win">客胜</span> <strong>70%</strong></span>
       </div>
     </div>
 
     
     <div class="pred-row market-row market-empty">
       <div>
-        <span class="pred-label">市场预测</span>
-        <span class="pred-score">盘口未挂出</span>
+        <span class="pred-label" data-i18n="market_pred">市场预测</span>
+        <span class="pred-score" data-i18n="odds_unavailable">盘口未挂出</span>
       </div>
     </div>
     
 
     
     <div class="status-row">
-      <span class="tag upcoming">⏳ 未开始</span>
+      <span class="tag upcoming" data-i18n="upcoming_label">⏳ 未开始</span>
     </div>
     
   </div>
@@ -3448,12 +3467,12 @@
       <span>06/25 (四) 10:00 JST</span>
       
       <span class="dot">·</span>
-      <span class="stage-badge">小组赛 GROUP_A</span>
+      <span class="stage-badge"><span data-i18n="stage_GROUP_STAGE">小组赛</span> GROUP_A</span>
     </div>
 
     <div class="teams">
       <div class="team home">
-        <span class="name">南非</span>
+        <span class="name team-name" data-team-en="South Africa">南非</span>
         <span class="flag">🇿🇦</span>
       </div>
       <div class="score-box">
@@ -3463,34 +3482,34 @@
       </div>
       <div class="team away">
         <span class="flag">🇰🇷</span>
-        <span class="name">韩国</span>
+        <span class="name team-name" data-team-en="South Korea">韩国</span>
       </div>
     </div>
 
     <div class="pred-row">
       <div>
-        <span class="pred-label">模型预测</span>
+        <span class="pred-label" data-i18n="model_pred">模型预测</span>
         <span class="pred-score">0 - 2</span>
       </div>
       <div class="probs">
-        <span>主胜 <strong>16%</strong></span>
-        <span>平 <strong>21%</strong></span>
-        <span>客胜 <strong>64%</strong></span>
+        <span><span data-i18n="home_win">主胜</span> <strong>16%</strong></span>
+        <span><span data-i18n="draw">平</span> <strong>21%</strong></span>
+        <span><span data-i18n="away_win">客胜</span> <strong>64%</strong></span>
       </div>
     </div>
 
     
     <div class="pred-row market-row market-empty">
       <div>
-        <span class="pred-label">市场预测</span>
-        <span class="pred-score">盘口未挂出</span>
+        <span class="pred-label" data-i18n="market_pred">市场预测</span>
+        <span class="pred-score" data-i18n="odds_unavailable">盘口未挂出</span>
       </div>
     </div>
     
 
     
     <div class="status-row">
-      <span class="tag upcoming">⏳ 未开始</span>
+      <span class="tag upcoming" data-i18n="upcoming_label">⏳ 未开始</span>
     </div>
     
   </div>
@@ -3503,12 +3522,12 @@
       <span>06/26 (五) 05:00 JST</span>
       
       <span class="dot">·</span>
-      <span class="stage-badge">小组赛 GROUP_E</span>
+      <span class="stage-badge"><span data-i18n="stage_GROUP_STAGE">小组赛</span> GROUP_E</span>
     </div>
 
     <div class="teams">
       <div class="team home">
-        <span class="name">厄瓜多尔</span>
+        <span class="name team-name" data-team-en="Ecuador">厄瓜多尔</span>
         <span class="flag">🇪🇨</span>
       </div>
       <div class="score-box">
@@ -3518,34 +3537,34 @@
       </div>
       <div class="team away">
         <span class="flag">🇩🇪</span>
-        <span class="name">德国</span>
+        <span class="name team-name" data-team-en="Germany">德国</span>
       </div>
     </div>
 
     <div class="pred-row">
       <div>
-        <span class="pred-label">模型预测</span>
+        <span class="pred-label" data-i18n="model_pred">模型预测</span>
         <span class="pred-score">1 - 1</span>
       </div>
       <div class="probs">
-        <span>主胜 <strong>22%</strong></span>
-        <span>平 <strong>23%</strong></span>
-        <span>客胜 <strong>54%</strong></span>
+        <span><span data-i18n="home_win">主胜</span> <strong>22%</strong></span>
+        <span><span data-i18n="draw">平</span> <strong>23%</strong></span>
+        <span><span data-i18n="away_win">客胜</span> <strong>54%</strong></span>
       </div>
     </div>
 
     
     <div class="pred-row market-row market-empty">
       <div>
-        <span class="pred-label">市场预测</span>
-        <span class="pred-score">盘口未挂出</span>
+        <span class="pred-label" data-i18n="market_pred">市场预测</span>
+        <span class="pred-score" data-i18n="odds_unavailable">盘口未挂出</span>
       </div>
     </div>
     
 
     
     <div class="status-row">
-      <span class="tag upcoming">⏳ 未开始</span>
+      <span class="tag upcoming" data-i18n="upcoming_label">⏳ 未开始</span>
     </div>
     
   </div>
@@ -3558,12 +3577,12 @@
       <span>06/26 (五) 05:00 JST</span>
       
       <span class="dot">·</span>
-      <span class="stage-badge">小组赛 GROUP_E</span>
+      <span class="stage-badge"><span data-i18n="stage_GROUP_STAGE">小组赛</span> GROUP_E</span>
     </div>
 
     <div class="teams">
       <div class="team home">
-        <span class="name">库拉索</span>
+        <span class="name team-name" data-team-en="Curaçao">库拉索</span>
         <span class="flag">🇨🇼</span>
       </div>
       <div class="score-box">
@@ -3573,34 +3592,34 @@
       </div>
       <div class="team away">
         <span class="flag">🇨🇮</span>
-        <span class="name">科特迪瓦</span>
+        <span class="name team-name" data-team-en="Côte d'Ivoire">科特迪瓦</span>
       </div>
     </div>
 
     <div class="pred-row">
       <div>
-        <span class="pred-label">模型预测</span>
+        <span class="pred-label" data-i18n="model_pred">模型预测</span>
         <span class="pred-score">1 - 1</span>
       </div>
       <div class="probs">
-        <span>主胜 <strong>44%</strong></span>
-        <span>平 <strong>25%</strong></span>
-        <span>客胜 <strong>31%</strong></span>
+        <span><span data-i18n="home_win">主胜</span> <strong>44%</strong></span>
+        <span><span data-i18n="draw">平</span> <strong>25%</strong></span>
+        <span><span data-i18n="away_win">客胜</span> <strong>31%</strong></span>
       </div>
     </div>
 
     
     <div class="pred-row market-row market-empty">
       <div>
-        <span class="pred-label">市场预测</span>
-        <span class="pred-score">盘口未挂出</span>
+        <span class="pred-label" data-i18n="market_pred">市场预测</span>
+        <span class="pred-score" data-i18n="odds_unavailable">盘口未挂出</span>
       </div>
     </div>
     
 
     
     <div class="status-row">
-      <span class="tag upcoming">⏳ 未开始</span>
+      <span class="tag upcoming" data-i18n="upcoming_label">⏳ 未开始</span>
     </div>
     
   </div>
@@ -3613,12 +3632,12 @@
       <span>06/26 (五) 08:00 JST</span>
       
       <span class="dot">·</span>
-      <span class="stage-badge">小组赛 GROUP_F</span>
+      <span class="stage-badge"><span data-i18n="stage_GROUP_STAGE">小组赛</span> GROUP_F</span>
     </div>
 
     <div class="teams">
       <div class="team home">
-        <span class="name">突尼斯</span>
+        <span class="name team-name" data-team-en="Tunisia">突尼斯</span>
         <span class="flag">🇹🇳</span>
       </div>
       <div class="score-box">
@@ -3628,34 +3647,34 @@
       </div>
       <div class="team away">
         <span class="flag">🇳🇱</span>
-        <span class="name">荷兰</span>
+        <span class="name team-name" data-team-en="Netherlands">荷兰</span>
       </div>
     </div>
 
     <div class="pred-row">
       <div>
-        <span class="pred-label">模型预测</span>
+        <span class="pred-label" data-i18n="model_pred">模型预测</span>
         <span class="pred-score">0 - 1</span>
       </div>
       <div class="probs">
-        <span>主胜 <strong>19%</strong></span>
-        <span>平 <strong>22%</strong></span>
-        <span>客胜 <strong>59%</strong></span>
+        <span><span data-i18n="home_win">主胜</span> <strong>19%</strong></span>
+        <span><span data-i18n="draw">平</span> <strong>22%</strong></span>
+        <span><span data-i18n="away_win">客胜</span> <strong>59%</strong></span>
       </div>
     </div>
 
     
     <div class="pred-row market-row market-empty">
       <div>
-        <span class="pred-label">市场预测</span>
-        <span class="pred-score">盘口未挂出</span>
+        <span class="pred-label" data-i18n="market_pred">市场预测</span>
+        <span class="pred-score" data-i18n="odds_unavailable">盘口未挂出</span>
       </div>
     </div>
     
 
     
     <div class="status-row">
-      <span class="tag upcoming">⏳ 未开始</span>
+      <span class="tag upcoming" data-i18n="upcoming_label">⏳ 未开始</span>
     </div>
     
   </div>
@@ -3668,12 +3687,12 @@
       <span>06/26 (五) 08:00 JST</span>
       
       <span class="dot">·</span>
-      <span class="stage-badge">小组赛 GROUP_F</span>
+      <span class="stage-badge"><span data-i18n="stage_GROUP_STAGE">小组赛</span> GROUP_F</span>
     </div>
 
     <div class="teams">
       <div class="team home">
-        <span class="name">日本</span>
+        <span class="name team-name" data-team-en="Japan">日本</span>
         <span class="flag">🇯🇵</span>
       </div>
       <div class="score-box">
@@ -3683,34 +3702,34 @@
       </div>
       <div class="team away">
         <span class="flag">🇸🇪</span>
-        <span class="name">瑞典</span>
+        <span class="name team-name" data-team-en="Sweden">瑞典</span>
       </div>
     </div>
 
     <div class="pred-row">
       <div>
-        <span class="pred-label">模型预测</span>
+        <span class="pred-label" data-i18n="model_pred">模型预测</span>
         <span class="pred-score">2 - 0</span>
       </div>
       <div class="probs">
-        <span>主胜 <strong>81%</strong></span>
-        <span>平 <strong>12%</strong></span>
-        <span>客胜 <strong>6%</strong></span>
+        <span><span data-i18n="home_win">主胜</span> <strong>81%</strong></span>
+        <span><span data-i18n="draw">平</span> <strong>12%</strong></span>
+        <span><span data-i18n="away_win">客胜</span> <strong>6%</strong></span>
       </div>
     </div>
 
     
     <div class="pred-row market-row market-empty">
       <div>
-        <span class="pred-label">市场预测</span>
-        <span class="pred-score">盘口未挂出</span>
+        <span class="pred-label" data-i18n="market_pred">市场预测</span>
+        <span class="pred-score" data-i18n="odds_unavailable">盘口未挂出</span>
       </div>
     </div>
     
 
     
     <div class="status-row">
-      <span class="tag upcoming">⏳ 未开始</span>
+      <span class="tag upcoming" data-i18n="upcoming_label">⏳ 未开始</span>
     </div>
     
   </div>
@@ -3723,12 +3742,12 @@
       <span>06/26 (五) 11:00 JST</span>
       
       <span class="dot">·</span>
-      <span class="stage-badge">小组赛 GROUP_D</span>
+      <span class="stage-badge"><span data-i18n="stage_GROUP_STAGE">小组赛</span> GROUP_D</span>
     </div>
 
     <div class="teams">
       <div class="team home">
-        <span class="name">土耳其</span>
+        <span class="name team-name" data-team-en="Turkey">土耳其</span>
         <span class="flag">🇹🇷</span>
       </div>
       <div class="score-box">
@@ -3738,34 +3757,34 @@
       </div>
       <div class="team away">
         <span class="flag">🇺🇸</span>
-        <span class="name">美国</span>
+        <span class="name team-name" data-team-en="United States">美国</span>
       </div>
     </div>
 
     <div class="pred-row">
       <div>
-        <span class="pred-label">模型预测</span>
+        <span class="pred-label" data-i18n="model_pred">模型预测</span>
         <span class="pred-score">1 - 1</span>
       </div>
       <div class="probs">
-        <span>主胜 <strong>30%</strong></span>
-        <span>平 <strong>25%</strong></span>
-        <span>客胜 <strong>44%</strong></span>
+        <span><span data-i18n="home_win">主胜</span> <strong>30%</strong></span>
+        <span><span data-i18n="draw">平</span> <strong>25%</strong></span>
+        <span><span data-i18n="away_win">客胜</span> <strong>44%</strong></span>
       </div>
     </div>
 
     
     <div class="pred-row market-row market-empty">
       <div>
-        <span class="pred-label">市场预测</span>
-        <span class="pred-score">盘口未挂出</span>
+        <span class="pred-label" data-i18n="market_pred">市场预测</span>
+        <span class="pred-score" data-i18n="odds_unavailable">盘口未挂出</span>
       </div>
     </div>
     
 
     
     <div class="status-row">
-      <span class="tag upcoming">⏳ 未开始</span>
+      <span class="tag upcoming" data-i18n="upcoming_label">⏳ 未开始</span>
     </div>
     
   </div>
@@ -3778,12 +3797,12 @@
       <span>06/26 (五) 11:00 JST</span>
       
       <span class="dot">·</span>
-      <span class="stage-badge">小组赛 GROUP_D</span>
+      <span class="stage-badge"><span data-i18n="stage_GROUP_STAGE">小组赛</span> GROUP_D</span>
     </div>
 
     <div class="teams">
       <div class="team home">
-        <span class="name">巴拉圭</span>
+        <span class="name team-name" data-team-en="Paraguay">巴拉圭</span>
         <span class="flag">🇵🇾</span>
       </div>
       <div class="score-box">
@@ -3793,34 +3812,34 @@
       </div>
       <div class="team away">
         <span class="flag">🇦🇺</span>
-        <span class="name">澳大利亚</span>
+        <span class="name team-name" data-team-en="Australia">澳大利亚</span>
       </div>
     </div>
 
     <div class="pred-row">
       <div>
-        <span class="pred-label">模型预测</span>
+        <span class="pred-label" data-i18n="model_pred">模型预测</span>
         <span class="pred-score">0 - 2</span>
       </div>
       <div class="probs">
-        <span>主胜 <strong>8%</strong></span>
-        <span>平 <strong>14%</strong></span>
-        <span>客胜 <strong>78%</strong></span>
+        <span><span data-i18n="home_win">主胜</span> <strong>8%</strong></span>
+        <span><span data-i18n="draw">平</span> <strong>14%</strong></span>
+        <span><span data-i18n="away_win">客胜</span> <strong>78%</strong></span>
       </div>
     </div>
 
     
     <div class="pred-row market-row market-empty">
       <div>
-        <span class="pred-label">市场预测</span>
-        <span class="pred-score">盘口未挂出</span>
+        <span class="pred-label" data-i18n="market_pred">市场预测</span>
+        <span class="pred-score" data-i18n="odds_unavailable">盘口未挂出</span>
       </div>
     </div>
     
 
     
     <div class="status-row">
-      <span class="tag upcoming">⏳ 未开始</span>
+      <span class="tag upcoming" data-i18n="upcoming_label">⏳ 未开始</span>
     </div>
     
   </div>
@@ -3833,12 +3852,12 @@
       <span>06/27 (六) 04:00 JST</span>
       
       <span class="dot">·</span>
-      <span class="stage-badge">小组赛 GROUP_I</span>
+      <span class="stage-badge"><span data-i18n="stage_GROUP_STAGE">小组赛</span> GROUP_I</span>
     </div>
 
     <div class="teams">
       <div class="team home">
-        <span class="name">挪威</span>
+        <span class="name team-name" data-team-en="Norway">挪威</span>
         <span class="flag">🇳🇴</span>
       </div>
       <div class="score-box">
@@ -3848,34 +3867,34 @@
       </div>
       <div class="team away">
         <span class="flag">🇫🇷</span>
-        <span class="name">法国</span>
+        <span class="name team-name" data-team-en="France">法国</span>
       </div>
     </div>
 
     <div class="pred-row">
       <div>
-        <span class="pred-label">模型预测</span>
+        <span class="pred-label" data-i18n="model_pred">模型预测</span>
         <span class="pred-score">1 - 1</span>
       </div>
       <div class="probs">
-        <span>主胜 <strong>37%</strong></span>
-        <span>平 <strong>26%</strong></span>
-        <span>客胜 <strong>37%</strong></span>
+        <span><span data-i18n="home_win">主胜</span> <strong>37%</strong></span>
+        <span><span data-i18n="draw">平</span> <strong>26%</strong></span>
+        <span><span data-i18n="away_win">客胜</span> <strong>37%</strong></span>
       </div>
     </div>
 
     
     <div class="pred-row market-row market-empty">
       <div>
-        <span class="pred-label">市场预测</span>
-        <span class="pred-score">盘口未挂出</span>
+        <span class="pred-label" data-i18n="market_pred">市场预测</span>
+        <span class="pred-score" data-i18n="odds_unavailable">盘口未挂出</span>
       </div>
     </div>
     
 
     
     <div class="status-row">
-      <span class="tag upcoming">⏳ 未开始</span>
+      <span class="tag upcoming" data-i18n="upcoming_label">⏳ 未开始</span>
     </div>
     
   </div>
@@ -3888,12 +3907,12 @@
       <span>06/27 (六) 04:00 JST</span>
       
       <span class="dot">·</span>
-      <span class="stage-badge">小组赛 GROUP_I</span>
+      <span class="stage-badge"><span data-i18n="stage_GROUP_STAGE">小组赛</span> GROUP_I</span>
     </div>
 
     <div class="teams">
       <div class="team home">
-        <span class="name">塞内加尔</span>
+        <span class="name team-name" data-team-en="Senegal">塞内加尔</span>
         <span class="flag">🇸🇳</span>
       </div>
       <div class="score-box">
@@ -3903,34 +3922,34 @@
       </div>
       <div class="team away">
         <span class="flag">🇮🇶</span>
-        <span class="name">伊拉克</span>
+        <span class="name team-name" data-team-en="Iraq">伊拉克</span>
       </div>
     </div>
 
     <div class="pred-row">
       <div>
-        <span class="pred-label">模型预测</span>
+        <span class="pred-label" data-i18n="model_pred">模型预测</span>
         <span class="pred-score">2 - 0</span>
       </div>
       <div class="probs">
-        <span>主胜 <strong>68%</strong></span>
-        <span>平 <strong>19%</strong></span>
-        <span>客胜 <strong>13%</strong></span>
+        <span><span data-i18n="home_win">主胜</span> <strong>68%</strong></span>
+        <span><span data-i18n="draw">平</span> <strong>19%</strong></span>
+        <span><span data-i18n="away_win">客胜</span> <strong>13%</strong></span>
       </div>
     </div>
 
     
     <div class="pred-row market-row market-empty">
       <div>
-        <span class="pred-label">市场预测</span>
-        <span class="pred-score">盘口未挂出</span>
+        <span class="pred-label" data-i18n="market_pred">市场预测</span>
+        <span class="pred-score" data-i18n="odds_unavailable">盘口未挂出</span>
       </div>
     </div>
     
 
     
     <div class="status-row">
-      <span class="tag upcoming">⏳ 未开始</span>
+      <span class="tag upcoming" data-i18n="upcoming_label">⏳ 未开始</span>
     </div>
     
   </div>
@@ -3943,12 +3962,12 @@
       <span>06/27 (六) 09:00 JST</span>
       
       <span class="dot">·</span>
-      <span class="stage-badge">小组赛 GROUP_H</span>
+      <span class="stage-badge"><span data-i18n="stage_GROUP_STAGE">小组赛</span> GROUP_H</span>
     </div>
 
     <div class="teams">
       <div class="team home">
-        <span class="name">乌拉圭</span>
+        <span class="name team-name" data-team-en="Uruguay">乌拉圭</span>
         <span class="flag">🇺🇾</span>
       </div>
       <div class="score-box">
@@ -3958,34 +3977,34 @@
       </div>
       <div class="team away">
         <span class="flag">🇪🇸</span>
-        <span class="name">西班牙</span>
+        <span class="name team-name" data-team-en="Spain">西班牙</span>
       </div>
     </div>
 
     <div class="pred-row">
       <div>
-        <span class="pred-label">模型预测</span>
+        <span class="pred-label" data-i18n="model_pred">模型预测</span>
         <span class="pred-score">0 - 2</span>
       </div>
       <div class="probs">
-        <span>主胜 <strong>7%</strong></span>
-        <span>平 <strong>13%</strong></span>
-        <span>客胜 <strong>80%</strong></span>
+        <span><span data-i18n="home_win">主胜</span> <strong>7%</strong></span>
+        <span><span data-i18n="draw">平</span> <strong>13%</strong></span>
+        <span><span data-i18n="away_win">客胜</span> <strong>80%</strong></span>
       </div>
     </div>
 
     
     <div class="pred-row market-row market-empty">
       <div>
-        <span class="pred-label">市场预测</span>
-        <span class="pred-score">盘口未挂出</span>
+        <span class="pred-label" data-i18n="market_pred">市场预测</span>
+        <span class="pred-score" data-i18n="odds_unavailable">盘口未挂出</span>
       </div>
     </div>
     
 
     
     <div class="status-row">
-      <span class="tag upcoming">⏳ 未开始</span>
+      <span class="tag upcoming" data-i18n="upcoming_label">⏳ 未开始</span>
     </div>
     
   </div>
@@ -3998,12 +4017,12 @@
       <span>06/27 (六) 09:00 JST</span>
       
       <span class="dot">·</span>
-      <span class="stage-badge">小组赛 GROUP_H</span>
+      <span class="stage-badge"><span data-i18n="stage_GROUP_STAGE">小组赛</span> GROUP_H</span>
     </div>
 
     <div class="teams">
       <div class="team home">
-        <span class="name">Cape Verde Islands</span>
+        <span class="name team-name" data-team-en="Cape Verde Islands">Cape Verde Islands</span>
         <span class="flag">🏳</span>
       </div>
       <div class="score-box">
@@ -4013,34 +4032,34 @@
       </div>
       <div class="team away">
         <span class="flag">🇸🇦</span>
-        <span class="name">沙特</span>
+        <span class="name team-name" data-team-en="Saudi Arabia">沙特</span>
       </div>
     </div>
 
     <div class="pred-row">
       <div>
-        <span class="pred-label">模型预测</span>
+        <span class="pred-label" data-i18n="model_pred">模型预测</span>
         <span class="pred-score">0 - 1</span>
       </div>
       <div class="probs">
-        <span>主胜 <strong>19%</strong></span>
-        <span>平 <strong>22%</strong></span>
-        <span>客胜 <strong>59%</strong></span>
+        <span><span data-i18n="home_win">主胜</span> <strong>19%</strong></span>
+        <span><span data-i18n="draw">平</span> <strong>22%</strong></span>
+        <span><span data-i18n="away_win">客胜</span> <strong>59%</strong></span>
       </div>
     </div>
 
     
     <div class="pred-row market-row market-empty">
       <div>
-        <span class="pred-label">市场预测</span>
-        <span class="pred-score">盘口未挂出</span>
+        <span class="pred-label" data-i18n="market_pred">市场预测</span>
+        <span class="pred-score" data-i18n="odds_unavailable">盘口未挂出</span>
       </div>
     </div>
     
 
     
     <div class="status-row">
-      <span class="tag upcoming">⏳ 未开始</span>
+      <span class="tag upcoming" data-i18n="upcoming_label">⏳ 未开始</span>
     </div>
     
   </div>
@@ -4053,12 +4072,12 @@
       <span>06/27 (六) 12:00 JST</span>
       
       <span class="dot">·</span>
-      <span class="stage-badge">小组赛 GROUP_G</span>
+      <span class="stage-badge"><span data-i18n="stage_GROUP_STAGE">小组赛</span> GROUP_G</span>
     </div>
 
     <div class="teams">
       <div class="team home">
-        <span class="name">新西兰</span>
+        <span class="name team-name" data-team-en="New Zealand">新西兰</span>
         <span class="flag">🇳🇿</span>
       </div>
       <div class="score-box">
@@ -4068,34 +4087,34 @@
       </div>
       <div class="team away">
         <span class="flag">🇧🇪</span>
-        <span class="name">比利时</span>
+        <span class="name team-name" data-team-en="Belgium">比利时</span>
       </div>
     </div>
 
     <div class="pred-row">
       <div>
-        <span class="pred-label">模型预测</span>
+        <span class="pred-label" data-i18n="model_pred">模型预测</span>
         <span class="pred-score">0 - 2</span>
       </div>
       <div class="probs">
-        <span>主胜 <strong>12%</strong></span>
-        <span>平 <strong>18%</strong></span>
-        <span>客胜 <strong>71%</strong></span>
+        <span><span data-i18n="home_win">主胜</span> <strong>12%</strong></span>
+        <span><span data-i18n="draw">平</span> <strong>18%</strong></span>
+        <span><span data-i18n="away_win">客胜</span> <strong>71%</strong></span>
       </div>
     </div>
 
     
     <div class="pred-row market-row market-empty">
       <div>
-        <span class="pred-label">市场预测</span>
-        <span class="pred-score">盘口未挂出</span>
+        <span class="pred-label" data-i18n="market_pred">市场预测</span>
+        <span class="pred-score" data-i18n="odds_unavailable">盘口未挂出</span>
       </div>
     </div>
     
 
     
     <div class="status-row">
-      <span class="tag upcoming">⏳ 未开始</span>
+      <span class="tag upcoming" data-i18n="upcoming_label">⏳ 未开始</span>
     </div>
     
   </div>
@@ -4108,12 +4127,12 @@
       <span>06/27 (六) 12:00 JST</span>
       
       <span class="dot">·</span>
-      <span class="stage-badge">小组赛 GROUP_G</span>
+      <span class="stage-badge"><span data-i18n="stage_GROUP_STAGE">小组赛</span> GROUP_G</span>
     </div>
 
     <div class="teams">
       <div class="team home">
-        <span class="name">埃及</span>
+        <span class="name team-name" data-team-en="Egypt">埃及</span>
         <span class="flag">🇪🇬</span>
       </div>
       <div class="score-box">
@@ -4123,34 +4142,34 @@
       </div>
       <div class="team away">
         <span class="flag">🇮🇷</span>
-        <span class="name">伊朗</span>
+        <span class="name team-name" data-team-en="Iran">伊朗</span>
       </div>
     </div>
 
     <div class="pred-row">
       <div>
-        <span class="pred-label">模型预测</span>
+        <span class="pred-label" data-i18n="model_pred">模型预测</span>
         <span class="pred-score">1 - 1</span>
       </div>
       <div class="probs">
-        <span>主胜 <strong>24%</strong></span>
-        <span>平 <strong>24%</strong></span>
-        <span>客胜 <strong>52%</strong></span>
+        <span><span data-i18n="home_win">主胜</span> <strong>24%</strong></span>
+        <span><span data-i18n="draw">平</span> <strong>24%</strong></span>
+        <span><span data-i18n="away_win">客胜</span> <strong>52%</strong></span>
       </div>
     </div>
 
     
     <div class="pred-row market-row market-empty">
       <div>
-        <span class="pred-label">市场预测</span>
-        <span class="pred-score">盘口未挂出</span>
+        <span class="pred-label" data-i18n="market_pred">市场预测</span>
+        <span class="pred-score" data-i18n="odds_unavailable">盘口未挂出</span>
       </div>
     </div>
     
 
     
     <div class="status-row">
-      <span class="tag upcoming">⏳ 未开始</span>
+      <span class="tag upcoming" data-i18n="upcoming_label">⏳ 未开始</span>
     </div>
     
   </div>
@@ -4163,12 +4182,12 @@
       <span>06/28 (日) 06:00 JST</span>
       
       <span class="dot">·</span>
-      <span class="stage-badge">小组赛 GROUP_L</span>
+      <span class="stage-badge"><span data-i18n="stage_GROUP_STAGE">小组赛</span> GROUP_L</span>
     </div>
 
     <div class="teams">
       <div class="team home">
-        <span class="name">巴拿马</span>
+        <span class="name team-name" data-team-en="Panama">巴拿马</span>
         <span class="flag">🇵🇦</span>
       </div>
       <div class="score-box">
@@ -4178,34 +4197,34 @@
       </div>
       <div class="team away">
         <span class="flag">🏴</span>
-        <span class="name">英格兰</span>
+        <span class="name team-name" data-team-en="England">英格兰</span>
       </div>
     </div>
 
     <div class="pred-row">
       <div>
-        <span class="pred-label">模型预测</span>
+        <span class="pred-label" data-i18n="model_pred">模型预测</span>
         <span class="pred-score">0 - 2</span>
       </div>
       <div class="probs">
-        <span>主胜 <strong>16%</strong></span>
-        <span>平 <strong>21%</strong></span>
-        <span>客胜 <strong>63%</strong></span>
+        <span><span data-i18n="home_win">主胜</span> <strong>16%</strong></span>
+        <span><span data-i18n="draw">平</span> <strong>21%</strong></span>
+        <span><span data-i18n="away_win">客胜</span> <strong>63%</strong></span>
       </div>
     </div>
 
     
     <div class="pred-row market-row market-empty">
       <div>
-        <span class="pred-label">市场预测</span>
-        <span class="pred-score">盘口未挂出</span>
+        <span class="pred-label" data-i18n="market_pred">市场预测</span>
+        <span class="pred-score" data-i18n="odds_unavailable">盘口未挂出</span>
       </div>
     </div>
     
 
     
     <div class="status-row">
-      <span class="tag upcoming">⏳ 未开始</span>
+      <span class="tag upcoming" data-i18n="upcoming_label">⏳ 未开始</span>
     </div>
     
   </div>
@@ -4218,12 +4237,12 @@
       <span>06/28 (日) 06:00 JST</span>
       
       <span class="dot">·</span>
-      <span class="stage-badge">小组赛 GROUP_L</span>
+      <span class="stage-badge"><span data-i18n="stage_GROUP_STAGE">小组赛</span> GROUP_L</span>
     </div>
 
     <div class="teams">
       <div class="team home">
-        <span class="name">克罗地亚</span>
+        <span class="name team-name" data-team-en="Croatia">克罗地亚</span>
         <span class="flag">🇭🇷</span>
       </div>
       <div class="score-box">
@@ -4233,34 +4252,34 @@
       </div>
       <div class="team away">
         <span class="flag">🇬🇭</span>
-        <span class="name">加纳</span>
+        <span class="name team-name" data-team-en="Ghana">加纳</span>
       </div>
     </div>
 
     <div class="pred-row">
       <div>
-        <span class="pred-label">模型预测</span>
+        <span class="pred-label" data-i18n="model_pred">模型预测</span>
         <span class="pred-score">2 - 0</span>
       </div>
       <div class="probs">
-        <span>主胜 <strong>65%</strong></span>
-        <span>平 <strong>20%</strong></span>
-        <span>客胜 <strong>15%</strong></span>
+        <span><span data-i18n="home_win">主胜</span> <strong>65%</strong></span>
+        <span><span data-i18n="draw">平</span> <strong>20%</strong></span>
+        <span><span data-i18n="away_win">客胜</span> <strong>15%</strong></span>
       </div>
     </div>
 
     
     <div class="pred-row market-row market-empty">
       <div>
-        <span class="pred-label">市场预测</span>
-        <span class="pred-score">盘口未挂出</span>
+        <span class="pred-label" data-i18n="market_pred">市场预测</span>
+        <span class="pred-score" data-i18n="odds_unavailable">盘口未挂出</span>
       </div>
     </div>
     
 
     
     <div class="status-row">
-      <span class="tag upcoming">⏳ 未开始</span>
+      <span class="tag upcoming" data-i18n="upcoming_label">⏳ 未开始</span>
     </div>
     
   </div>
@@ -4273,12 +4292,12 @@
       <span>06/28 (日) 08:30 JST</span>
       
       <span class="dot">·</span>
-      <span class="stage-badge">小组赛 GROUP_K</span>
+      <span class="stage-badge"><span data-i18n="stage_GROUP_STAGE">小组赛</span> GROUP_K</span>
     </div>
 
     <div class="teams">
       <div class="team home">
-        <span class="name">哥伦比亚</span>
+        <span class="name team-name" data-team-en="Colombia">哥伦比亚</span>
         <span class="flag">🇨🇴</span>
       </div>
       <div class="score-box">
@@ -4288,34 +4307,34 @@
       </div>
       <div class="team away">
         <span class="flag">🇵🇹</span>
-        <span class="name">葡萄牙</span>
+        <span class="name team-name" data-team-en="Portugal">葡萄牙</span>
       </div>
     </div>
 
     <div class="pred-row">
       <div>
-        <span class="pred-label">模型预测</span>
+        <span class="pred-label" data-i18n="model_pred">模型预测</span>
         <span class="pred-score">1 - 1</span>
       </div>
       <div class="probs">
-        <span>主胜 <strong>35%</strong></span>
-        <span>平 <strong>26%</strong></span>
-        <span>客胜 <strong>40%</strong></span>
+        <span><span data-i18n="home_win">主胜</span> <strong>35%</strong></span>
+        <span><span data-i18n="draw">平</span> <strong>26%</strong></span>
+        <span><span data-i18n="away_win">客胜</span> <strong>40%</strong></span>
       </div>
     </div>
 
     
     <div class="pred-row market-row market-empty">
       <div>
-        <span class="pred-label">市场预测</span>
-        <span class="pred-score">盘口未挂出</span>
+        <span class="pred-label" data-i18n="market_pred">市场预测</span>
+        <span class="pred-score" data-i18n="odds_unavailable">盘口未挂出</span>
       </div>
     </div>
     
 
     
     <div class="status-row">
-      <span class="tag upcoming">⏳ 未开始</span>
+      <span class="tag upcoming" data-i18n="upcoming_label">⏳ 未开始</span>
     </div>
     
   </div>
@@ -4328,12 +4347,12 @@
       <span>06/28 (日) 08:30 JST</span>
       
       <span class="dot">·</span>
-      <span class="stage-badge">小组赛 GROUP_K</span>
+      <span class="stage-badge"><span data-i18n="stage_GROUP_STAGE">小组赛</span> GROUP_K</span>
     </div>
 
     <div class="teams">
       <div class="team home">
-        <span class="name">Congo DR</span>
+        <span class="name team-name" data-team-en="Congo DR">Congo DR</span>
         <span class="flag">🏳</span>
       </div>
       <div class="score-box">
@@ -4343,34 +4362,34 @@
       </div>
       <div class="team away">
         <span class="flag">🇺🇿</span>
-        <span class="name">乌兹别克斯坦</span>
+        <span class="name team-name" data-team-en="Uzbekistan">乌兹别克斯坦</span>
       </div>
     </div>
 
     <div class="pred-row">
       <div>
-        <span class="pred-label">模型预测</span>
+        <span class="pred-label" data-i18n="model_pred">模型预测</span>
         <span class="pred-score">0 - 2</span>
       </div>
       <div class="probs">
-        <span>主胜 <strong>11%</strong></span>
-        <span>平 <strong>17%</strong></span>
-        <span>客胜 <strong>72%</strong></span>
+        <span><span data-i18n="home_win">主胜</span> <strong>11%</strong></span>
+        <span><span data-i18n="draw">平</span> <strong>17%</strong></span>
+        <span><span data-i18n="away_win">客胜</span> <strong>72%</strong></span>
       </div>
     </div>
 
     
     <div class="pred-row market-row market-empty">
       <div>
-        <span class="pred-label">市场预测</span>
-        <span class="pred-score">盘口未挂出</span>
+        <span class="pred-label" data-i18n="market_pred">市场预测</span>
+        <span class="pred-score" data-i18n="odds_unavailable">盘口未挂出</span>
       </div>
     </div>
     
 
     
     <div class="status-row">
-      <span class="tag upcoming">⏳ 未开始</span>
+      <span class="tag upcoming" data-i18n="upcoming_label">⏳ 未开始</span>
     </div>
     
   </div>
@@ -4383,12 +4402,12 @@
       <span>06/28 (日) 11:00 JST</span>
       
       <span class="dot">·</span>
-      <span class="stage-badge">小组赛 GROUP_J</span>
+      <span class="stage-badge"><span data-i18n="stage_GROUP_STAGE">小组赛</span> GROUP_J</span>
     </div>
 
     <div class="teams">
       <div class="team home">
-        <span class="name">约旦</span>
+        <span class="name team-name" data-team-en="Jordan">约旦</span>
         <span class="flag">🇯🇴</span>
       </div>
       <div class="score-box">
@@ -4398,34 +4417,34 @@
       </div>
       <div class="team away">
         <span class="flag">🇦🇷</span>
-        <span class="name">阿根廷</span>
+        <span class="name team-name" data-team-en="Argentina">阿根廷</span>
       </div>
     </div>
 
     <div class="pred-row">
       <div>
-        <span class="pred-label">模型预测</span>
+        <span class="pred-label" data-i18n="model_pred">模型预测</span>
         <span class="pred-score">0 - 2</span>
       </div>
       <div class="probs">
-        <span>主胜 <strong>10%</strong></span>
-        <span>平 <strong>16%</strong></span>
-        <span>客胜 <strong>74%</strong></span>
+        <span><span data-i18n="home_win">主胜</span> <strong>10%</strong></span>
+        <span><span data-i18n="draw">平</span> <strong>16%</strong></span>
+        <span><span data-i18n="away_win">客胜</span> <strong>74%</strong></span>
       </div>
     </div>
 
     
     <div class="pred-row market-row market-empty">
       <div>
-        <span class="pred-label">市场预测</span>
-        <span class="pred-score">盘口未挂出</span>
+        <span class="pred-label" data-i18n="market_pred">市场预测</span>
+        <span class="pred-score" data-i18n="odds_unavailable">盘口未挂出</span>
       </div>
     </div>
     
 
     
     <div class="status-row">
-      <span class="tag upcoming">⏳ 未开始</span>
+      <span class="tag upcoming" data-i18n="upcoming_label">⏳ 未开始</span>
     </div>
     
   </div>
@@ -4438,12 +4457,12 @@
       <span>06/28 (日) 11:00 JST</span>
       
       <span class="dot">·</span>
-      <span class="stage-badge">小组赛 GROUP_J</span>
+      <span class="stage-badge"><span data-i18n="stage_GROUP_STAGE">小组赛</span> GROUP_J</span>
     </div>
 
     <div class="teams">
       <div class="team home">
-        <span class="name">阿尔及利亚</span>
+        <span class="name team-name" data-team-en="Algeria">阿尔及利亚</span>
         <span class="flag">🇩🇿</span>
       </div>
       <div class="score-box">
@@ -4453,49 +4472,104 @@
       </div>
       <div class="team away">
         <span class="flag">🇦🇹</span>
-        <span class="name">奥地利</span>
+        <span class="name team-name" data-team-en="Austria">奥地利</span>
       </div>
     </div>
 
     <div class="pred-row">
       <div>
-        <span class="pred-label">模型预测</span>
+        <span class="pred-label" data-i18n="model_pred">模型预测</span>
         <span class="pred-score">1 - 0</span>
       </div>
       <div class="probs">
-        <span>主胜 <strong>59%</strong></span>
-        <span>平 <strong>22%</strong></span>
-        <span>客胜 <strong>19%</strong></span>
+        <span><span data-i18n="home_win">主胜</span> <strong>59%</strong></span>
+        <span><span data-i18n="draw">平</span> <strong>22%</strong></span>
+        <span><span data-i18n="away_win">客胜</span> <strong>19%</strong></span>
       </div>
     </div>
 
     
     <div class="pred-row market-row market-empty">
       <div>
-        <span class="pred-label">市场预测</span>
-        <span class="pred-score">盘口未挂出</span>
+        <span class="pred-label" data-i18n="market_pred">市场预测</span>
+        <span class="pred-score" data-i18n="odds_unavailable">盘口未挂出</span>
       </div>
     </div>
     
 
     
     <div class="status-row">
-      <span class="tag upcoming">⏳ 未开始</span>
+      <span class="tag upcoming" data-i18n="upcoming_label">⏳ 未开始</span>
     </div>
     
   </div>
   
 
   <footer>
-    数据：<a href="https://www.football-data.org/" target="_blank" rel="noopener">football-data.org</a>
-    · 历史：<a href="https://github.com/martj42/international_results" target="_blank" rel="noopener">martj42</a><br>
-    模型：Elo 评分 + 泊松分布（独立 xG）· 这是一个学习项目，预测仅供娱乐<br>
-    源码：<a href="https://github.com/Nicolaslinlin/wc2026" target="_blank" rel="noopener">GitHub</a>
+    <span data-i18n="footer_data">数据</span>：<a href="https://www.football-data.org/" target="_blank" rel="noopener">football-data.org</a>
+    · <span data-i18n="footer_history">历史</span>：<a href="https://github.com/martj42/international_results" target="_blank" rel="noopener">martj42</a><br>
+    <span data-i18n="footer_model">模型</span>：Elo + Poisson + Dixon-Coles · <span data-i18n="footer_disclaimer">这是一个学习项目，预测仅供娱乐</span><br>
+    <span data-i18n="footer_source">源码</span>：<a href="https://github.com/Nicolaslinlin/wc2026" target="_blank" rel="noopener">GitHub</a>
   </footer>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twemoji/14.0.2/twemoji.min.js" crossorigin="anonymous"></script>
 <script>
+  // ---------- i18n ----------
+  const I18N = {"zh": {"title": "2026 世界杯预测", "tag_model": "模型", "tag_score": "比分", "tag_odds": "盘口", "model_name": "Elo + 泊松 + Dixon-Coles", "score_refresh": "每 20 分钟 刷新一次", "odds_tiered": "临赛 3h 内 <strong>20 分钟</strong> · 24h 内 <strong>3 小时</strong> · 其他 <strong>8 小时</strong>", "updated": "最后更新", "dashboard_title": "📊 累计命中率", "finished_count": "已结束 {n} 场", "model_outcome": "模型 · 胜负", "model_score": "模型 · 比分", "market_outcome": "市场 · 胜负", "market_score": "市场 · 比分", "stat_sample": "/ {n} 场", "dashboard_empty": "还没有已结束的比赛 · 等比赛开始就有数据了 ⚽", "legend_model": "模型胜负命中率", "legend_market": "市场胜负命中率", "div_title": "🎯 模型 vs 市场 · 分歧最大", "div_subtitle": "点击跳转到完整卡片", "div_badge_label": "分歧", "filter_all": "全部", "filter_group": "小组赛", "filter_knockout": "淘汰赛", "filter_finished": "已结束", "filter_upcoming": "未开始", "model_pred": "模型预测", "market_pred": "市场预测", "odds_unavailable": "盘口未挂出", "home_win": "主胜", "draw": "平", "away_win": "客胜", "outcome_hit": "✓ 胜负", "outcome_miss": "✗ 胜负", "score_hit": "✓ 比分", "score_miss": "✗ 比分", "no_odds": "无盘口", "upcoming_label": "⏳ 未开始", "stage_GROUP_STAGE": "小组赛", "stage_LAST_16": "1/8 决赛", "stage_ROUND_OF_16": "1/8 决赛", "stage_QUARTER_FINALS": "1/4 决赛", "stage_SEMI_FINALS": "半决赛", "stage_THIRD_PLACE": "三四名", "stage_FINAL": "决赛", "footer_data": "数据", "footer_history": "历史", "footer_model": "模型", "footer_disclaimer": "这是一个学习项目，预测仅供娱乐", "footer_source": "源码"}, "en": {"title": "2026 World Cup Predictor", "tag_model": "MODEL", "tag_score": "SCORES", "tag_odds": "ODDS", "model_name": "Elo + Poisson + Dixon-Coles", "score_refresh": "Refreshed every 20 min", "odds_tiered": "&lt;3h to KO: <strong>20 min</strong> · &lt;24h: <strong>3 hours</strong> · else: <strong>8 hours</strong>", "updated": "Last update", "dashboard_title": "📊 Cumulative Hit Rate", "finished_count": "{n} matches finished", "model_outcome": "Model · Outcome", "model_score": "Model · Score", "market_outcome": "Market · Outcome", "market_score": "Market · Score", "stat_sample": "/ {n} matches", "dashboard_empty": "No finished matches yet · Data will arrive as games end ⚽", "legend_model": "Model outcome accuracy", "legend_market": "Market outcome accuracy", "div_title": "🎯 Model vs Market · Top Divergences", "div_subtitle": "Click to jump to match card", "div_badge_label": "Δ", "filter_all": "All", "filter_group": "Group", "filter_knockout": "Knockout", "filter_finished": "Finished", "filter_upcoming": "Upcoming", "model_pred": "Model", "market_pred": "Market", "odds_unavailable": "No odds yet", "home_win": "H", "draw": "D", "away_win": "A", "outcome_hit": "✓ Outcome", "outcome_miss": "✗ Outcome", "score_hit": "✓ Score", "score_miss": "✗ Score", "no_odds": "no odds", "upcoming_label": "⏳ Upcoming", "stage_GROUP_STAGE": "Group", "stage_LAST_16": "Round of 16", "stage_ROUND_OF_16": "Round of 16", "stage_QUARTER_FINALS": "Quarter-final", "stage_SEMI_FINALS": "Semi-final", "stage_THIRD_PLACE": "Third place", "stage_FINAL": "Final", "footer_data": "Data", "footer_history": "History", "footer_model": "Model", "footer_disclaimer": "Learning project · entertainment only", "footer_source": "Source"}, "ja": {"title": "2026 ワールドカップ予測", "tag_model": "モデル", "tag_score": "結果", "tag_odds": "オッズ", "model_name": "Elo + ポアソン + Dixon-Coles", "score_refresh": "20 分ごとに更新", "odds_tiered": "試合 3h 前: <strong>20 分</strong> · 24h 内: <strong>3 時間</strong> · その他: <strong>8 時間</strong>", "updated": "最終更新", "dashboard_title": "📊 累計的中率", "finished_count": "終了 {n} 試合", "model_outcome": "モデル · 勝敗", "model_score": "モデル · スコア", "market_outcome": "市場 · 勝敗", "market_score": "市場 · スコア", "stat_sample": "/ {n} 試合", "dashboard_empty": "まだ終了した試合はありません · 試合終了後にデータが入ります ⚽", "legend_model": "モデル勝敗的中率", "legend_market": "市場勝敗的中率", "div_title": "🎯 モデル vs 市場 · 乖離の大きい試合", "div_subtitle": "クリックで試合カードへ", "div_badge_label": "乖離", "filter_all": "全て", "filter_group": "グループ", "filter_knockout": "決勝T", "filter_finished": "終了", "filter_upcoming": "未開始", "model_pred": "モデル予測", "market_pred": "市場予測", "odds_unavailable": "オッズ未開示", "home_win": "ホーム", "draw": "分", "away_win": "アウェイ", "outcome_hit": "✓ 勝敗", "outcome_miss": "✗ 勝敗", "score_hit": "✓ スコア", "score_miss": "✗ スコア", "no_odds": "オッズなし", "upcoming_label": "⏳ 未開始", "stage_GROUP_STAGE": "グループ", "stage_LAST_16": "ラウンド 16", "stage_ROUND_OF_16": "ラウンド 16", "stage_QUARTER_FINALS": "準々決勝", "stage_SEMI_FINALS": "準決勝", "stage_THIRD_PLACE": "3 位決定戦", "stage_FINAL": "決勝", "footer_data": "データ", "footer_history": "履歴", "footer_model": "モデル", "footer_disclaimer": "学習プロジェクト · 娯楽のみ", "footer_source": "ソース"}};
+  const JA_NAMES = {"Germany": "ドイツ", "Curaçao": "キュラソー", "Brazil": "ブラジル", "Argentina": "アルゼンチン", "France": "フランス", "Spain": "スペイン", "England": "イングランド", "Portugal": "ポルトガル", "Netherlands": "オランダ", "Italy": "イタリア", "Belgium": "ベルギー", "Croatia": "クロアチア", "Mexico": "メキシコ", "United States": "アメリカ", "Canada": "カナダ", "Japan": "日本", "South Korea": "韓国", "Australia": "オーストラリア", "Morocco": "モロッコ", "Senegal": "セネガル", "Côte d'Ivoire": "コートジボワール", "Ecuador": "エクアドル", "Uruguay": "ウルグアイ", "Colombia": "コロンビア", "Switzerland": "スイス", "Denmark": "デンマーク", "Poland": "ポーランド", "Iran": "イラン", "Saudi Arabia": "サウジアラビア", "Qatar": "カタール", "Tunisia": "チュニジア", "Ghana": "ガーナ", "Cameroon": "カメルーン", "Egypt": "エジプト", "Nigeria": "ナイジェリア", "Algeria": "アルジェリア", "Wales": "ウェールズ", "Scotland": "スコットランド", "Serbia": "セルビア", "Cape Verde": "カーボベルデ", "Norway": "ノルウェー", "Austria": "オーストリア", "Czech Republic": "チェコ", "Sweden": "スウェーデン", "Romania": "ルーマニア", "Turkey": "トルコ", "Greece": "ギリシャ", "Ukraine": "ウクライナ", "Russia": "ロシア", "New Zealand": "ニュージーランド", "Costa Rica": "コスタリカ", "Panama": "パナマ", "Honduras": "ホンジュラス", "Jamaica": "ジャマイカ", "Paraguay": "パラグアイ", "Peru": "ペルー", "Chile": "チリ", "Venezuela": "ベネズエラ", "Bolivia": "ボリビア", "South Africa": "南アフリカ", "Mali": "マリ", "Burkina Faso": "ブルキナファソ", "DR Congo": "コンゴ民主共和国", "Zambia": "ザンビア", "Uzbekistan": "ウズベキスタン", "Jordan": "ヨルダン", "Iraq": "イラク", "Bosnia and Herzegovina": "ボスニア・ヘルツェゴビナ", "Republic of the Congo": "コンゴ共和国", "Haiti": "ハイチ", "Slovakia": "スロバキア", "New Caledonia": "ニューカレドニア"};
+
+  function applyLang(lang) {
+    const dict = I18N[lang] || I18N.zh;
+    document.documentElement.lang = lang === 'ja' ? 'ja' : (lang === 'en' ? 'en' : 'zh-CN');
+
+    // text replacements
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+      const key = el.dataset.i18n;
+      if (dict[key] != null) el.textContent = dict[key];
+    });
+    document.querySelectorAll('[data-i18n-html]').forEach(el => {
+      const key = el.dataset.i18nHtml;
+      if (dict[key] != null) el.innerHTML = dict[key];
+    });
+    // templated strings with {n}
+    document.querySelectorAll('[data-i18n-tpl]').forEach(el => {
+      const key = el.dataset.i18nTpl;
+      const n = el.dataset.i18nN;
+      if (dict[key] != null) el.textContent = dict[key].replace('{n}', n);
+    });
+    // team name swap (en uses data-team-en key directly; ja looks up JA_NAMES)
+    document.querySelectorAll('.team-name').forEach(el => {
+      const en = el.dataset.teamEn;
+      if (lang === 'en') el.textContent = en;
+      else if (lang === 'ja') el.textContent = JA_NAMES[en] || en;
+      // for zh, keep server-rendered Chinese name (no override needed unless we restore;
+      // store original Chinese on first run)
+      else el.textContent = el.dataset.zhOriginal || el.textContent;
+    });
+
+    // update lang button active state
+    document.querySelectorAll('.lang-btn').forEach(b =>
+      b.classList.toggle('active', b.dataset.lang === lang)
+    );
+
+    // re-parse twemoji in case content was replaced
+    if (window.twemoji) twemoji.parse(document.body, { folder: 'svg', ext: '.svg' });
+
+    localStorage.setItem('wc2026_lang', lang);
+  }
+
+  // snapshot Chinese team names so zh switch can restore them
+  document.querySelectorAll('.team-name').forEach(el => {
+    el.dataset.zhOriginal = el.textContent;
+  });
+
+  document.querySelectorAll('.lang-btn').forEach(btn =>
+    btn.addEventListener('click', () => applyLang(btn.dataset.lang))
+  );
+
+  const savedLang = localStorage.getItem('wc2026_lang');
+  if (savedLang && savedLang !== 'zh') applyLang(savedLang);
   // Replace flag emojis with Twemoji images (so Windows/older browsers render flags too)
   if (window.twemoji) {
     twemoji.parse(document.body, { folder: 'svg', ext: '.svg' });

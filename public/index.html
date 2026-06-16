@@ -4,7 +4,13 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>2026 世界杯预测 · WC Predictor</title>
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%8F%86%3C/text%3E%3C/svg%3E">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#1e1b4b">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="WC2026">
+<link rel="apple-touch-icon" href="icon.svg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
@@ -389,7 +395,7 @@
         <span data-i18n-html="odds_tiered">临赛 3h 内 <strong>20 分钟</strong> · 24h 内 <strong>3 小时</strong> · 其他 <strong>8 小时</strong></span>
       </div>
     </div>
-    <div class="updated"><span data-i18n="updated">最后更新</span> · 2026-06-16 11:40 JST</div>
+    <div class="updated"><span data-i18n="updated">最后更新</span> · 2026-06-16 11:46 JST</div>
   </header>
 
   <div class="dashboard">
@@ -4609,6 +4615,15 @@
       m.style.display = show ? '' : 'none';
     });
   }));
+
+  // ---------- PWA: register service worker ----------
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('sw.js').catch(err =>
+        console.warn('SW registration failed:', err)
+      );
+    });
+  }
 </script>
 </body>
 </html>

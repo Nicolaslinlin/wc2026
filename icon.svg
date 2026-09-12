@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#1e293b"/>
+      <stop offset="100%" stop-color="#1e1b4b"/>
+    </linearGradient>
+    <linearGradient id="trophy" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#fde047"/>
+      <stop offset="100%" stop-color="#f59e0b"/>
+    </linearGradient>
+  </defs>
+  <rect width="192" height="192" fill="url(#bg)" rx="36"/>
+  <!-- Trophy cup -->
+  <path d="M62 50 h68 v24 c0 22 -15 40 -34 40 s-34 -18 -34 -40 z" fill="url(#trophy)"/>
+  <!-- Left handle -->
+  <path d="M62 60 c-12 0 -18 10 -18 22 s8 18 18 18" fill="none" stroke="url(#trophy)" stroke-width="6"/>
+  <!-- Right handle -->
+  <path d="M130 60 c12 0 18 10 18 22 s-8 18 -18 18" fill="none" stroke="url(#trophy)" stroke-width="6"/>
+  <!-- Stem -->
+  <rect x="88" y="114" width="16" height="20" fill="url(#trophy)"/>
+  <!-- Base -->
+  <rect x="68" y="134" width="56" height="12" rx="3" fill="url(#trophy)"/>
+  <rect x="60" y="146" width="72" height="8" rx="2" fill="#b45309"/>
+</svg>
